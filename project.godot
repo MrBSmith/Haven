@@ -1,0 +1,123 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Area2D",
+"class": "Card",
+"language": "GDScript",
+"path": "res://AbstractClasses/Card.gd"
+}, {
+"base": "Tile",
+"class": "Forest",
+"language": "GDScript",
+"path": "res://Scenes/Tiles/Forest/ForestTile.gd"
+}, {
+"base": "Tile",
+"class": "Grass",
+"language": "GDScript",
+"path": "res://Scenes/Tiles/Grass/GrassTile.gd"
+}, {
+"base": "Node2D",
+"class": "Hand",
+"language": "GDScript",
+"path": "res://Scenes/Hand/Hand.gd"
+}, {
+"base": "Card",
+"class": "Rain",
+"language": "GDScript",
+"path": "res://Scenes/Card/Rain/RainCard.gd"
+}, {
+"base": "Tile",
+"class": "Soil",
+"language": "GDScript",
+"path": "res://Scenes/Tiles/Soil/Soil.gd"
+}, {
+"base": "Node",
+"class": "StateBase",
+"language": "GDScript",
+"path": "res://AbstractClasses/StateBase.gd"
+}, {
+"base": "Node",
+"class": "StatesMachine",
+"language": "GDScript",
+"path": "res://AbstractClasses/StateMachine.gd"
+}, {
+"base": "Node",
+"class": "Tile",
+"language": "GDScript",
+"path": "res://AbstractClasses/Tile.gd"
+}, {
+"base": "Tile",
+"class": "Water",
+"language": "GDScript",
+"path": "res://Scenes/Tiles/Water/WaterTile.gd"
+} ]
+_global_script_class_icons={
+"Card": "",
+"Forest": "",
+"Grass": "",
+"Hand": "",
+"Rain": "",
+"Soil": "",
+"StateBase": "",
+"StatesMachine": "",
+"Tile": "",
+"Water": ""
+}
+
+[application]
+
+config/name="Haven"
+run/main_scene="res://Scenes/Garden/Garden.tscn"
+config/icon="res://icon.png"
+
+[display]
+
+window/size/width=80
+window/size/height=120
+window/size/test_width=400
+window/size/test_height=600
+window/stretch/mode="2d"
+window/stretch/aspect="keep_width"
+
+[importer_defaults]
+
+texture={
+"compress/bptc_ldr": 0,
+"compress/hdr_mode": 0,
+"compress/lossy_quality": 0.7,
+"compress/mode": 0,
+"compress/normal_map": 0,
+"detect_3d": false,
+"flags/anisotropic": false,
+"flags/filter": false,
+"flags/mipmaps": false,
+"flags/repeat": 0,
+"flags/srgb": 2,
+"process/HDR_as_SRGB": false,
+"process/fix_alpha_border": true,
+"process/invert_color": false,
+"process/premult_alpha": false,
+"size_limit": 0,
+"stream": false,
+"svg/scale": 1.0
+}
+
+[input]
+
+click={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"
