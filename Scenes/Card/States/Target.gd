@@ -6,7 +6,7 @@ var area_node : Node2D
 var current_tile : Tile = null
 var AOE_relatives : Array = []
 var area_of_effect
-
+var affected_tiles_array : Array = []
 
 func _ready():
 	yield(owner, "ready")
@@ -37,8 +37,8 @@ func update(_delta: float):
 	if current_tile_pos != area_node.get_global_position():
 		area_node.set_global_position(current_tile_pos)
 		area_node.clear()
-		var AOE_pos_array = find_AOE_tile_pos(grid_tile_array)
-		area_node.create_area(AOE_pos_array)
+		affected_tiles_array = find_tiles_in_AOE(grid_tile_array)
+		area_node.create_area(affected_tiles_array)
 
 
 func enter_state(_previous_state: StateBase):
@@ -135,13 +135,12 @@ func find_tile_at_relative_grid_pos(current_pos: Vector2, rel_pos: Vector2, grid
 
 
 # Return an array of valid positions
-func find_AOE_tile_pos(grid_array : Array) -> Array:
+func find_tiles_in_AOE(grid_array : Array) -> Array:
 	var current_pos = current_tile.get_grid_position()
-	var tile_pos_in_AOE : Array = []
+	var tile_in_AOE : Array = []
 	for rel_pos in AOE_relatives:
 		var tile = find_tile_at_relative_grid_pos(current_pos, rel_pos, grid_array)
 		if tile:
-			var pos = tile.get_global_position()
-			tile_pos_in_AOE.append(pos)
+			tile_in_AOE.append(tile)
 	
-	return tile_pos_in_AOE
+	return tile_in_AOE

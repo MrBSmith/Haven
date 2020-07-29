@@ -12,12 +12,17 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "AOE",
 "language": "GDScript",
-"path": "res://AbstractClasses/AOE.gd"
+"path": "res://Resources/CardAOE/AOE.gd"
 }, {
 "base": "Area2D",
 "class": "Card",
 "language": "GDScript",
 "path": "res://AbstractClasses/Card.gd"
+}, {
+"base": "Resource",
+"class": "CardEffect",
+"language": "GDScript",
+"path": "res://Resources/CardEffect/CardEffect.gd"
 }, {
 "base": "Tile",
 "class": "Forest",
@@ -54,7 +59,12 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://AbstractClasses/StateMachine.gd"
 }, {
-"base": "Node",
+"base": "Tile",
+"class": "Swamp",
+"language": "GDScript",
+"path": "res://Scenes/Tiles/Swamp/SwampTile.gd"
+}, {
+"base": "Node2D",
 "class": "Tile",
 "language": "GDScript",
 "path": "res://AbstractClasses/Tile.gd"
@@ -67,6 +77,7 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "AOE": "",
 "Card": "",
+"CardEffect": "",
 "Forest": "",
 "Grass": "",
 "Hand": "",
@@ -74,6 +85,7 @@ _global_script_class_icons={
 "Soil": "",
 "StateBase": "",
 "StatesMachine": "",
+"Swamp": "",
 "Tile": "",
 "Water": ""
 }

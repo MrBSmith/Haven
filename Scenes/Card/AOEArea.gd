@@ -6,10 +6,11 @@ func _ready():
 	pass
 
 
-func create_area(pos_array: Array):
-	for pos in pos_array:
+func create_area(tile_array: Array):
+	for tile in tile_array:
 		var area = tile_area_scene.instance()
-		area.set_global_position(pos - get_global_position() - Vector2(8, 8))
+		var area_container_pos = get_global_position()
+		area.set_global_position(tile.get_global_position() - area_container_pos - Globals.TILE_SIZE / 2)
 		add_child(area)
 
 
@@ -20,4 +21,6 @@ func clear():
 
 func set_area_active():
 	for child in get_children():
-		child.set_modulate(Color.red)
+		var transparent_red = Color.red
+		transparent_red.a = 0.5
+		child.set_frame_color(transparent_red)

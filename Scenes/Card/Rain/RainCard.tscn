@@ -1,14 +1,15 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scenes/Card/Card.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Card/Rain/Pluie.png" type="Texture" id=2]
 [ext_resource path="res://Scenes/Card/Rain/RainCard.gd" type="Script" id=3]
 [ext_resource path="res://Resources/CardAOE/Circle2.tres" type="Resource" id=4]
-
+[ext_resource path="res://Resources/CardEffect/Rain.tres" type="Resource" id=5]
 
 [node name="RainCard" instance=ExtResource( 1 )]
 script = ExtResource( 3 )
 area_of_effect = ExtResource( 4 )
+effect_on_tile = ExtResource( 5 )
 
 [node name="Sprite" parent="." index="0"]
 texture = ExtResource( 2 )

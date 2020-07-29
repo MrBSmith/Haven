@@ -1,14 +1,19 @@
 extends Node2D
 
-onready var soil_scene = preload("res://Scenes/Tiles/Soil/SoilTile.tscn")
+const base_tiles_array = [
+	Globals.grass_tile,
+	Globals.soil_tile
+]
 
 func generate_grid():
+	randomize()
 	var nb_tiles = Globals.GRID_TILE_SIZE
 	var tile_size = Globals.TILE_SIZE
 	
 	for i in range(nb_tiles.x):
 		for j in range(nb_tiles.y):
-			var tile = soil_scene.instance()
+			var rng = randi() % 2
+			var tile = base_tiles_array[rng].instance()
 			tile.set_position(Vector2(i * tile_size.x, j * tile_size.y) + tile_size / 2)
 			tile.set_grid_position(Vector2(i, j))
 			add_child(tile)

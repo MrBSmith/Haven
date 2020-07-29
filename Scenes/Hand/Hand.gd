@@ -41,12 +41,12 @@ func generate_card(card_index: int):
 	
 	new_card.set_position(pos)
 	new_card.set_default_position(pos)
-	add_child(new_card)
+	call_deferred('add_child', new_card)
 	
 	var _err = new_card.connect("destroyed", self, "_on_card_destroyed")
 	
 	if new_card.get_index() != card_index:
-		move_child(new_card, card_index)
+		call_deferred("move_child", new_card, card_index)
 
 
 func _unhandled_input(_event):
