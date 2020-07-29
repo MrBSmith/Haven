@@ -1,0 +1,9 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://AbstractClasses/AOE.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+type = 1
+v_size = Vector2( 4, 4 )
+i_size = 0

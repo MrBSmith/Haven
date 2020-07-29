@@ -1,6 +1,6 @@
 [gd_scene format=2]
 
-[node name="AOE" type="ColorRect"]
+[node name="TileArea" type="ColorRect"]
 margin_left = -8.0
 margin_top = -8.0
 margin_right = 8.0

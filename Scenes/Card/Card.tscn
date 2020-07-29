@@ -4,8 +4,8 @@
 [ext_resource path="res://Scenes/Card/States/Drag.gd" type="Script" id=2]
 [ext_resource path="res://AbstractClasses/StateMachine.gd" type="Script" id=3]
 [ext_resource path="res://Scenes/Card/States/Idle.gd" type="Script" id=4]
-[ext_resource path="res://Scenes/Card/States/AOE.gd" type="Script" id=5]
-[ext_resource path="res://Scenes/AOE/AOE.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Scenes/Card/States/Target.gd" type="Script" id=5]
+[ext_resource path="res://Scenes/Card/AOEArea.gd" type="Script" id=7]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -27,10 +27,8 @@ script = ExtResource( 4 )
 [node name="Drag" type="Node" parent="StateMachine"]
 script = ExtResource( 2 )
 
-[node name="AOE" type="Node2D" parent="StateMachine"]
+[node name="Target" type="Node2D" parent="StateMachine"]
 script = ExtResource( 5 )
 
-[node name="Area" type="Node2D" parent="StateMachine/AOE"]
-visible = false
-
-[node name="MainAOEArea" parent="StateMachine/AOE/Area" instance=ExtResource( 6 )]
+[node name="Area" type="Node2D" parent="StateMachine/Target"]
+script = ExtResource( 7 )

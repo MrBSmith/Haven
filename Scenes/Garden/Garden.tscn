@@ -20,5 +20,4 @@ script = ExtResource( 4 )
 shape = SubResource( 1 )
 
 [node name="Hand" type="Node2D" parent="."]
-position = Vector2( 40, 100 )
 script = ExtResource( 2 )

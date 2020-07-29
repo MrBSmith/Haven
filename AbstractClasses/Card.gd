@@ -6,7 +6,7 @@ onready var sprite_node = $Sprite
 var mouse_over : bool = false
 var default_position := Vector2.ZERO setget set_default_position, get_default_position
 
-var AOE = null
+export var area_of_effect : Resource = null
 
 #### ACCESSORS ####
 
@@ -40,7 +40,6 @@ func _ready():
 #### LOGIC ####
 
 
-
 #### INPUTS ####
 
 func _unhandled_input(_event):
@@ -60,8 +59,8 @@ func _on_mouse_exited():
 
 func on_grid_entered():
 	if get_state_name() == "Drag":
-		set_state("AOE")
+		set_state("Target")
 
 func on_grid_exited():
-	if get_state_name() == "AOE":
+	if get_state_name() == "Target":
 		set_state("Drag")
