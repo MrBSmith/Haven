@@ -16,3 +16,8 @@ func create_area(pos_array: Array):
 func clear():
 	for child in get_children():
 		child.queue_free()
+
+
+func set_area_active():
+	for child in get_children():
+		child.set_modulate(Color.red)

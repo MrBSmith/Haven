@@ -2,14 +2,15 @@ extends StateBase
 
 #### AOE STATE #### 
 
-onready var area_node = $Area
+var area_node : Node2D
 var current_tile : Tile = null
 var AOE_relatives : Array = []
 var area_of_effect
 
 
 func _ready():
-	pass
+	yield(owner, "ready")
+	area_node = owner.get_node("Area")
 
 
 func update(_delta: float):
@@ -35,12 +36,12 @@ func update(_delta: float):
 	# If the tile changed
 	if current_tile_pos != area_node.get_global_position():
 		area_node.set_global_position(current_tile_pos)
-		$Area.clear()
+		area_node.clear()
 		var AOE_pos_array = find_AOE_tile_pos(grid_tile_array)
-		$Area.create_area(AOE_pos_array)
+		area_node.create_area(AOE_pos_array)
 
 
-func enter_state():
+func enter_state(_previous_state: StateBase):
 	area_of_effect = owner.area_of_effect
 	
 	# Get the relative grid pos of the tiles affected by the area
@@ -52,12 +53,12 @@ func enter_state():
 		AOE_relatives = get_rect_AOE(area_of_effect.v_size, false)
 	
 	owner.sprite_node.set_visible(false)
-	area_node.set_visible(true)
 
 
-func exit_state():
-	owner.sprite_node.set_visible(true)
-	area_node.set_visible(false)
+func exit_state(next_state: StateBase):
+	if next_state.name != "Effect":
+		owner.sprite_node.set_visible(true)
+		area_node.clear()
 
 
 # Return the closest tile from the given position in the given array of tiles

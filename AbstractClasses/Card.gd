@@ -3,10 +3,12 @@ class_name Card
 
 onready var sprite_node = $Sprite
 
+export var area_of_effect : Resource = null
+
 var mouse_over : bool = false
 var default_position := Vector2.ZERO setget set_default_position, get_default_position
 
-export var area_of_effect : Resource = null
+signal destroyed
 
 #### ACCESSORS ####
 
@@ -39,6 +41,10 @@ func _ready():
 
 #### LOGIC ####
 
+func destroy():
+	emit_signal("destroyed", get_position_in_parent())
+	queue_free()
+
 
 #### INPUTS ####
 
@@ -46,7 +52,10 @@ func _unhandled_input(_event):
 	if Input.is_action_just_pressed("click") && mouse_over:
 		set_state("Drag")
 	if Input.is_action_just_released("click"):
-		set_state("Idle")
+		if get_state_name() == "Target" && $Area.get_child_count() > 0:
+			set_state("Effect")
+		else:
+			set_state("Idle")
 
 
 #### SIGNAL RESPONSES ####

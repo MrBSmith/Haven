@@ -54,7 +54,7 @@ func set_state(new_state):
 	
 	# Use the exit state function of the current state
 	if current_state != null:
-		current_state.exit_state()
+		current_state.exit_state(new_state)
 	
 	# Change the current state, and the previous state
 	previous_state = current_state
@@ -62,6 +62,6 @@ func set_state(new_state):
 	
 	# Use the enter_state function of the current state
 	if new_state != null:
-		current_state.enter_state()
+		current_state.enter_state(previous_state)
 	
 	emit_signal("state_changed", current_state.name)

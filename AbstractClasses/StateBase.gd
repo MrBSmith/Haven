@@ -7,11 +7,11 @@ onready var states_machine = get_parent()
 #### Abstract base class for a State in a state machine ####
 
 # Called when the current state of the state machine is set to this node
-func enter_state():
+func enter_state(_previous_state: StateBase):
 	pass
 	
 # Called when the current state of the state machine is switched to another one
-func exit_state():
+func exit_state(_new_state: StateBase):
 	pass
 
 # Called every frames, for real time behaviour
