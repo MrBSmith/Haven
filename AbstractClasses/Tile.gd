@@ -27,7 +27,6 @@ func get_wetness() -> int:
 	return wetness
 
 func add_to_wetness(value: int):
-	print("wetness + " + String(value))
 	set_wetness(get_wetness() + value)
 
 

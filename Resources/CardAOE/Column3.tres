@@ -4,6 +4,6 @@
 
 [resource]
 script = ExtResource( 1 )
-type = 2
+type = 1
 v_size = Vector2( 6, 3 )
 i_size = 0

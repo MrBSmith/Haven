@@ -50,6 +50,9 @@ func destroy():
 #### INPUTS ####
 
 func _unhandled_input(_event):
+	if get_state_name() == "Effect":
+		return
+	
 	# Trigger the drag state
 	if Input.is_action_just_pressed("click") && mouse_over:
 		set_state("Drag")

@@ -22,14 +22,16 @@ func update(_delta: float):
 	
 	owner.set_global_position(mouse_pos)
 	
-	# If the AOE shape is a column
-	if area_of_effect.type == AOE.TYPES.COLUMN:
-		var AOE_col_width = int(area_of_effect.v_size.y / 2)
-		var current_tile_col = current_tile.get_grid_position().y
-		var column_max = Globals.GRID_TILE_SIZE.y - AOE_col_width - 2
-		var column = int(clamp(current_tile_col, 0.0, column_max))
-		
-		current_tile = find_tile_at_pos(Vector2(0, column), grid_tile_array)
+	# If the AOE shape is a column or a rect: clamp the position accordingly
+	if area_of_effect.type == AOE.TYPES.RECT:
+		var AOE_extents = Vector2(int(area_of_effect.v_size.x / 2), int(area_of_effect.v_size.y / 2))
+		var current_tile_pos = current_tile.get_grid_position()
+		var shift = compute_odd_number_grid_shift(area_of_effect.v_size)
+		var max_grid_pos = Globals.GRID_TILE_SIZE - AOE_extents - Vector2.ONE + shift
+		var line = int(clamp(current_tile_pos.x, AOE_extents.x, max_grid_pos.x))
+		var column = int(clamp(current_tile_pos.y, AOE_extents.y, max_grid_pos.y))
+
+		current_tile = find_tile_at_pos(Vector2(line, column), grid_tile_array)
 	
 	var current_tile_pos = current_tile.get_global_position()
 	
@@ -49,8 +51,6 @@ func enter_state(_previous_state: StateBase):
 		AOE_relatives = get_circle_AOE([Vector2.ZERO], area_of_effect.i_size)
 	elif area_of_effect.type == AOE.TYPES.RECT:
 		AOE_relatives = get_rect_AOE(area_of_effect.v_size)
-	elif area_of_effect.type == AOE.TYPES.COLUMN:
-		AOE_relatives = get_rect_AOE(area_of_effect.v_size, false)
 	
 	owner.sprite_node.set_visible(false)
 
@@ -101,7 +101,7 @@ func get_circle_AOE(pos_array: Array, radius: int) -> Array:
 
 
 # Return an array of relative grid position from the given origin
-func get_rect_AOE(rect_size: Vector2, origin_centered: bool = true) -> Array:
+func get_rect_AOE(rect_size: Vector2) -> Array:
 	var AOE_pos_array : Array = []
 	var center = Vector2(int(rect_size.x / 2), int(rect_size.y /2))
 	
@@ -109,8 +109,7 @@ func get_rect_AOE(rect_size: Vector2, origin_centered: bool = true) -> Array:
 	for i in range(rect_size.x):
 		for j in range(rect_size.y):
 			var pos = Vector2(i, j)
-			if origin_centered:
-				pos -= center
+			pos -= center
 			AOE_pos_array.append(pos)
 	
 	return AOE_pos_array
@@ -144,3 +143,14 @@ func find_tiles_in_AOE(grid_array : Array) -> Array:
 			tile_in_AOE.append(tile)
 	
 	return tile_in_AOE
+
+
+# Return a vector shifted by one on the x axis if the given extents is even
+# Same thing for the y axis
+func compute_odd_number_grid_shift(aoe_size: Vector2) -> Vector2:
+	var offset := Vector2.ZERO
+	if int(aoe_size.x) % 2 == 0:
+		offset.x = 1
+	if int(aoe_size.y) % 2 == 0:
+		offset.y = 1
+	return offset

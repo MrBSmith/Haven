@@ -3,8 +3,7 @@ class_name AOE
 
 enum TYPES {
 	CIRCLE,
-	RECT,
-	COLUMN
+	RECT
 }
 
 export var type : int = TYPES.CIRCLE
