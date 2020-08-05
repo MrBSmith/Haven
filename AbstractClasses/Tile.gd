@@ -5,6 +5,10 @@ var grid_position : Vector2 setget set_grid_position, get_grid_position
 var wetness : int = 50 setget set_wetness, get_wetness
 export var overwet_treshold = 25
 
+
+func _ready():
+	pass
+
 #### ACCESSORS ####
 
 func set_grid_position(value: Vector2):
@@ -29,8 +33,25 @@ func get_wetness() -> int:
 func add_to_wetness(value: int):
 	set_wetness(get_wetness() + value)
 
-
 #### LOGIC ####
+
+# Try to remove the given amount of wetness, return the amount really removed
+func drain_wetness(value: int) -> int:
+	var pre_drain_wetness = get_wetness()
+	set_wetness(pre_drain_wetness - value)
+	var post_drain_wetness = get_wetness()
+	
+	return pre_drain_wetness - post_drain_wetness
+
+
+# Return the number of seeds this
+func get_seed_nb() -> int:
+	var nb_seed : int = 0
+	for child in get_children():
+		if child is Seed:
+			nb_seed += 1
+	return nb_seed
+
 
 # Change the type of the tile for the given one
 func change_tile_type(tile_type_scene: PackedScene):
@@ -44,6 +65,14 @@ func change_tile_type(tile_type_scene: PackedScene):
 
 func destroy():
 	queue_free()
+
+
+func add_plant(plant_node: Plant, pos: Vector2):
+	plant_node.current_tile_weakref = weakref(self)
+	plant_node.set_position(pos)
+	call_deferred("add_child", plant_node)
+#	print("Seed added to " + name + " at " + String(pos))
+
 
 
 #### SIGNALS REACTION ####
