@@ -1,38 +1,60 @@
 extends StateBase
+class_name TargetCardState
 
 #### AOE STATE #### 
+
+signal wind_direction_changed
 
 var area_node : Node2D
 var current_tile : Tile = null
 var AOE_relatives : Array = []
 var area_of_effect
 var affected_tiles_array : Array = []
+var wind_direction := Vector2.UP setget set_wind_direction, get_wind_direction
+
+#### ACCESSORS ####
+
+func set_wind_direction(value: Vector2):
+	if !value.is_normalized():
+		value = value.normalized()
+	
+	var changed = wind_direction != value
+	wind_direction = value
+	
+	if changed:
+		emit_signal("wind_direction_changed", wind_direction)
+
+func get_wind_direction() -> Vector2:
+	return wind_direction
+
+#### BUILT-IN ####
 
 func _ready():
 	yield(owner, "ready")
 	area_node = owner.get_node("Area")
+	
+	var _err = connect("wind_direction_changed", self, "on_wind_direction_changed")
 
+
+#### VIRUTALS ####
 
 func update(_delta: float):
 	var mouse_pos = owner.get_global_mouse_position()
 	var grid_node = get_tree().get_current_scene().get_node("Grid")
-	
 	var grid_tile_array = grid_node.get_tiles()
 	current_tile = find_closest_tile(mouse_pos, grid_tile_array)
 	
 	owner.set_global_position(mouse_pos)
 	
-	# If the AOE shape is a column or a rect: clamp the position accordingly
-	if area_of_effect.type == AOE.TYPES.RECT:
-		var AOE_extents = Vector2(int(area_of_effect.v_size.x / 2), int(area_of_effect.v_size.y / 2))
-		var current_tile_pos = current_tile.get_grid_position()
-		var shift = compute_odd_number_grid_shift(area_of_effect.v_size)
-		var max_grid_pos = Globals.GRID_TILE_SIZE - AOE_extents - Vector2.ONE + shift
-		var line = int(clamp(current_tile_pos.x, AOE_extents.x, max_grid_pos.x))
-		var column = int(clamp(current_tile_pos.y, AOE_extents.y, max_grid_pos.y))
-
-		current_tile = find_tile_at_pos(Vector2(line, column), grid_tile_array)
+	# Get the wind direction if the card is a wind card
+	if owner is WindCard:
+		set_wind_direction(compute_wind_direction(mouse_pos))
 	
+	# If the AOE shape is a rect: clamp the position accordingly
+	if area_of_effect.type == AOE.TYPES.RECT:
+		current_tile = find_correct_tile_rectAOE(grid_tile_array, wind_direction)
+	
+	# Get the position of the current tile
 	var current_tile_pos = current_tile.get_global_position()
 	
 	# If the tile changed
@@ -59,6 +81,27 @@ func exit_state(next_state: StateBase):
 	if next_state.name != "Effect":
 		owner.sprite_node.set_visible(true)
 		area_node.clear()
+
+
+#### LOGIC ####
+
+
+# Find the correct tile to be the origin of the AOE, based on the rect and the direction of it
+func find_correct_tile_rectAOE(grid_tile_array: Array, wind_dir: Vector2) -> Tile:
+	var area_size = area_of_effect.v_size
+	if wind_dir == Vector2.LEFT or wind_dir == Vector2.RIGHT:
+		area_size = Vector2(area_size.y, area_size.x)
+	var AOE_extents = Vector2(int(area_size.x / 2), int(area_size.y / 2))
+	
+	var current_tile_pos = current_tile.get_grid_position()
+	var max_grid_pos = Globals.GRID_TILE_SIZE - AOE_extents
+	
+	max_grid_pos -= Vector2(abs(wind_dir.y), abs(wind_dir.x))
+	
+	var line = int(clamp(current_tile_pos.x, AOE_extents.x, max_grid_pos.x))
+	var column = int(clamp(current_tile_pos.y, AOE_extents.y, max_grid_pos.y))
+	
+	return find_tile_at_pos(Vector2(line, column), grid_tile_array)
 
 
 # Return the closest tile from the given position in the given array of tiles
@@ -101,18 +144,46 @@ func get_circle_AOE(pos_array: Array, radius: int) -> Array:
 
 
 # Return an array of relative grid position from the given origin
-func get_rect_AOE(rect_size: Vector2) -> Array:
+func get_rect_AOE(rect_size: Vector2, dir: Vector2 = Vector2.UP) -> Array:
 	var AOE_pos_array : Array = []
 	var center = Vector2(int(rect_size.x / 2), int(rect_size.y /2))
+	if dir == Vector2.LEFT or dir == Vector2.RIGHT:
+		center = Vector2(center.y, center.x)
 	
-	# If the rect has a center tile
 	for i in range(rect_size.x):
 		for j in range(rect_size.y):
-			var pos = Vector2(i, j)
+			var pos
+			
+			if dir == Vector2.UP or dir == Vector2.DOWN:
+				pos = Vector2(i, j)
+			else:
+				pos = Vector2(j, i)
+			
 			pos -= center
+			
 			AOE_pos_array.append(pos)
 	
 	return AOE_pos_array
+
+
+# Return the direction of the wind based on the position of the mouse
+func compute_wind_direction(mouse_pos: Vector2) -> Vector2:
+	var dir := Vector2.ZERO
+	var grid_px_size = Globals.get_grid_pixel_size()
+	
+	var upper_right : bool = mouse_pos.x > mouse_pos.y
+	var upper_left : bool = mouse_pos.x + mouse_pos.y < grid_px_size.x
+	
+	if upper_right && upper_left:
+		dir = Vector2.DOWN
+	elif upper_right:
+		dir = Vector2.LEFT
+	elif upper_left:
+		dir = Vector2.RIGHT
+	else:
+		dir = Vector2.UP
+	
+	return dir
 
 
 # Return a tile at the given grid position, or null if nothing were found
@@ -144,13 +215,9 @@ func find_tiles_in_AOE(grid_array : Array) -> Array:
 	
 	return tile_in_AOE
 
+#### SIGNAL RESPONSES ####
 
-# Return a vector shifted by one on the x axis if the given extents is even
-# Same thing for the y axis
-func compute_odd_number_grid_shift(aoe_size: Vector2) -> Vector2:
-	var offset := Vector2.ZERO
-	if int(aoe_size.x) % 2 == 0:
-		offset.x = 1
-	if int(aoe_size.y) % 2 == 0:
-		offset.y = 1
-	return offset
+func on_wind_direction_changed(new_wind_dir: Vector2):
+	AOE_relatives = get_rect_AOE(area_of_effect.v_size, new_wind_dir)
+	var angle = new_wind_dir.angle()
+	$Arrow.set_rotation(angle + deg2rad(90))

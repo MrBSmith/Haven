@@ -34,6 +34,12 @@ func get_debug_state() -> bool:
 func toggle_debug_state():
 	set_debug_state(!get_debug_state())
 
+#### LOGIC ####
+
+# Return the size of the grid in pixels
+func get_grid_pixel_size():
+	return TILE_SIZE * GRID_TILE_SIZE
+
 #### INPUT ####
 
 func _input(event: InputEvent):

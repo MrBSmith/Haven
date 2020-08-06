@@ -74,6 +74,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scenes/Tiles/Swamp/SwampTile.gd"
 }, {
+"base": "StateBase",
+"class": "TargetCardState",
+"language": "GDScript",
+"path": "res://Scenes/Card/States/Target.gd"
+}, {
 "base": "Node2D",
 "class": "Tile",
 "language": "GDScript",
@@ -88,6 +93,11 @@ _global_script_classes=[ {
 "class": "Water",
 "language": "GDScript",
 "path": "res://Scenes/Tiles/Water/WaterTile.gd"
+}, {
+"base": "Card",
+"class": "WindCard",
+"language": "GDScript",
+"path": "res://Scenes/Card/Wind/WindCard.gd"
 } ]
 _global_script_class_icons={
 "AOE": "",
@@ -103,9 +113,11 @@ _global_script_class_icons={
 "StateBase": "",
 "StatesMachine": "",
 "Swamp": "",
+"TargetCardState": "",
 "Tile": "",
 "TreeBase": "",
-"Water": ""
+"Water": "",
+"WindCard": ""
 }
 
 [application]

@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scenes/Card/Card.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Card/Wind/Vent.png" type="Texture" id=2]
 [ext_resource path="res://Scenes/Card/Wind/WindCard.gd" type="Script" id=3]
 [ext_resource path="res://Resources/CardAOE/Column3.tres" type="Resource" id=4]
 [ext_resource path="res://Resources/CardEffect/Wind.tres" type="Resource" id=5]
+[ext_resource path="res://Scenes/Card/Wind/Arrow.png" type="Texture" id=6]
+[ext_resource path="res://Scenes/Card/Wind/TargetWindState.gd" type="Script" id=7]
 
 [node name="WindCard" instance=ExtResource( 1 )]
 script = ExtResource( 3 )
@@ -13,3 +15,10 @@ effect_on_tile = ExtResource( 5 )
 
 [node name="Sprite" parent="." index="0"]
 texture = ExtResource( 2 )
+
+[node name="Target" parent="StateMachine" index="2"]
+script = ExtResource( 7 )
+
+[node name="Arrow" type="Sprite" parent="StateMachine/Target" index="0"]
+visible = false
+texture = ExtResource( 6 )

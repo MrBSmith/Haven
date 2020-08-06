@@ -70,12 +70,11 @@ func is_seed_correct_position(seed_array: Array, pos: Vector2, min_dist: float =
 
 # Genenerate a random position in the tile
 func random_tile_position() -> Vector2:
-	return Vector2(rand_range(0.0, Globals.TILE_SIZE.x), rand_range(0.0, Globals.TILE_SIZE.y)) - Vector2(8, 8)
-
-
-# Return the size of the grid in pixels
-func get_grid_pixel_size():
-	return Globals.TILE_SIZE * Globals.GRID_TILE_SIZE.x
+	var margin = Globals.TILE_SIZE / 20
+	var min_pos = -Globals.TILE_SIZE / 2 + margin
+	var max_pos = Globals.TILE_SIZE / 2 - margin
+	
+	return Vector2(rand_range(min_pos.x, max_pos.x), rand_range(min_pos.y, max_pos.y))
 
 
 func get_tiles() -> Array:
