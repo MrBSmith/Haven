@@ -5,12 +5,13 @@ extends Node
 const swamp_tile = preload("res://Scenes/Tiles/Swamp/SwampTile.tscn")
 const soil_tile = preload("res://Scenes/Tiles/Soil/SoilTile.tscn")
 const water_tile = preload("res://Scenes/Tiles/Water/WaterTile.tscn")
-const forest_tile = preload("res://Scenes/Tiles/Forest/ForestTile.tscn")
-const grass_tile = preload("res://Scenes/Tiles/Grass/GrassTile.tscn")
 
-const base_tree = preload("res://Scenes/Trees/Tree.tscn")
+const base_tree = preload("res://Scenes/Plants/Trees/Tree.tscn")
 
-var tile_types = [soil_tile, grass_tile, forest_tile, water_tile, swamp_tile]
+const grass = preload("res://Scenes/Plants/SmallPlants/Grass.tscn")
+
+
+var tile_types = [soil_tile, water_tile, swamp_tile]
 var tree_types = [base_tree]
 
 var window_width = ProjectSettings.get_setting("display/window/size/width")

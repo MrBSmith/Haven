@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Seed.png-cc25865f3238bf9298b56eda5e13a690.stex"
+path="res://.import/Seed.png-048ebb9945e8d3e80a25024e2394107c.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Scenes/Trees/Seed.png"
-dest_files=[ "res://.import/Seed.png-cc25865f3238bf9298b56eda5e13a690.stex" ]
+source_file="res://Scenes/Plants/Trees/Seed.png"
+dest_files=[ "res://.import/Seed.png-048ebb9945e8d3e80a25024e2394107c.stex" ]
 
 [params]
 

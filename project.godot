@@ -24,15 +24,15 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Resources/CardEffect/CardEffect.gd"
 }, {
-"base": "Tile",
-"class": "Forest",
+"base": "Plant",
+"class": "Flower",
 "language": "GDScript",
-"path": "res://Scenes/Tiles/Forest/ForestTile.gd"
+"path": "res://Scenes/Plants/SmallPlants/Flower.gd"
 }, {
-"base": "Tile",
+"base": "Plant",
 "class": "Grass",
 "language": "GDScript",
-"path": "res://Scenes/Tiles/Grass/GrassTile.gd"
+"path": "res://Scenes/Plants/SmallPlants/Grass.gd"
 }, {
 "base": "Node2D",
 "class": "Hand",
@@ -79,7 +79,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scenes/Card/States/Target.gd"
 }, {
-"base": "Node2D",
+"base": "YSort",
 "class": "Tile",
 "language": "GDScript",
 "path": "res://AbstractClasses/Tile.gd"
@@ -87,7 +87,7 @@ _global_script_classes=[ {
 "base": "Plant",
 "class": "TreeBase",
 "language": "GDScript",
-"path": "res://Scenes/Trees/Tree.gd"
+"path": "res://Scenes/Plants/Trees/Tree.gd"
 }, {
 "base": "Tile",
 "class": "Water",
@@ -103,7 +103,7 @@ _global_script_class_icons={
 "AOE": "",
 "Card": "",
 "CardEffect": "",
-"Forest": "",
+"Flower": "",
 "Grass": "",
 "Hand": "",
 "Plant": "",
