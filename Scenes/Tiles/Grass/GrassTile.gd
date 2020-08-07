@@ -1,0 +1,40 @@
+extends Tile
+class_name GrassTile
+
+enum TILE_STATES{
+	PLAIN,
+	FOREST
+}
+
+var current_tile_state = TILE_STATES.PLAIN
+
+#### ACCESSORS ####
+
+
+
+#### BUILT-IN ####
+
+
+
+#### LOGIC ####
+
+
+
+#### INPUTS ####
+
+
+
+#### SIGNAL RESPONSES ####
+
+
+func _on_max_wetness_reached():
+	pass
+
+func _on_over_wetness_threshold_reached():
+	pass
+
+func _on_min_wetness_reached():
+	pass
+
+func on_plant_added(_plant: Plant):
+	pass

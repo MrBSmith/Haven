@@ -1,5 +1,5 @@
 extends Tile
-class_name Swamp
+class_name SwampTile
 
 #### SIGNALS REACTION ####
 

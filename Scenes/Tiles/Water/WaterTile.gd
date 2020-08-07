@@ -1,2 +1,2 @@
 extends Tile
-class_name Water
+class_name WaterTile

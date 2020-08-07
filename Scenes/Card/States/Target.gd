@@ -96,7 +96,8 @@ func find_correct_tile_rectAOE(grid_tile_array: Array, wind_dir: Vector2) -> Til
 	var current_tile_pos = current_tile.get_grid_position()
 	var max_grid_pos = Globals.GRID_TILE_SIZE - AOE_extents
 	
-	max_grid_pos -= Vector2(abs(wind_dir.y), abs(wind_dir.x))
+	if int(area_size.x) % 2 == 1 or int(area_size.y) % 2 == 1:
+		max_grid_pos -= Vector2(abs(wind_dir.y), abs(wind_dir.x))
 	
 	var line = int(clamp(current_tile_pos.x, AOE_extents.x, max_grid_pos.x))
 	var column = int(clamp(current_tile_pos.y, AOE_extents.y, max_grid_pos.y))

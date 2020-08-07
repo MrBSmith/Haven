@@ -5,13 +5,16 @@ onready var grass_group_node = $Grass
 onready var trees_group_node = $Trees
 onready var flowers_group_node = $Flowers
 
+onready var plant_group_array = [grass_group_node, trees_group_node, flowers_group_node]
+
 var grid_position : Vector2 setget set_grid_position, get_grid_position
 var wetness : int = 50 setget set_wetness, get_wetness
 export var overwet_treshold = 25
 
+signal plant_added
 
 func _ready():
-	pass
+	var _err = connect("plant_added", self, "on_plant_added")
 
 #### ACCESSORS ####
 
@@ -39,6 +42,48 @@ func add_to_wetness(value: int):
 
 #### LOGIC ####
 
+func generate_itself():
+	var grass_scene = Globals.grass
+	var tree_scene = Globals.tree_types[0]
+	
+	var nb_grass = generate_plant(grass_scene, 8, 70, true)
+	if nb_grass >= 4:
+		var nb_tree = generate_plant(tree_scene, 5, 20, true)
+		if nb_tree <= 3:
+			var rdm_flower_type = randi() % Globals.flower_types.size()
+			var _nb_flower = generate_plant(Globals.flower_types[rdm_flower_type], 5, 20, true)
+	
+	update_tile_type()
+
+
+# Generate the given plant (from one to three per tile)
+# Called when the garden is generated
+func generate_plant(plant: PackedScene, max_nb: int, spawn_chances: int, garden_generation : bool = false) -> int:
+	randomize()
+	
+	var plant_array : Array = []
+	var nb_plant_rng = randi() % max_nb + 1
+	
+	for _i in range(nb_plant_rng):
+		var rng_plant = randi() % 100
+		if rng_plant < spawn_chances:
+			
+			var new_plant = plant.instance()
+			var min_dist = new_plant.get_min_sibling_dist()
+			
+			# Generate new positions until one is correct
+			var pos = random_tile_position()
+			while(!is_plant_correct_position(plant_array, pos, min_dist)):
+				pos = random_tile_position()
+			
+			add_plant(new_plant, pos, true)
+			plant_array.append(new_plant)
+	
+	if !garden_generation:
+		update_tile_type()
+	
+	return plant_array.size()
+
 # Try to remove the given amount of wetness, return the amount really removed
 func drain_wetness(value: int) -> int:
 	var pre_drain_wetness = get_wetness()
@@ -62,8 +107,16 @@ func change_tile_type(tile_type_scene: PackedScene):
 	var new_tile = tile_type_scene.instance()
 	new_tile.set_global_position(global_position)
 	new_tile.set_grid_position(get_grid_position())
+	
 	var grid_node = get_parent()
 	grid_node.add_child(new_tile)
+	
+	# Duplicate every plant the tile possess
+	for group in plant_group_array:
+		var dest_group = new_tile.find_node(group.name)
+		for plant in group.get_children():
+			dest_group.add_child(plant.duplicate())
+	
 	destroy()
 
 
@@ -71,39 +124,27 @@ func destroy():
 	queue_free()
 
 
-# Generate the given plant (from one to three per tile) on the given grass tile
-func generate_plant(plant: PackedScene, max_nb: int, spawn_chances: int):
-	randomize()
-	
-	var tree_array : Array = []
-	var nb_plant_rng = randi() % max_nb + 1
-	for _i in range(nb_plant_rng):
-		var rng_plant = randi() % 100
-		if rng_plant < spawn_chances:
-			
-			var new_plant = plant.instance()
-			var min_dist = new_plant.get_min_sibling_dist()
-			
-			# Generate new positions until one is correct
-			var pos = random_tile_position()
-			while(!is_plant_correct_position(tree_array, pos, min_dist)):
-				pos = random_tile_position()
-			
-			add_plant(new_plant, pos)
-			tree_array.append(new_plant)
+func update_tile_type():
+	if grass_group_node.get_child_count() >= 4:
+		change_tile_type(Globals.grass_tile)
 
 
 # Add the given plant to the tile, in the right group
-func add_plant(plant_node: Plant, pos: Vector2):
+func add_plant(plant_node: Plant, pos: Vector2, garden_generation : bool = false):
 	plant_node.current_tile_weakref = weakref(self)
 	plant_node.set_position(pos)
 	
 	if plant_node is Grass:
-		grass_group_node.call_deferred("add_child", plant_node)
+		grass_group_node.add_child(plant_node)
 	elif plant_node is TreeBase:
-		trees_group_node.call_deferred("add_child", plant_node)
-	elif plant_node is Flower:
-		flowers_group_node.call_deferred("add_child", plant_node)
+		trees_group_node.add_child(plant_node)
+	elif plant_node is FlowerBase:
+		flowers_group_node.add_child(plant_node)
+	
+	# Send a signal to signify the plant has been added
+	# Not desired if the garden is currently beeing generated
+	if !garden_generation:
+		emit_signal("plant_added", plant_node)
 
 
 # Return true if the given position is far enough (the minimum distance is defined by min_dist)
@@ -118,7 +159,7 @@ func is_plant_correct_position(seed_array: Array, pos: Vector2, min_dist: float 
 
 # Genenerate a random position in the tile
 func random_tile_position() -> Vector2:
-	var margin = Globals.TILE_SIZE / 20
+	var margin = Globals.TILE_SIZE / 16
 	var min_pos = -Globals.TILE_SIZE / 2 + margin
 	var max_pos = Globals.TILE_SIZE / 2 - margin
 	
@@ -134,4 +175,7 @@ func _on_over_wetness_threshold_reached():
 	pass
 
 func _on_min_wetness_reached():
+	pass
+
+func on_plant_added(_plant: Plant):
 	pass

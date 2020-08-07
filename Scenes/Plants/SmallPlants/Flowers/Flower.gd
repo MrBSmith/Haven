@@ -1,5 +1,5 @@
 extends Plant
-class_name Flower
+class_name FlowerBase
 
 #### ACCESSORS ####
 
