@@ -11,5 +11,5 @@ func affect_tiles(tiles_array: Array, wind_dir := Vector2.ZERO):
 		return
 	
 	for tile in tiles_array:
-		var rdm_force = randi() % 6 
+		var rdm_force = randi() % 100 + 50 
 		tile.on_wind_applied(wind_dir, rdm_force)

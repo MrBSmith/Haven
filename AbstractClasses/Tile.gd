@@ -1,6 +1,8 @@
 extends YSort
 class_name Tile
 
+onready var grid_node = get_parent()
+
 onready var grass_group_node = $Grass
 onready var trees_group_node = $Trees
 onready var flowers_group_node = $Flowers
@@ -129,7 +131,6 @@ func change_tile_type(tile_type_scene: PackedScene):
 	new_tile.set_global_position(global_position)
 	new_tile.set_grid_position(get_grid_position())
 	
-	var grid_node = get_parent()
 	grid_node.add_child(new_tile)
 	
 	# Duplicate every plant the tile possess
@@ -163,6 +164,11 @@ func add_plant(plant_node: Plant, pos: Vector2, garden_generation : bool = false
 	elif plant_node is FlowerBase:
 		flowers_group_node.add_child(plant_node)
 	
+	# Connect the seed generation signal emited by the plant to the grid 
+	# which is in charge of generating the moving_seed
+	if plant_node.has_signal("generate_seed"):
+		var _err = plant_node.connect("generate_seed", grid_node, "generate_moving_seed")
+	
 	# Send a signal to signify the plant has been added
 	# Not desired if the garden is currently beeing generated
 	if !garden_generation:
@@ -178,7 +184,6 @@ func is_plant_correct_position(seed_array: Array, pos: Vector2, min_dist: float 
 	return true
 
 
-
 # Genenerate a random position in the tile
 func random_tile_position() -> Vector2:
 	var margin = Globals.TILE_SIZE / 16
@@ -186,6 +191,11 @@ func random_tile_position() -> Vector2:
 	var max_pos = Globals.TILE_SIZE / 2 - margin
 	
 	return Vector2(rand_range(min_pos.x, max_pos.x), rand_range(min_pos.y, max_pos.y))
+
+
+# Return the tile, trans away from this tile or null if nothing was found
+func get_tile_by_translation(trans: Vector2) -> Tile:
+	return grid_node.get_tile_at_grid_pos(get_grid_position() + trans)
 
 
 #### SIGNALS REACTION ####
@@ -211,5 +221,6 @@ func _on_plant_added(_plant: Plant):
 	pass
 
 # Called when wind is applied to this tile
-func on_wind_applied(_wind_dir: Vector2, _mwind_force):
-	print("wind")
+func on_wind_applied(wind_dir: Vector2, wind_force: int):
+	for tree in trees_group_node.get_children():
+		tree.apply_wind(wind_dir, wind_force)

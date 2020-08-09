@@ -22,7 +22,6 @@ func get_growth() -> int:
 
 func add_to_growth(value: int):
 	set_growth(get_growth() + value)
-#	print("Seed grew by " + String(value) + " || Current grow: " + String(get_growth()))
 
 
 #### BUILT-IN ####

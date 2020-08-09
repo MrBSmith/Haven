@@ -1,5 +1,7 @@
 extends Node2D
 
+var moving_seed_scene = preload("res://Scenes/Animations/MovingSeed/MovingSeed.tscn")
+
 #### ACCESSORS ####
 
 func get_tile_array() -> Array:
@@ -74,9 +76,43 @@ func reroll_grid():
 	clear_grid()
 	generate_grid()
 
+# Return the tile at the given grid coordinates
+func get_tile_at_grid_pos(pos : Vector2) -> Tile:
+	var tile_array = get_tile_array()
+	for tile in tile_array:
+		if tile.get_grid_position() == pos:
+			return tile
+	
+	return null
+
+# Return the tile at the given grid coordinates
+func get_tile_at_world_pos(pos : Vector2) -> Tile:
+	var tile_array = get_tile_array()
+	for tile in tile_array:
+		if tile.get_grid_position() == pos:
+			return tile
+	
+	return null
+
+# Generate a moving seed at the given position, with the given velocity and tree_type
+func generate_moving_seed(init_pos: Vector2, init_velocity: Vector2, tree_type: PackedScene):
+	var new_seed = moving_seed_scene.instance()
+	new_seed.set_position(init_pos)
+	new_seed.set_velocity(init_velocity)
+	new_seed.set_tree_type(tree_type)
+	
+	new_seed.connect("seed_planted", self, "on_seed_planted")
+	$SeedsContainer.add_child(new_seed)
+
 
 #### INPUTS ####
 
 func _input(event):
 	if event.is_action_pressed("RerollGrid"):
 		reroll_grid()
+
+
+#### SIGNALS REPSONSES ####
+
+func on_seed_planted(pos: Vector2, tree_type: PackedScene):
+	pass
