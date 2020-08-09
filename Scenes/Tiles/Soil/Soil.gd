@@ -4,8 +4,6 @@ class_name SoilTile
 
 #### LOGIC ####
 
-func update_tile_state():
-	pass
 
 #### SIGNALS REACTION ####
 
@@ -16,7 +14,8 @@ func _on_over_wetness_threshold_reached():
 	change_tile_type(Globals.swamp_tile)
 
 func _on_min_wetness_reached():
-	pass
+	change_tile_type(Globals.sand_tile)
+
 
 func on_plant_added(plant: Plant):
 	if plant is Grass:

@@ -7,14 +7,24 @@ onready var flowers_group_node = $Flowers
 
 onready var plant_group_array = [grass_group_node, trees_group_node, flowers_group_node]
 
+export var min_grass_nb : int = 0
+export var max_grass_nb : int = 6
+export var min_flower_nb : int = 0
+export var max_flower_nb : int = 0
+export var min_tree_nb : int = 0
+export var max_tree_nb : int = 5
+
 var grid_position : Vector2 setget set_grid_position, get_grid_position
 var wetness : int = 50 setget set_wetness, get_wetness
+
 export var overwet_treshold = 25
 
+signal tile_created
 signal plant_added
 
 func _ready():
-	var _err = connect("plant_added", self, "on_plant_added")
+	var _err = connect("plant_added", self, "_on_plant_added")
+	_err = connect("tile_created", self, "_on_tile_created")
 
 #### ACCESSORS ####
 
@@ -42,33 +52,39 @@ func add_to_wetness(value: int):
 
 #### LOGIC ####
 
-func generate_itself():
-	var grass_scene = Globals.grass
-	var tree_scene = Globals.tree_types[0]
+func generate_flora():
+	generate_plant(Globals.grass, min_grass_nb, max_grass_nb, 70, true)
+	generate_plant(Globals.flower_types, min_flower_nb, max_flower_nb, 70, true)
+	generate_plant(Globals.base_tree, min_tree_nb, max_tree_nb, 40, true)
 	
-	var nb_grass = generate_plant(grass_scene, 8, 70, true)
-	if nb_grass >= 4:
-		var nb_tree = generate_plant(tree_scene, 5, 20, true)
-		if nb_tree <= 3:
-			var rdm_flower_type = randi() % Globals.flower_types.size()
-			var _nb_flower = generate_plant(Globals.flower_types[rdm_flower_type], 5, 20, true)
-	
-	update_tile_type()
+	emit_signal("tile_created")
 
 
-# Generate the given plant (from one to three per tile)
+# Generate the given plant n times, n beeing between min_nb and max_nb, 
+# With a spawn porbability determined by spwan_chance (must be a value between 0 and 100)
+# The plant argument can also be an array, if this is the case, 
+# A random member will be picked each time
 # Called when the garden is generated
-func generate_plant(plant: PackedScene, max_nb: int, spawn_chances: int, garden_generation : bool = false) -> int:
+func generate_plant(plant, min_nb: int, max_nb: int, spawn_chances: int, garden_generation : bool = false):
+	if max_nb == 0:
+		return
+	
 	randomize()
 	
 	var plant_array : Array = []
-	var nb_plant_rng = randi() % max_nb + 1
+	var nb_plant_rng = randi() % max_nb + min_nb
 	
 	for _i in range(nb_plant_rng):
 		var rng_plant = randi() % 100
 		if rng_plant < spawn_chances:
+			var new_plant : Plant
 			
-			var new_plant = plant.instance()
+			if plant is PackedScene:
+				new_plant = plant.instance()
+			elif plant is Array:
+				var rdm_id = randi() % plant.size()
+				new_plant = plant[rdm_id].instance()
+				
 			var min_dist = new_plant.get_min_sibling_dist()
 			
 			# Generate new positions until one is correct
@@ -81,8 +97,13 @@ func generate_plant(plant: PackedScene, max_nb: int, spawn_chances: int, garden_
 	
 	if !garden_generation:
 		update_tile_type()
-	
-	return plant_array.size()
+
+
+# Return all the plants on the tile in an array
+func get_all_plants() -> Array:
+	return grass_group_node.get_children() + trees_group_node.get_children()\
+	 + flowers_group_node.get_children()
+
 
 # Try to remove the given amount of wetness, return the amount really removed
 func drain_wetness(value: int) -> int:
@@ -117,6 +138,7 @@ func change_tile_type(tile_type_scene: PackedScene):
 		for plant in group.get_children():
 			dest_group.add_child(plant.duplicate())
 	
+	new_tile.emit_signal("tile_created")
 	destroy()
 
 
@@ -168,14 +190,26 @@ func random_tile_position() -> Vector2:
 
 #### SIGNALS REACTION ####
 
+# Called when the tile has finished beeing created
+func _on_tile_created():
+	pass
+
+# Called when the tile is at its max wetness
 func _on_max_wetness_reached():
 	pass
 
+# Called when the tile is wetness passed 100% and is over his threshold
 func _on_over_wetness_threshold_reached():
 	pass
 
+# Called when the tile is at its min wetness
 func _on_min_wetness_reached():
 	pass
 
-func on_plant_added(_plant: Plant):
+# Called when a plant is added
+func _on_plant_added(_plant: Plant):
 	pass
+
+# Called when wind is applied to this tile
+func on_wind_applied(_wind_dir: Vector2, _mwind_force):
+	print("wind")

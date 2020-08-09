@@ -41,7 +41,7 @@ func _ready():
 func update(_delta: float):
 	var mouse_pos = owner.get_global_mouse_position()
 	var grid_node = get_tree().get_current_scene().get_node("Grid")
-	var grid_tile_array = grid_node.get_tiles()
+	var grid_tile_array = grid_node.get_tile_array()
 	current_tile = find_closest_tile(mouse_pos, grid_tile_array)
 	
 	owner.set_global_position(mouse_pos)
@@ -81,6 +81,8 @@ func exit_state(next_state: StateBase):
 	if next_state.name != "Effect":
 		owner.sprite_node.set_visible(true)
 		area_node.clear()
+	else:
+		owner.affect_tiles(affected_tiles_array, wind_direction)
 
 
 #### LOGIC ####

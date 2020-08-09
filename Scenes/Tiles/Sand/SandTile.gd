@@ -1,5 +1,21 @@
 extends Tile
-class_name WaterTile
+class_name SandTile
+
+#### ACCESSORS ####
+
+
+
+#### BUILT-IN ####
+
+
+
+#### LOGIC ####
+
+
+
+#### INPUTS ####
+
+
 
 #### SIGNAL RESPONSES ####
 

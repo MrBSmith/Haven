@@ -6,6 +6,8 @@
 
 [node name="WaterTile" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
+max_grass_nb = 0
+max_tree_nb = 0
 
 [node name="Sprite" parent="." index="0"]
 texture = ExtResource( 3 )

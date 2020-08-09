@@ -6,6 +6,8 @@
 
 [node name="GrassTile" instance=ExtResource( 2 )]
 script = ExtResource( 3 )
+min_grass_nb = 3
+max_flower_nb = 4
 
 [node name="Sprite" parent="." index="0"]
 texture = ExtResource( 1 )

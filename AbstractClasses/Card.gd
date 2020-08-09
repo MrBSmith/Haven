@@ -61,14 +61,15 @@ func _unhandled_input(_event):
 		# Triggers the effect of the card
 		if get_state_name() == "Target" && $Area.get_child_count() > 0:
 			set_state("Effect")
-			affect_tiles($StateMachine/Target.affected_tiles_array)
 		
 		# The card was droped on an invalid position
 		else:
 			set_state("Idle")
 
 
-func affect_tiles(tiles_array: Array):
+# Apply the effect of the card on the targeted tiles
+# Called by
+func affect_tiles(tiles_array: Array, _wind_dir := Vector2.ZERO):
 	randomize()
 	
 	var wetness = effect_on_tile.wetness

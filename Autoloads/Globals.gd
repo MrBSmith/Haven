@@ -6,6 +6,7 @@ const swamp_tile = preload("res://Scenes/Tiles/Swamp/SwampTile.tscn")
 const soil_tile = preload("res://Scenes/Tiles/Soil/SoilTile.tscn")
 const water_tile = preload("res://Scenes/Tiles/Water/WaterTile.tscn")
 const grass_tile = preload("res://Scenes/Tiles/Grass/GrassTile.tscn")
+const sand_tile = preload("res://Scenes/Tiles/Sand/SandTile.tscn")
 
 const base_tree = preload("res://Scenes/Plants/Trees/Tree.tscn")
 const grass = preload("res://Scenes/Plants/SmallPlants/Grass.tscn")
