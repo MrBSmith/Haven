@@ -16,5 +16,9 @@ class_name FlowerBase
 #### INPUTS ####
 
 
+#### VIRTUALS ####
+
+func get_plant_category() -> String:
+	return "Flower"
 
 #### SIGNAL RESPONSES ####

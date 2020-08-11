@@ -17,9 +17,9 @@ func _on_min_wetness_reached():
 	change_tile_type(Globals.sand_tile)
 
 
-func on_plant_added(plant: Plant):
+func _on_plant_added(plant: Plant):
 	if plant is Grass:
 		var nb_grass = grass_group_node.get_child_count()
 		
-		if nb_grass >= 4:
+		if nb_grass >= max_grass_nb:
 			change_tile_type(Globals.grass_tile)

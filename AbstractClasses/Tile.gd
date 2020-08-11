@@ -9,6 +9,8 @@ onready var flowers_group_node = $Flowers
 
 onready var plant_group_array = [grass_group_node, trees_group_node, flowers_group_node]
 
+export var growable_plants_array : PoolStringArray
+
 export var min_grass_nb : int = 0
 export var max_grass_nb : int = 6
 export var min_flower_nb : int = 0
@@ -91,7 +93,7 @@ func generate_plant(plant, min_nb: int, max_nb: int, spawn_chances: int, garden_
 			
 			# Generate new positions until one is correct
 			var pos = random_plant_position()
-			while(!is_plant_correct_position(plant_array, pos, min_dist)):
+			while(!is_plant_correct_position(new_plant, pos, min_dist)):
 				pos = random_plant_position()
 			
 			add_plant(new_plant, pos, true)
@@ -106,6 +108,13 @@ func get_all_plants() -> Array:
 	return grass_group_node.get_children() + trees_group_node.get_children()\
 	 + flowers_group_node.get_children()
 
+func get_plant_cat_max(plant_category : String):
+	if plant_category == "Tree":
+		return max_tree_nb
+	elif plant_category == "Grass":
+		return max_grass_nb
+	elif plant_category == "Flower":
+		return max_flower_nb
 
 # Try to remove the given amount of wetness, return the amount really removed
 func drain_wetness(value: int) -> int:
@@ -135,9 +144,8 @@ func change_tile_type(tile_type_scene: PackedScene):
 	
 	# Duplicate every plant the tile possess
 	for group in plant_group_array:
-		var dest_group = new_tile.find_node(group.name)
 		for plant in group.get_children():
-			dest_group.add_child(plant.duplicate())
+			new_tile.add_plant(plant.duplicate(), plant.get_position())
 	
 	new_tile.emit_signal("tile_created")
 	destroy()
@@ -152,17 +160,20 @@ func update_tile_type():
 		change_tile_type(Globals.grass_tile)
 
 
-# Add the given plant to the tile, in the right group
+# Add the given plant to the tile, at the given local_pos, in the right group
 func add_plant(plant_node: Plant, pos: Vector2, garden_generation : bool = false):
 	plant_node.current_tile_weakref = weakref(self)
 	plant_node.set_position(pos)
 	
-	if plant_node is Grass:
-		grass_group_node.add_child(plant_node)
-	elif plant_node is TreeBase:
-		trees_group_node.add_child(plant_node)
-	elif plant_node is FlowerBase:
-		flowers_group_node.add_child(plant_node)
+	var plant_category = plant_node.get_plant_category()
+	var plant_group = get_plant_correct_group(plant_category)
+	
+	var plant_max_nb = get_plant_cat_max(plant_category)
+	
+	# Check if the plant doesn't reach the max capacity of the tile
+	if plant_group.get_child_count() < plant_max_nb:
+		plant_node.grid_node = grid_node
+		plant_group.add_child(plant_node)
 	
 	# Connect the seed generation signal emited by the plant to the grid 
 	# which is in charge of generating the moving_seed
@@ -177,12 +188,28 @@ func add_plant(plant_node: Plant, pos: Vector2, garden_generation : bool = false
 
 # Return true if the given position is far enough (the minimum distance is defined by min_dist)
 # from every seed in the seed array
-func is_plant_correct_position(seed_array: Array, pos: Vector2, min_dist: float = 2.0) -> bool:
-	for current_seed in seed_array:
-		if current_seed.get_position().distance_to(pos) < min_dist:
+func is_plant_correct_position(plant_node: Plant, pos: Vector2, min_dist: float = 4.0) -> bool:
+	var plant_category = plant_node.get_plant_category()
+	var plant_array := get_plant_correct_group(plant_category).get_children()
+	
+	for plant in plant_array:
+		if plant.get_position().distance_to(pos) < min_dist:
 			return false
 	return true
 
+
+# Take a plant category, return the group it should be in
+func get_plant_correct_group(plant_category: String) -> Node:
+	var plant_group : Node = null
+	
+	if plant_category == "Tree":
+		plant_group = trees_group_node
+	elif plant_category == "Grass":
+		plant_group = grass_group_node
+	elif plant_category == "Flower":
+		plant_group = flowers_group_node
+	
+	return plant_group
 
 # Genenerate a random position in the tile
 func random_plant_position() -> Vector2:

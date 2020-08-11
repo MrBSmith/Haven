@@ -104,13 +104,13 @@ func is_pos_outside_grid(pos: Vector2):
 
 # Generate a moving seed at the given position, with the given velocity and tree_type
 func generate_moving_seed(init_pos: Vector2, init_velocity: Vector2, tree_type: PackedScene):
-	var new_seed = moving_seed_scene.instance()
-	new_seed.set_position(init_pos)
-	new_seed.set_velocity(init_velocity)
-	new_seed.set_tree_type(tree_type)
+	var new_plant = moving_seed_scene.instance()
+	new_plant.set_position(init_pos)
+	new_plant.set_velocity(init_velocity)
+	new_plant.set_tree_type(tree_type)
 	
-	new_seed.connect("seed_planted", self, "on_seed_planted")
-	$SeedsContainer.add_child(new_seed)
+	new_plant.connect("seed_planted", self, "on_seed_planted")
+	$SeedsContainer.add_child(new_plant)
 
 
 # Return the closest tile from the given world position
@@ -140,13 +140,15 @@ func _input(event):
 
 func on_seed_planted(pos: Vector2, tree_type: PackedScene):
 	var tile = get_tile_at_world_pos(pos)
-	var new_seed = tree_type.instance()
+	var new_plant : Plant = tree_type.instance()
 	
-	if tile == null or tile is WaterTile or tile is SwampTile:
+	if tile == null or (not tile is SoilTile and not tile is GrassTile):
 		return
 	
-	tile.add_child(new_seed)
-	new_seed.set_global_position(pos)
+	tile.add_child(new_plant)
+	new_plant.current_tile_weakref = weakref(tile)
+	new_plant.grid_node = self
+	new_plant.set_global_position(pos)
 	
 	if Globals.debug_state == true:
 		print("seed_planted a pos: " + String(tile.get_grid_position()))

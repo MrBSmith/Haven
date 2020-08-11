@@ -6,6 +6,7 @@
 
 [node name="GrassTile" instance=ExtResource( 2 )]
 script = ExtResource( 3 )
+growable_plants_array = PoolStringArray( "Grass", "Flower", "Tree" )
 min_grass_nb = 3
 max_flower_nb = 4
 
