@@ -88,9 +88,18 @@ func get_tile_at_grid_pos(pos : Vector2) -> Tile:
 
 # Return the tile at the given grid coordinates
 func get_tile_at_world_pos(world_pos : Vector2) -> Tile:
-	var tile_grid_pos = (world_pos / Globals.TILE_SIZE) - Vector2.ONE
-	tile_grid_pos = tile_grid_pos.round()
-	return get_tile_at_grid_pos(tile_grid_pos)
+	if is_pos_outside_grid(world_pos):
+		return null
+
+	return find_closest_tile(world_pos)
+
+
+# Return true if the given pos is outside the grid, false if not
+func is_pos_outside_grid(pos: Vector2):
+	var max_grid_pos = Globals.GRID_TILE_SIZE * Globals.TILE_SIZE
+	
+	return pos.x < 0.0 or pos.y < 0.0 or \
+	pos.x > max_grid_pos.x or pos.y > max_grid_pos.y
 
 
 # Generate a moving seed at the given position, with the given velocity and tree_type
@@ -138,3 +147,6 @@ func on_seed_planted(pos: Vector2, tree_type: PackedScene):
 	
 	tile.add_child(new_seed)
 	new_seed.set_global_position(pos)
+	
+	if Globals.debug_state == true:
+		print("seed_planted a pos: " + String(tile.get_grid_position()))
