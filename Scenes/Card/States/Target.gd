@@ -42,7 +42,7 @@ func update(_delta: float):
 	var mouse_pos = owner.get_global_mouse_position()
 	var grid_node = get_tree().get_current_scene().get_node("Grid")
 	var grid_tile_array = grid_node.get_tile_array()
-	current_tile = find_closest_tile(mouse_pos, grid_tile_array)
+	current_tile = grid_node.find_closest_tile(mouse_pos)
 	
 	owner.set_global_position(mouse_pos)
 	
@@ -105,21 +105,6 @@ func find_correct_tile_rectAOE(grid_tile_array: Array, wind_dir: Vector2) -> Til
 	var column = int(clamp(current_tile_pos.y, AOE_extents.y, max_grid_pos.y))
 	
 	return find_tile_at_pos(Vector2(line, column), grid_tile_array)
-
-
-# Return the closest tile from the given position in the given array of tiles
-func find_closest_tile(pos: Vector2, tile_array: Array) -> Tile:
-	var closest_tile : Tile = null
-	var smallest_dist : float = INF
-	
-	for tile in tile_array:
-		var tile_pos = tile.get_global_position()
-		var dist_to_tile = pos.distance_to(tile_pos)
-		if dist_to_tile < smallest_dist:
-			smallest_dist = dist_to_tile
-			closest_tile = tile
-	
-	return closest_tile
 
 
 # Return the adjacent positions 

@@ -90,9 +90,9 @@ func generate_plant(plant, min_nb: int, max_nb: int, spawn_chances: int, garden_
 			var min_dist = new_plant.get_min_sibling_dist()
 			
 			# Generate new positions until one is correct
-			var pos = random_tile_position()
+			var pos = random_plant_position()
 			while(!is_plant_correct_position(plant_array, pos, min_dist)):
-				pos = random_tile_position()
+				pos = random_plant_position()
 			
 			add_plant(new_plant, pos, true)
 			plant_array.append(new_plant)
@@ -185,7 +185,7 @@ func is_plant_correct_position(seed_array: Array, pos: Vector2, min_dist: float 
 
 
 # Genenerate a random position in the tile
-func random_tile_position() -> Vector2:
+func random_plant_position() -> Vector2:
 	var margin = Globals.TILE_SIZE / 16
 	var min_pos = -Globals.TILE_SIZE / 2 + margin
 	var max_pos = Globals.TILE_SIZE / 2 - margin

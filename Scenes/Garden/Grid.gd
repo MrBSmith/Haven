@@ -85,14 +85,13 @@ func get_tile_at_grid_pos(pos : Vector2) -> Tile:
 	
 	return null
 
+
 # Return the tile at the given grid coordinates
-func get_tile_at_world_pos(pos : Vector2) -> Tile:
-	var tile_array = get_tile_array()
-	for tile in tile_array:
-		if tile.get_grid_position() == pos:
-			return tile
-	
-	return null
+func get_tile_at_world_pos(world_pos : Vector2) -> Tile:
+	var tile_grid_pos = (world_pos / Globals.TILE_SIZE) - Vector2.ONE
+	tile_grid_pos = tile_grid_pos.round()
+	return get_tile_at_grid_pos(tile_grid_pos)
+
 
 # Generate a moving seed at the given position, with the given velocity and tree_type
 func generate_moving_seed(init_pos: Vector2, init_velocity: Vector2, tree_type: PackedScene):
@@ -105,6 +104,22 @@ func generate_moving_seed(init_pos: Vector2, init_velocity: Vector2, tree_type: 
 	$SeedsContainer.add_child(new_seed)
 
 
+# Return the closest tile from the given world position
+func find_closest_tile(pos: Vector2) -> Tile:
+	var tile_array = get_tile_array()
+	var closest_tile : Tile = null
+	var smallest_dist : float = INF
+	
+	for tile in tile_array:
+		var tile_pos = tile.get_global_position()
+		var dist_to_tile = pos.distance_to(tile_pos)
+		if dist_to_tile < smallest_dist:
+			smallest_dist = dist_to_tile
+			closest_tile = tile
+	
+	return closest_tile
+
+
 #### INPUTS ####
 
 func _input(event):
@@ -115,4 +130,11 @@ func _input(event):
 #### SIGNALS REPSONSES ####
 
 func on_seed_planted(pos: Vector2, tree_type: PackedScene):
-	pass
+	var tile = get_tile_at_world_pos(pos)
+	var new_seed = tree_type.instance()
+	
+	if tile == null or tile is WaterTile or tile is SwampTile:
+		return
+	
+	tile.add_child(new_seed)
+	new_seed.set_global_position(pos)
