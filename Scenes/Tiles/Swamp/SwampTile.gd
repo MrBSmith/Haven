@@ -1,6 +1,9 @@
 extends Tile
 class_name SwampTile
 
+func get_type():
+	return "SwampTile"
+
 #### SIGNALS REACTION ####
 
 func _on_over_wetness_threshold_reached():

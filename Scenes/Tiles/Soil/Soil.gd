@@ -1,11 +1,16 @@
 extends Tile
 class_name SoilTile
 
+func get_type():
+	return "SoilTile"
 
 #### LOGIC ####
 
 
 #### SIGNALS REACTION ####
+
+func _on_tile_created():
+	pass
 
 func _on_max_wetness_reached():
 	pass
@@ -15,7 +20,6 @@ func _on_over_wetness_threshold_reached():
 
 func _on_min_wetness_reached():
 	change_tile_type(Globals.sand_tile)
-
 
 func _on_plant_added(plant: Plant):
 	if plant is Grass:

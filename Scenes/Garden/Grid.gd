@@ -28,7 +28,7 @@ func generate_grid():
 	var nb_water_tile = randi() % 4 + 5
 	place_tiles_on_grid(Globals.water_tile, free_pos_array, nb_water_tile)
 	
-	# Determine the number of grass tile to place btw 5-8, then places it
+	# Determine the number of grass tile to place btw 15-20, then places it
 	var nb_grass_tile = randi() % 5 + 15
 	place_tiles_on_grid(Globals.grass_tile, free_pos_array, nb_grass_tile)
 	
@@ -143,6 +143,9 @@ func on_seed_planted(pos: Vector2, tree_type: PackedScene):
 	var new_plant : Plant = tree_type.instance()
 	
 	if tile == null or (not tile is SoilTile and not tile is GrassTile):
+		return
+	
+	if !tile.is_growable():
 		return
 	
 	tile.add_child(new_plant)

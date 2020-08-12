@@ -11,6 +11,8 @@ onready var plant_group_array = [grass_group_node, trees_group_node, flowers_gro
 
 export var growable_plants_array : PoolStringArray
 
+export var growable_min_wetness : int = 33
+
 export var min_grass_nb : int = 0
 export var max_grass_nb : int = 6
 export var min_flower_nb : int = 0
@@ -31,6 +33,9 @@ func _ready():
 	_err = connect("tile_created", self, "_on_tile_created")
 
 #### ACCESSORS ####
+
+func get_type():
+	return "Tile"
 
 func set_grid_position(value: Vector2):
 	grid_position = value
@@ -63,6 +68,10 @@ func generate_flora():
 	
 	emit_signal("tile_created")
 
+
+# Return true if the tile is wet enough to grow plant
+func is_growable() -> bool:
+	return get_wetness() > growable_min_wetness
 
 # Generate the given plant n times, n beeing between min_nb and max_nb, 
 # With a spawn porbability determined by spwan_chance (must be a value between 0 and 100)
@@ -108,6 +117,7 @@ func get_all_plants() -> Array:
 	return grass_group_node.get_children() + trees_group_node.get_children()\
 	 + flowers_group_node.get_children()
 
+
 func get_plant_cat_max(plant_category : String):
 	if plant_category == "Tree":
 		return max_tree_nb
@@ -115,6 +125,7 @@ func get_plant_cat_max(plant_category : String):
 		return max_grass_nb
 	elif plant_category == "Flower":
 		return max_flower_nb
+
 
 # Try to remove the given amount of wetness, return the amount really removed
 func drain_wetness(value: int) -> int:
@@ -137,18 +148,22 @@ func get_seed_nb() -> int:
 # Change the type of the tile for the given one
 func change_tile_type(tile_type_scene: PackedScene):
 	var new_tile = tile_type_scene.instance()
-	new_tile.set_global_position(global_position)
-	new_tile.set_grid_position(get_grid_position())
 	
-	grid_node.add_child(new_tile)
+	if self.get_type() == new_tile.get_type():
+		new_tile.queue_free()
+		return
+	
+	grid_node.call_deferred("add_child", new_tile)
+	new_tile.call_deferred("set_position", position)
+	new_tile.set_grid_position(get_grid_position())
 	
 	# Duplicate every plant the tile possess
 	for group in plant_group_array:
 		for plant in group.get_children():
-			new_tile.add_plant(plant.duplicate(), plant.get_position())
+			new_tile.call_deferred("add_plant", plant.duplicate(), plant.get_position())
 	
-	new_tile.emit_signal("tile_created")
 	destroy()
+	new_tile.emit_signal("tile_created")
 
 
 func destroy():
@@ -156,8 +171,10 @@ func destroy():
 
 
 func update_tile_type():
-	if grass_group_node.get_child_count() >= 4:
+	if grass_group_node.get_child_count() >= 3:
 		change_tile_type(Globals.grass_tile)
+	elif grass_group_node.get_child_count() < 3:
+		change_tile_type(Globals.soil_tile)
 
 
 # Add the given plant to the tile, at the given local_pos, in the right group
@@ -165,15 +182,19 @@ func add_plant(plant_node: Plant, pos: Vector2, garden_generation : bool = false
 	plant_node.current_tile_weakref = weakref(self)
 	plant_node.set_position(pos)
 	
-	var plant_category = plant_node.get_plant_category()
+	var plant_category = plant_node.get_category()
 	var plant_group = get_plant_correct_group(plant_category)
 	
 	var plant_max_nb = get_plant_cat_max(plant_category)
+	
+	if plant_group == null:
+		return
 	
 	# Check if the plant doesn't reach the max capacity of the tile
 	if plant_group.get_child_count() < plant_max_nb:
 		plant_node.grid_node = grid_node
 		plant_group.add_child(plant_node)
+		var _err = plant_node.connect("tree_exited", self, "_on_plant_died")
 	
 	# Connect the seed generation signal emited by the plant to the grid 
 	# which is in charge of generating the moving_seed
@@ -189,7 +210,7 @@ func add_plant(plant_node: Plant, pos: Vector2, garden_generation : bool = false
 # Return true if the given position is far enough (the minimum distance is defined by min_dist)
 # from every seed in the seed array
 func is_plant_correct_position(plant_node: Plant, pos: Vector2, min_dist: float = 4.0) -> bool:
-	var plant_category = plant_node.get_plant_category()
+	var plant_category = plant_node.get_category()
 	var plant_array := get_plant_correct_group(plant_category).get_children()
 	
 	for plant in plant_array:
@@ -246,6 +267,9 @@ func _on_min_wetness_reached():
 # Called when a plant is added
 func _on_plant_added(_plant: Plant):
 	pass
+
+func _on_plant_died():
+	update_tile_type()
 
 # Called when wind is applied to this tile
 func on_wind_applied(wind_dir: Vector2, wind_force: int):

@@ -10,8 +10,11 @@ export var growth_frequency_time : float = 1.2
 var adult : bool = false setget set_adult, is_adult
 var growth_timer_node : Timer = null
 var growth : int = 3 setget set_growth, get_growth
+var dehydration : int = 0 setget set_dehydration, get_dehydration
 
 var current_tile_weakref : WeakRef = null
+
+signal plant_died
 
 #### ACCESSORS ####
 
@@ -40,6 +43,20 @@ func set_adult(value: bool):
 func is_adult() -> bool:
 	return adult
 
+func set_dehydration(value: int):
+	if value >= 0 && value < 3:
+		dehydration = value
+	
+	if dehydration == 2:
+		die()
+
+func get_dehydration() -> int:
+	return dehydration
+
+func add_to_dehydration(value: int):
+	set_dehydration(get_dehydration() + value)
+
+
 #### BUILT-IN ####
 
 func _ready():
@@ -57,7 +74,14 @@ func try_to_grow():
 	
 	var drained_water = drain_tile_water()
 	if drained_water >= drain_amount:
-		add_to_growth(1)
+		grow()
+	elif drained_water < float(drain_amount) / 2:
+		add_to_dehydration(1)
+
+
+func grow():
+	add_to_growth(1)
+	add_to_dehydration(-1)
 
 
 # Drain water from the tile, il the amount of water drain is sufficent, grow
@@ -79,12 +103,16 @@ func reset_growth_timer():
 	
 	growth_timer_node.start()
 
+func die():
+	queue_free()
+	emit_signal("plant_died", get_category())
+
 
 #### INPUTS ####
 
 #### VIRTUALS ####
 
-func get_plant_categorie() -> String:
+func get_category() -> String:
 	return ""
 
 #### SIGNAL RESPONSES ####

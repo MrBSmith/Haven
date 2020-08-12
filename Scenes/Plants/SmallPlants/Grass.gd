@@ -11,11 +11,18 @@ class_name Grass
 
 #### LOGIC ####
 
-func try_to_grow():
+
+func grow():
+	add_to_growth(1)
+	add_to_dehydration(-1)
+	prolifarate()
+
+# Proliferate to a random position nearby
+func prolifarate():
 	var rdm_pos = rdm_pos_at_dist(get_global_position(), min_sibling_dist)
 	var tile_under_pos = grid_node.get_tile_at_world_pos(rdm_pos)
 	
-	if tile_under_pos == null:
+	if tile_under_pos == null or tile_under_pos.is_growable():
 		return
 	
 	var local_pos = rdm_pos - tile_under_pos.get_global_position()
@@ -39,7 +46,7 @@ func rdm_pos_at_dist(origin_pos: Vector2, dist: float) -> Vector2:
 
 #### VIRTUALS ####
 
-func get_plant_category() -> String:
+func get_category() -> String:
 	return "Grass"
 
 #### SIGNAL RESPONSES ####

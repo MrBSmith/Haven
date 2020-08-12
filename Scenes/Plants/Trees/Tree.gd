@@ -21,7 +21,7 @@ func apply_wind(wind_dir: Vector2, wind_force: int):
 
 #### VIRTUALS ####
 
-func get_plant_category() -> String:
+func get_category() -> String:
 	return "Tree"
 
 

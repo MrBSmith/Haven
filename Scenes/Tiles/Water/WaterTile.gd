@@ -1,6 +1,9 @@
 extends Tile
 class_name WaterTile
 
+func get_type():
+	return "WaterTile"
+
 #### SIGNAL RESPONSES ####
 
 # Called when the tile has finished beeing created
