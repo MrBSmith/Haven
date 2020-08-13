@@ -9,7 +9,11 @@ export var effect_on_tile : Resource = null
 var mouse_over : bool = false
 var default_position := Vector2.ZERO setget set_default_position, get_default_position
 
-signal destroyed
+var pickable : bool = true setget set_pickable, get_pickable
+
+signal active_effect
+signal normal_effect_finished
+signal combined_effect_finished
 
 #### ACCESSORS ####
 
@@ -28,6 +32,11 @@ func get_state() -> StateBase:
 func get_state_name() -> String:
 	return $StateMachine.get_state_name() 
 
+func set_pickable(value: bool):
+	pickable = value
+
+func get_pickable() -> bool:
+	return pickable
 
 #### BUILT-IN ####
 
@@ -38,19 +47,21 @@ func _ready():
 	shape.set_extents(sprite_size / 2)
 	var _err = connect("mouse_entered", self, "_on_mouse_entered")
 	_err = connect("mouse_exited", self, "_on_mouse_exited")
-
+	_err = connect("active_effect", get_parent(), "_on_card_active_effect")
+	_err = connect("normal_effect_finished", get_parent(), "_on_card_normal_effect_finished")
+	_err = connect("combined_effect_finished", get_parent(), "_on_card_combined_effect_finished")
+	_err = $StateMachine.connect("state_changed", self, "_on_state_changed")
 
 #### LOGIC ####
 
 func destroy():
-	emit_signal("destroyed", get_position_in_parent())
-	queue_free()
+	set_state("Destroy")
 
 
 #### INPUTS ####
 
 func _unhandled_input(_event):
-	if get_state_name() == "Effect":
+	if get_state_name() == "Effect" or pickable == false:
 		return
 	
 	# Trigger the drag state
@@ -68,21 +79,31 @@ func _unhandled_input(_event):
 
 
 # Apply the effect of the card on the targeted tiles
-# Called by
-func affect_tiles(tiles_array: Array, _wind_dir := Vector2.ZERO):
+# Called by the target state, when going to the effect state
+func normal_effect(tiles_array: Array, _wind_dir := Vector2.ZERO):
 	randomize()
 	
 	var wetness = effect_on_tile.wetness
 	if wetness == 0:
 		return
 	
+	var effect_variance = effect_on_tile.wetness_variance
+	
 	for tile in tiles_array:
-		var var_sign = sign((randi() % 50) - 25)
-		var variance_rate := float((randi() % effect_on_tile.wetness_variance) * var_sign)
+		var variance_rate := rand_range(-effect_variance, effect_variance)
 		var variance : float = wetness * (variance_rate / 100)
 		var wetness_change = wetness + variance
 		
 		tile.add_to_wetness(wetness_change)
+
+
+# Apply the effect, when the players got the same card twice in hand
+func combined_effect():
+	var grid_node = get_tree().get_current_scene().get_node("Grid")
+	var tiles_affected = grid_node.get_tile_array()
+	$Area.create_area(tiles_affected)
+	
+	set_state("Effect")
 
 
 #### SIGNAL RESPONSES ####
@@ -92,6 +113,17 @@ func _on_mouse_entered():
 
 func _on_mouse_exited():
 	mouse_over = false
+
+func _on_state_changed(state_name: String):
+	if state_name == "Effect":
+		emit_signal("active_effect")
+		
+	elif state_name == "Destroy":
+		var previous_state = $StateMachine.previous_state.name
+		if previous_state == "Effect":
+			emit_signal("normal_effect_finished", get_index())
+		elif previous_state == "CombinedEffect":
+			emit_signal("combined_effect_finished")
 
 func on_grid_entered():
 	if get_state_name() == "Drag":

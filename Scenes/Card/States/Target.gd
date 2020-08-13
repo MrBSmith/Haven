@@ -82,7 +82,7 @@ func exit_state(next_state: StateBase):
 		owner.sprite_node.set_visible(true)
 		area_node.clear()
 	else:
-		owner.affect_tiles(affected_tiles_array, wind_direction)
+		owner.normal_effect(affected_tiles_array, wind_direction)
 
 
 #### LOGIC ####

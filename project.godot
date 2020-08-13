@@ -79,6 +79,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://AbstractClasses/StateMachine.gd"
 }, {
+"base": "Card",
+"class": "SunCard",
+"language": "GDScript",
+"path": "res://Scenes/Card/Sun/SunCard.gd"
+}, {
 "base": "Tile",
 "class": "SwampTile",
 "language": "GDScript",
@@ -124,6 +129,7 @@ _global_script_class_icons={
 "SoilTile": "",
 "StateBase": "",
 "StatesMachine": "",
+"SunCard": "",
 "SwampTile": "",
 "TargetCardState": "",
 "Tile": "",

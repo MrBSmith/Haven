@@ -15,7 +15,6 @@ var state_name
 
 signal state_changed
 
-
 # Set the state to the first of the list
 func _ready():
 	yield(owner, "ready")
@@ -40,6 +39,7 @@ func get_state_name() -> String:
 		return ""
 	else:
 		return current_state.name
+
 
 # Set current_state at a new state, also set previous state, and emit a signal to notify the change, to anybody needing it 
 func set_state(new_state):

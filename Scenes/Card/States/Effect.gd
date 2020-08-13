@@ -15,4 +15,4 @@ func enter_state(_previous_state: StateBase):
 
 
 func _on_timer_timeout():
-	owner.destroy()
+	states_machine.set_state("Destroy")

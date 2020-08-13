@@ -146,6 +146,8 @@ func get_seed_nb() -> int:
 
 
 # Change the type of the tile for the given one
+#### IN SOME CASES, THE UNDERNEATH TILE SEAMS NOT TO BE DESTROYED ####
+#### TO BE INVESTIGATED AND FIXED ####
 func change_tile_type(tile_type_scene: PackedScene):
 	var new_tile = tile_type_scene.instance()
 	
@@ -160,10 +162,10 @@ func change_tile_type(tile_type_scene: PackedScene):
 	# Duplicate every plant the tile possess
 	for group in plant_group_array:
 		for plant in group.get_children():
-			new_tile.call_deferred("add_plant", plant.duplicate(), plant.get_position())
+			new_tile.add_plant(plant.duplicate(), plant.get_position())
 	
-	destroy()
 	new_tile.emit_signal("tile_created")
+	destroy()
 
 
 func destroy():

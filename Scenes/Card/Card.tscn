@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://AbstractClasses/Card.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Card/States/Drag.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Scenes/Card/States/Target.gd" type="Script" id=5]
 [ext_resource path="res://Scenes/Card/States/Effect.gd" type="Script" id=6]
 [ext_resource path="res://Scenes/Card/AOEArea.gd" type="Script" id=7]
+[ext_resource path="res://Scenes/Card/Destroy.gd" type="Script" id=8]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -36,6 +37,15 @@ script = ExtResource( 6 )
 
 [node name="Timer" type="Timer" parent="StateMachine/Effect"]
 one_shot = true
+
+[node name="CombinedEffect" type="Node" parent="StateMachine"]
+script = ExtResource( 6 )
+
+[node name="Timer" type="Timer" parent="StateMachine/CombinedEffect"]
+one_shot = true
+
+[node name="Destroy" type="Node" parent="StateMachine"]
+script = ExtResource( 8 )
 
 [node name="Area" type="Node2D" parent="."]
 script = ExtResource( 7 )

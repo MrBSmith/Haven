@@ -1,11 +1,14 @@
 extends Card
 class_name WindCard
 
+func get_type() -> String:
+	return "Wind"
+
 #### LOGIC ####
 
 # Override from tile
 # Apply wind on concerned tiles
-func affect_tiles(tiles_array: Array, wind_dir := Vector2.ZERO):
+func normal_effect(tiles_array: Array, wind_dir := Vector2.ZERO):
 	randomize()
 	if wind_dir == Vector2.ZERO:
 		return
