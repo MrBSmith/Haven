@@ -23,6 +23,7 @@ func generate_grid():
 	for i in range(nb_tiles.x):
 		for j in range(nb_tiles.y):
 			free_pos_array.append(Vector2(i, j))
+			
 	
 	# Determine the number of water tile to place btw 5-8, then places it
 	var nb_water_tile = randi() % 4 + 5
@@ -34,6 +35,9 @@ func generate_grid():
 	
 	# Fill the rest with soil tiles
 	place_tiles_on_grid(Globals.soil_tile, free_pos_array)
+	
+	var last_tile = get_child(get_child_count() - 1)
+	yield(last_tile, "type_changed")
 	
 	for child in get_children():
 		if child is Tile:
@@ -57,13 +61,16 @@ func place_tiles_on_grid(tile_type: PackedScene, free_pos_array: Array, nb_tile:
 		free_pos_array.resize(0)
 
 
+# Place a tile, and give it the given type
 func place_single_tile(tile_type: PackedScene, grid_position: Vector2):
 	var tile_size = Globals.TILE_SIZE
-	var new_tile = tile_type.instance()
+	var new_tile = Globals.tile.instance()
 	
 	new_tile.set_position(grid_position * tile_size + (tile_size / 2))
 	new_tile.set_grid_position(grid_position)
 	add_child(new_tile)
+	
+	new_tile.call_deferred("change_tile_type", tile_type)
 
 
 func clear_grid():
@@ -142,7 +149,7 @@ func on_seed_planted(pos: Vector2, tree_type: PackedScene):
 	var tile = get_tile_at_world_pos(pos)
 	var new_plant : Plant = tree_type.instance()
 	
-	if tile == null or (not tile is SoilTile and not tile is GrassTile):
+	if tile == null or (tile.get_type() != "Soil" and tile.get_type() != "Grass"):
 		return
 	
 	if !tile.is_growable():

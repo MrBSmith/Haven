@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/SandTile.png-368d8fd906c8747c5fc95c6fab97e5e7.stex"
+path="res://.import/Marais.png-194bc55be800ea6346acc7b74f16760c.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Scenes/Tiles/Sand/SandTile.png"
-dest_files=[ "res://.import/SandTile.png-368d8fd906c8747c5fc95c6fab97e5e7.stex" ]
+source_file="res://Scenes/Tiles/TileType/Swamp/Marais.png"
+dest_files=[ "res://.import/Marais.png-194bc55be800ea6346acc7b74f16760c.stex" ]
 
 [params]
 

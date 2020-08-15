@@ -1,4 +1,4 @@
-extends Tile
+extends TileType
 class_name GrassTile
 
 enum TILE_STATES{
@@ -8,8 +8,8 @@ enum TILE_STATES{
 
 var current_tile_state = TILE_STATES.PLAIN
 
-func get_type():
-	return "GrassTile"
+func get_type() -> String:
+	return "Grass"
 
 #### ACCESSORS ####
 

@@ -9,28 +9,18 @@ onready var flowers_group_node = $Flowers
 
 onready var plant_group_array = [grass_group_node, trees_group_node, flowers_group_node]
 
-export var growable_plants_array : PoolStringArray
-
-export var growable_min_wetness : int = 33
-
-export var min_grass_nb : int = 0
-export var max_grass_nb : int = 6
-export var min_flower_nb : int = 0
-export var max_flower_nb : int = 0
-export var min_tree_nb : int = 0
-export var max_tree_nb : int = 5
-
 var grid_position : Vector2 setget set_grid_position, get_grid_position
 var wetness : int = 50 setget set_wetness, get_wetness
 
-export var overwet_treshold = 25
+var type : TileType = null
 
 signal tile_created
+signal type_changed
 signal plant_added
 
 func _ready():
 	var _err = connect("plant_added", self, "_on_plant_added")
-	_err = connect("tile_created", self, "_on_tile_created")
+	_err = connect("type_changed", self, "_on_type_changed")
 
 #### ACCESSORS ####
 
@@ -46,7 +36,7 @@ func get_grid_position() -> Vector2:
 func set_wetness(value: int):
 	wetness = int(clamp(value, 0.0, 100.0))
 	if wetness == 100:
-		if value > wetness + overwet_treshold:
+		if value > wetness + type.overwet_treshold:
 			_on_over_wetness_threshold_reached()
 		else:
 			_on_max_wetness_reached()
@@ -62,16 +52,16 @@ func add_to_wetness(value: int):
 #### LOGIC ####
 
 func generate_flora():
-	generate_plant(Globals.grass, min_grass_nb, max_grass_nb, 70, true)
-	generate_plant(Globals.flower_types, min_flower_nb, max_flower_nb, 70, true)
-	generate_plant(Globals.base_tree, min_tree_nb, max_tree_nb, 40, true)
+	generate_plant(Globals.grass, type.min_grass_nb, type.max_grass_nb, 70, true)
+	generate_plant(Globals.flower_types, type.min_flower_nb, type.max_flower_nb, 70, true)
+	generate_plant(Globals.base_tree, type.min_tree_nb, type.max_tree_nb, 40, true)
 	
 	emit_signal("tile_created")
 
 
 # Return true if the tile is wet enough to grow plant
 func is_growable() -> bool:
-	return get_wetness() > growable_min_wetness
+	return get_wetness() > type.growable_min_wetness
 
 # Generate the given plant n times, n beeing between min_nb and max_nb, 
 # With a spawn porbability determined by spwan_chance (must be a value between 0 and 100)
@@ -118,15 +108,6 @@ func get_all_plants() -> Array:
 	 + flowers_group_node.get_children()
 
 
-func get_plant_cat_max(plant_category : String):
-	if plant_category == "Tree":
-		return max_tree_nb
-	elif plant_category == "Grass":
-		return max_grass_nb
-	elif plant_category == "Flower":
-		return max_flower_nb
-
-
 # Try to remove the given amount of wetness, return the amount really removed
 func drain_wetness(value: int) -> int:
 	var pre_drain_wetness = get_wetness()
@@ -136,42 +117,29 @@ func drain_wetness(value: int) -> int:
 	return pre_drain_wetness - post_drain_wetness
 
 
-# Return the number of seeds this
-func get_seed_nb() -> int:
-	var nb_seed : int = 0
-	for child in get_children():
-		if child is Seed:
-			nb_seed += 1
-	return nb_seed
-
-
 # Change the type of the tile for the given one
 #### IN SOME CASES, THE UNDERNEATH TILE SEAMS NOT TO BE DESTROYED ####
 #### TO BE INVESTIGATED AND FIXED ####
 func change_tile_type(tile_type_scene: PackedScene):
-	var new_tile = tile_type_scene.instance()
+	var new_tile_type = tile_type_scene.instance()
 	
-	if self.get_type() == new_tile.get_type():
-		new_tile.queue_free()
+	# If the type to be changed in is the same as the current type, abort
+	if type != null && type.get_type() == new_tile_type.get_type():
+		new_tile_type.queue_free()
 		return
 	
-	grid_node.call_deferred("add_child", new_tile)
-	new_tile.call_deferred("set_position", position)
-	new_tile.set_grid_position(get_grid_position())
+	if type:
+		type.queue_free()
 	
-	# Duplicate every plant the tile possess
-	for group in plant_group_array:
-		for plant in group.get_children():
-			new_tile.add_plant(plant.duplicate(), plant.get_position())
+	call_deferred("add_child", new_tile_type)
+	type = new_tile_type
+	type.tile = self
 	
-	new_tile.emit_signal("tile_created")
-	destroy()
+	yield(new_tile_type, "ready")
+	emit_signal("type_changed")
 
 
-func destroy():
-	queue_free()
-
-
+# Check of the tile type need to be changed, and change it if necesary
 func update_tile_type():
 	if grass_group_node.get_child_count() >= 3:
 		change_tile_type(Globals.grass_tile)
@@ -187,7 +155,7 @@ func add_plant(plant_node: Plant, pos: Vector2, garden_generation : bool = false
 	var plant_category = plant_node.get_category()
 	var plant_group = get_plant_correct_group(plant_category)
 	
-	var plant_max_nb = get_plant_cat_max(plant_category)
+	var plant_max_nb = type.get_plant_cat_max(plant_category)
 	
 	if plant_group == null:
 		return
@@ -234,6 +202,7 @@ func get_plant_correct_group(plant_category: String) -> Node:
 	
 	return plant_group
 
+
 # Genenerate a random position in the tile
 func random_plant_position() -> Vector2:
 	var margin = Globals.TILE_SIZE / 16
@@ -251,7 +220,7 @@ func get_tile_by_translation(trans: Vector2) -> Tile:
 #### SIGNALS REACTION ####
 
 # Called when the tile has finished beeing created
-func _on_tile_created():
+func _on_type_changed():
 	pass
 
 # Called when the tile is at its max wetness

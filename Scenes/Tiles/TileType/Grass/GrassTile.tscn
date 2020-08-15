@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scenes/Tiles/TileType/TileType.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/Tiles/TileType/Grass/GrassTile.gd" type="Script" id=2]
+[ext_resource path="res://Scenes/Tiles/TileType/Grass/Grass.png" type="Texture" id=3]
+
+
+
+[node name="GrassTile" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+growable_plants_array = PoolStringArray( "Grass", "Flower", "Tree" )
+min_grass_nb = 3
+max_flower_nb = 4
+
+[node name="Sprite" parent="." index="0"]
+texture = ExtResource( 3 )

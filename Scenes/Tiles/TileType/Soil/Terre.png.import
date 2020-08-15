@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Eau.png-bbc9b816388b12962d3015019a7cea1f.stex"
+path="res://.import/Terre.png-5fba391287867ffb3823f49cbbefaa13.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Scenes/Tiles/Water/Eau.png"
-dest_files=[ "res://.import/Eau.png-bbc9b816388b12962d3015019a7cea1f.stex" ]
+source_file="res://Scenes/Tiles/TileType/Soil/Terre.png"
+dest_files=[ "res://.import/Terre.png-5fba391287867ffb3823f49cbbefaa13.stex" ]
 
 [params]
 

@@ -2,18 +2,20 @@ extends Node
 
 #### GLOBALS AUTOLOAD ####
 
-const swamp_tile = preload("res://Scenes/Tiles/Swamp/SwampTile.tscn")
-const soil_tile = preload("res://Scenes/Tiles/Soil/SoilTile.tscn")
-const water_tile = preload("res://Scenes/Tiles/Water/WaterTile.tscn")
-const grass_tile = preload("res://Scenes/Tiles/Grass/GrassTile.tscn")
-const sand_tile = preload("res://Scenes/Tiles/Sand/SandTile.tscn")
+const tile = preload("res://Scenes/Tiles/Tile.tscn")
+
+const swamp_tile = preload("res://Scenes/Tiles/TileType/Swamp/SwampTile.tscn")
+const soil_tile = preload("res://Scenes/Tiles/TileType/Soil/SoilTile.tscn")
+const water_tile = preload("res://Scenes/Tiles/TileType/Water/WaterTile.tscn")
+const grass_tile = preload("res://Scenes/Tiles/TileType/Grass/GrassTile.tscn")
+const sand_tile = preload("res://Scenes/Tiles/TileType/Sand/SandTile.tscn")
 
 const base_tree = preload("res://Scenes/Plants/Trees/Tree.tscn")
 const grass = preload("res://Scenes/Plants/SmallPlants/Grass.tscn")
 const blue_flower = preload("res://Scenes/Plants/SmallPlants/Flowers/BlueFlower/BlueFlower.tscn")
 const red_flower = preload("res://Scenes/Plants/SmallPlants/Flowers/RedFlower/RedFlower.tscn")
 
-var tile_types = [soil_tile, grass_tile, water_tile, swamp_tile]
+var tile_types = [soil_tile, grass_tile, water_tile, swamp_tile, sand_tile]
 var tree_types = [base_tree]
 var flower_types = [blue_flower, red_flower]
 
