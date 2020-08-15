@@ -34,7 +34,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scenes/Plants/SmallPlants/Grass.gd"
 }, {
-"base": "TileType",
+"base": "SoilTile",
 "class": "GrassTile",
 "language": "GDScript",
 "path": "res://Scenes/Tiles/TileType/Grass/GrassTile.gd"

@@ -6,10 +6,10 @@ func get_type() -> String:
 
 #### SIGNALS REACTION ####
 
-func _on_over_wetness_threshold_reached():
+func on_over_wetness_threshold_reached():
 	tile.change_tile_type(Globals.water_tile)
 
-func _on_min_wetness_reached():
+func on_min_wetness_reached():
 	tile.change_tile_type(Globals.soil_tile)
 
 # Called when the tile has finished beeing created

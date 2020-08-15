@@ -4,12 +4,13 @@
 [ext_resource path="res://Scenes/Tiles/TileType/Water/WaterTile.gd" type="Script" id=2]
 [ext_resource path="res://Scenes/Tiles/TileType/Water/Eau.png" type="Texture" id=3]
 
-
-
 [node name="WaterTile" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 max_grass_nb = 0
 max_tree_nb = 0
+dry_threshold = 800
+wet_threshold = 1000
+more_dry_tile_type = "Swamp"
 
 [node name="Sprite" parent="." index="0"]
 texture = ExtResource( 3 )

@@ -10,7 +10,7 @@ onready var flowers_group_node = $Flowers
 onready var plant_group_array = [grass_group_node, trees_group_node, flowers_group_node]
 
 var grid_position : Vector2 setget set_grid_position, get_grid_position
-var wetness : int = 50 setget set_wetness, get_wetness
+var wetness : int = 500 setget set_wetness, get_wetness
 
 var type : TileType = null
 
@@ -34,13 +34,10 @@ func get_grid_position() -> Vector2:
 	return grid_position
 
 func set_wetness(value: int):
-	wetness = int(clamp(value, 0.0, 100.0))
-	if wetness == 100:
-		if value > wetness + type.overwet_treshold:
-			_on_over_wetness_threshold_reached()
-		else:
-			_on_max_wetness_reached()
-	elif wetness == 0:
+	wetness = int(clamp(value, 0.0, 1000.0))
+	if wetness >= type.wet_threshold:
+		_on_max_wetness_reached()
+	elif wetness < type.dry_threshold:
 		_on_min_wetness_reached()
 
 func get_wetness() -> int:
@@ -118,8 +115,6 @@ func drain_wetness(value: int) -> int:
 
 
 # Change the type of the tile for the given one
-#### IN SOME CASES, THE UNDERNEATH TILE SEAMS NOT TO BE DESTROYED ####
-#### TO BE INVESTIGATED AND FIXED ####
 func change_tile_type(tile_type_scene: PackedScene):
 	var new_tile_type = tile_type_scene.instance()
 	
@@ -142,9 +137,9 @@ func change_tile_type(tile_type_scene: PackedScene):
 # Check of the tile type need to be changed, and change it if necesary
 func update_tile_type():
 	if grass_group_node.get_child_count() >= 3:
-		change_tile_type(Globals.grass_tile)
+		change_tile_type(Globals.tiles_type["Grass"])
 	elif grass_group_node.get_child_count() < 3:
-		change_tile_type(Globals.soil_tile)
+		change_tile_type(Globals.tiles_type["Soil"])
 
 
 # Add the given plant to the tile, at the given local_pos, in the right group
@@ -219,26 +214,27 @@ func get_tile_by_translation(trans: Vector2) -> Tile:
 
 #### SIGNALS REACTION ####
 
+func _on_min_wetness_reached():
+	var tile_type_name = type.more_dry_tile_type
+	
+	if tile_type_name != "" && Globals.tiles_type.has(tile_type_name):
+		change_tile_type(Globals.tiles_type[tile_type_name])
+
+func _on_max_wetness_reached():
+	var tile_type_name = type.more_wet_tile_type
+	
+	if tile_type_name != "" && Globals.tiles_type.has(tile_type_name):
+		change_tile_type(Globals.tiles_type[tile_type_name])
+
 # Called when the tile has finished beeing created
 func _on_type_changed():
-	pass
-
-# Called when the tile is at its max wetness
-func _on_max_wetness_reached():
-	pass
-
-# Called when the tile is wetness passed 100% and is over his threshold
-func _on_over_wetness_threshold_reached():
-	pass
-
-# Called when the tile is at its min wetness
-func _on_min_wetness_reached():
 	pass
 
 # Called when a plant is added
 func _on_plant_added(_plant: Plant):
 	pass
 
+# Called when a plant die
 func _on_plant_died():
 	update_tile_type()
 
@@ -246,3 +242,5 @@ func _on_plant_died():
 func on_wind_applied(wind_dir: Vector2, wind_force: int):
 	for tree in trees_group_node.get_children():
 		tree.apply_wind(wind_dir, wind_force)
+	
+	type.on_wind_applied(wind_dir, wind_force)
