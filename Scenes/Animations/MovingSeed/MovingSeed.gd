@@ -5,7 +5,7 @@ const damping : float = 0.1
 var velocity := Vector2.ZERO setget set_velocity, get_velocity
 var tree_type : PackedScene = null setget set_tree_type, get_tree_type
 
-signal seed_planted (seed_pos, tree_type) 
+signal seed_planted(seed_pos, tree_type) 
 
 #### ACCESSORS ####
 

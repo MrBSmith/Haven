@@ -3,8 +3,6 @@ class_name TileType
 
 export var growable_plants_array : PoolStringArray
 
-export var growable_min_wetness : int = 33
-
 export var min_grass_nb : int = 0
 export var max_grass_nb : int = 6
 export var min_flower_nb : int = 0
@@ -14,6 +12,7 @@ export var max_tree_nb : int = 5
 
 export var dry_threshold : int =  0
 export var wet_threshold : int =  100
+export var growable_min_wetness : int = 33
 
 export var more_dry_tile_type : String = ""
 export var more_wet_tile_type : String = ""

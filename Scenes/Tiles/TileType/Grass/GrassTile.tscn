@@ -8,7 +8,9 @@
 script = ExtResource( 2 )
 growable_plants_array = PoolStringArray(  )
 max_grass_nb = 6
+max_flower_nb = 4
 max_tree_nb = 5
+growable_min_wetness = 400
 
 [node name="Sprite" parent="." index="0"]
 texture = ExtResource( 3 )

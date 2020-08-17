@@ -25,7 +25,7 @@ func _ready():
 #### ACCESSORS ####
 
 func get_type():
-	return "Tile"
+	return type.get_type()
 
 func set_grid_position(value: Vector2):
 	grid_position = value
@@ -48,6 +48,9 @@ func add_to_wetness(value: int):
 
 #### LOGIC ####
 
+
+# Generate the flora of the tile, based on its type
+# Called by the grid when the tile is generated
 func generate_flora():
 	generate_plant(Globals.grass, type.min_grass_nb, type.max_grass_nb, 70, true)
 	generate_plant(Globals.flower_types, type.min_flower_nb, type.max_flower_nb, 70, true)
@@ -56,9 +59,12 @@ func generate_flora():
 	emit_signal("tile_created")
 
 
-# Return true if the tile is wet enough to grow plant
-func is_growable() -> bool:
-	return get_wetness() > type.growable_min_wetness
+# Set the wetness of the tile, based on its type at the middle of its wet range
+# Called by the grid when the tile is generated
+func generate_wetness():
+	var default_wetness = type.dry_threshold + (float(type.wet_threshold - type.dry_threshold) / 2)
+	set_wetness(default_wetness)
+
 
 # Generate the given plant n times, n beeing between min_nb and max_nb, 
 # With a spawn porbability determined by spwan_chance (must be a value between 0 and 100)
@@ -97,6 +103,11 @@ func generate_plant(plant, min_nb: int, max_nb: int, spawn_chances: int, garden_
 	
 	if !garden_generation:
 		update_tile_type()
+
+
+# Return true if the tile is wet enough to grow plant
+func is_growable() -> bool:
+	return get_wetness() > type.growable_min_wetness
 
 
 # Return all the plants on the tile in an array

@@ -71,14 +71,17 @@ func place_single_tile(tile_type: PackedScene, grid_position: Vector2):
 	add_child(new_tile)
 	
 	new_tile.call_deferred("change_tile_type", tile_type)
+	new_tile.call_deferred("generate_wetness")
 
 
+# Clear every tile in the grid
 func clear_grid():
 	var tile_array = get_tile_array()
 	for tile in tile_array:
 		tile.queue_free()
 
 
+# Clear the grid then reroll it
 func reroll_grid():
 	clear_grid()
 	generate_grid()
@@ -148,8 +151,9 @@ func _input(event):
 func on_seed_planted(pos: Vector2, tree_type: PackedScene):
 	var tile = get_tile_at_world_pos(pos)
 	var new_plant : Plant = tree_type.instance()
+	var tile_type : String = tile.get_type()
 	
-	if tile == null or (tile.get_type() != "Soil" and tile.get_type() != "Grass"):
+	if tile == null or (tile_type != "Soil" and tile_type != "Grass"):
 		return
 	
 	if !tile.is_growable():
