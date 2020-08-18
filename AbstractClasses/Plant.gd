@@ -43,6 +43,8 @@ func set_adult(value: bool):
 func is_adult() -> bool:
 	return adult
 
+# Set the level of dehydration, from 0 to 2
+# When the dehydration reach 2, the plant die
 func set_dehydration(value: int):
 	if value >= 0 && value < 3:
 		dehydration = value
@@ -59,12 +61,6 @@ func add_to_dehydration(value: int):
 
 #### BUILT-IN ####
 
-func _ready():
-	growth_timer_node = Timer.new()
-	add_child(growth_timer_node)
-	var _err = growth_timer_node.connect("timeout", self, "on_growth_timer_timeout")
-	
-	reset_growth_timer()
 
 #### LOGIC ####
 
@@ -94,15 +90,6 @@ func drain_tile_water() -> int:
 	return tile.drain_wetness(drain_amount)
 
 
-# Set a random wait time, and then start the growth timer
-func reset_growth_timer():
-	var rdm_variance = rand_range(-20.0, 20.0)
-	
-	var new_time = growth_frequency_time + abs(growth_frequency_time * rdm_variance)
-	growth_timer_node.set_wait_time(new_time)
-	
-	growth_timer_node.start()
-
 func die():
 	queue_free()
 	emit_signal("plant_died", get_category())
@@ -116,9 +103,6 @@ func get_category() -> String:
 	return ""
 
 #### SIGNAL RESPONSES ####
-
-func on_growth_timer_timeout():
-	try_to_grow()
 
 func on_growth_finished():
 	set_adult(true)

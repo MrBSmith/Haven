@@ -10,6 +10,7 @@ var mouse_over : bool = false
 var default_position := Vector2.ZERO setget set_default_position, get_default_position
 
 var pickable : bool = true setget set_pickable, get_pickable
+var hand_index : int = -1 setget set_hand_index, get_hand_index
 
 signal active_effect
 signal normal_effect_finished
@@ -37,6 +38,13 @@ func set_pickable(value: bool):
 
 func get_pickable() -> bool:
 	return pickable
+
+func set_hand_index(value: int):
+	hand_index = value
+
+func get_hand_index() -> int:
+	return hand_index
+
 
 #### BUILT-IN ####
 

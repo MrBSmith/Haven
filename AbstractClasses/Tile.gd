@@ -46,8 +46,8 @@ func get_wetness() -> int:
 func add_to_wetness(value: int):
 	set_wetness(get_wetness() + value)
 
-#### LOGIC ####
 
+#### LOGIC ####
 
 # Generate the flora of the tile, based on its type
 # Called by the grid when the tile is generated

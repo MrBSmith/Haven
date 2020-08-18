@@ -151,9 +151,13 @@ func _input(event):
 func on_seed_planted(pos: Vector2, tree_type: PackedScene):
 	var tile = get_tile_at_world_pos(pos)
 	var new_plant : Plant = tree_type.instance()
+	
+	if tile == null:
+		return
+	
 	var tile_type : String = tile.get_type()
 	
-	if tile == null or (tile_type != "Soil" and tile_type != "Grass"):
+	if tile_type != "Soil" and tile_type != "Grass":
 		return
 	
 	if !tile.is_growable():

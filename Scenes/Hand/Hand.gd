@@ -1,6 +1,8 @@
 extends Node2D
 class_name Hand
 
+onready var garden_node = get_parent()
+
 const wind_card_scene = preload("res://Scenes/Card/Wind/WindCard.tscn")
 const sun_card_scene = preload("res://Scenes/Card/Sun/SunCard.tscn")
 const rain_card_scene = preload("res://Scenes/Card/Rain/RainCard.tscn")
@@ -10,9 +12,12 @@ const card_types_array : Array = [wind_card_scene, sun_card_scene, rain_card_sce
 const CARD_SIZE = Vector2(16, 16)
 const MAX_CARDS = 2
 
+signal turn_finished
+
 #### BUILT-IN ####
 
 func _ready():
+	var _err = connect("turn_finished", garden_node, "_on_turn_finished")
 	var _nothing = roll()
 
 #### LOGIC ####
@@ -117,13 +122,19 @@ func _unhandled_input(_event):
 
 func _on_card_normal_effect_finished(card_index: int):
 	draw_card(card_index)
-	set_cards_pickable(true)
+	emit_signal("turn_finished")
+
 
 func _on_card_combined_effect_finished():
 	var last_card = get_child(1)
 	yield(last_card, "tree_exited")
-	
 	reroll()
+	emit_signal("turn_finished")
+	
+
+func on_nature_turn_finished():
+	set_cards_pickable(true)
+
 
 func _on_card_active_effect():
 	set_cards_pickable(false)
