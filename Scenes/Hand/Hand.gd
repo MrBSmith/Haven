@@ -25,9 +25,9 @@ func _ready():
 # Clear every card in the hand, and generate a new hand
 # Make sure the hand rerolled is different form the last one
 func reroll():
-	clear()
 	var current_hand = get_current_cards_types()
 	var previous_hand : PoolStringArray = current_hand
+	clear()
 	
 	while(current_hand == previous_hand or previous_hand == current_hand.invert()):
 		var rdm_hand = roll()
@@ -72,6 +72,7 @@ func draw_card(card_index: int):
 	var other_card_type = other_card.get_type()
 	
 	if new_card_type == other_card_type:
+		yield(new_card, "ready")
 		new_card.combined_effect()
 
 
@@ -101,7 +102,7 @@ func add_card(new_card: Card, card_index: int):
 	
 	new_card.set_position(pos)
 	new_card.set_default_position(pos)
-	add_child(new_card)
+	call_deferred("add_child", new_card)
 	
 	if new_card.get_index() != card_index:
 		call_deferred("move_child", new_card, card_index)
@@ -126,11 +127,9 @@ func _on_card_normal_effect_finished(card_index: int):
 
 
 func _on_card_combined_effect_finished():
-	var last_card = get_child(1)
-	yield(last_card, "tree_exited")
 	reroll()
 	emit_signal("turn_finished")
-	
+
 
 func on_nature_turn_finished():
 	set_cards_pickable(true)

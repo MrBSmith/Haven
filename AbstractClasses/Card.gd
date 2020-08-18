@@ -111,7 +111,7 @@ func combined_effect():
 	var tiles_affected = grid_node.get_tile_array()
 	$Area.create_area(tiles_affected)
 	
-	set_state("Effect")
+	call_deferred("set_state", "CombinedEffect")
 
 
 #### SIGNAL RESPONSES ####
