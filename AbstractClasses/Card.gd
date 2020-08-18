@@ -88,7 +88,25 @@ func _unhandled_input(_event):
 
 # Apply the effect of the card on the targeted tiles
 # Called by the target state, when going to the effect state
+# wind_dir can be used optionaly in the children classes 
 func normal_effect(tiles_array: Array, _wind_dir := Vector2.ZERO):
+	affect_tiles_wetness(tiles_array)
+
+
+# Apply the effect, when the players got the same card twice in hand
+func combined_effect():
+	var grid_node = get_tree().get_current_scene().get_node("Grid")
+	var tiles_affected = grid_node.get_tile_array()
+	$Area.create_area(tiles_affected)
+	
+	affect_tiles_wetness(tiles_affected, 1.5)
+	
+	call_deferred("set_state", "CombinedEffect")
+
+
+# Affect the given tiles wetness by the value contained 
+# in effect_on_tile.wetness with the given modifier
+func affect_tiles_wetness(tiles_array: Array, modifier : float = 1.0):
 	randomize()
 	
 	var wetness = effect_on_tile.wetness
@@ -100,18 +118,9 @@ func normal_effect(tiles_array: Array, _wind_dir := Vector2.ZERO):
 	for tile in tiles_array:
 		var variance_rate := rand_range(-effect_variance, effect_variance)
 		var variance : float = wetness * (variance_rate / 100)
-		var wetness_change = wetness + variance
+		var wetness_change = (wetness + variance) * modifier
 		
 		tile.add_to_wetness(wetness_change)
-
-
-# Apply the effect, when the players got the same card twice in hand
-func combined_effect():
-	var grid_node = get_tree().get_current_scene().get_node("Grid")
-	var tiles_affected = grid_node.get_tile_array()
-	$Area.create_area(tiles_affected)
-	
-	call_deferred("set_state", "CombinedEffect")
 
 
 #### SIGNAL RESPONSES ####
@@ -121,6 +130,7 @@ func _on_mouse_entered():
 
 func _on_mouse_exited():
 	mouse_over = false
+
 
 func _on_state_changed(state_name: String):
 	if state_name == "Effect":
@@ -133,9 +143,11 @@ func _on_state_changed(state_name: String):
 		elif previous_state == "CombinedEffect":
 			emit_signal("combined_effect_finished")
 
+
 func on_grid_entered():
 	if get_state_name() == "Drag":
 		set_state("Target")
+
 
 func on_grid_exited():
 	if get_state_name() == "Target":
