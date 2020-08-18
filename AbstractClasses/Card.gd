@@ -16,6 +16,8 @@ signal active_effect
 signal normal_effect_finished
 signal combined_effect_finished
 
+const WIND_POSSIBLE_DIR : Array = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]
+
 #### ACCESSORS ####
 
 func set_default_position(value: Vector2):
@@ -66,24 +68,10 @@ func destroy():
 	set_state("Destroy")
 
 
-#### INPUTS ####
-
-func _unhandled_input(_event):
-	if get_state_name() == "Effect" or pickable == false:
-		return
-	
-	# Trigger the drag state
-	if Input.is_action_just_pressed("click") && mouse_over:
-		set_state("Drag")
-	
-	if Input.is_action_just_released("click"):
-		# Triggers the effect of the card
-		if get_state_name() == "Target" && $Area.get_child_count() > 0:
-			set_state("Effect")
-		
-		# The card was droped on an invalid position
-		else:
-			set_state("Idle")
+# Return a random wind direction
+func random_wind_dir() -> Vector2:
+	randomize()
+	return WIND_POSSIBLE_DIR[randi() % WIND_POSSIBLE_DIR.size()]
 
 
 # Apply the effect of the card on the targeted tiles
@@ -123,6 +111,40 @@ func affect_tiles_wetness(tiles_array: Array, modifier : float = 1.0):
 		tile.add_to_wetness(wetness_change)
 
 
+# Apply wind on the given set of tiles, contained in tiles_array, with the given wind direction
+# The given minimun wind force, and the range of random value, 
+# going from force_min to force_min + force_range
+func apply_wind(tiles_array: Array, wind_dir: Vector2, force_range := 100, force_min = 50):
+	randomize()
+	if wind_dir == Vector2.ZERO:
+		return
+	
+	for tile in tiles_array:
+		var rdm_force = randi() % force_range + force_min
+		tile.on_wind_applied(wind_dir, rdm_force)
+
+
+
+#### INPUTS ####
+
+func _unhandled_input(_event):
+	if get_state_name() == "Effect" or pickable == false:
+		return
+	
+	# Trigger the drag state
+	if Input.is_action_just_pressed("click") && mouse_over:
+		set_state("Drag")
+	
+	if Input.is_action_just_released("click"):
+		# Triggers the effect of the card
+		if get_state_name() == "Target" && $Area.get_child_count() > 0:
+			set_state("Effect")
+		
+		# The card was droped on an invalid position
+		else:
+			set_state("Idle")
+
+
 #### SIGNAL RESPONSES ####
 
 func _on_mouse_entered():
@@ -133,7 +155,7 @@ func _on_mouse_exited():
 
 
 func _on_state_changed(state_name: String):
-	if state_name == "Effect":
+	if state_name == "Effect" or state_name == "CombinedEffect":
 		emit_signal("active_effect")
 		
 	elif state_name == "Destroy":
