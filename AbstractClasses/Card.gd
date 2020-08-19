@@ -163,7 +163,7 @@ func _on_state_changed(state_name: String):
 		if previous_state == "Effect":
 			emit_signal("normal_effect_finished", get_index())
 		elif previous_state == "CombinedEffect":
-			emit_signal("combined_effect_finished")
+			emit_signal("combined_effect_finished", get_index())
 
 
 func on_grid_entered():

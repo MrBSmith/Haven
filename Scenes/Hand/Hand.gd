@@ -13,11 +13,13 @@ const CARD_SIZE = Vector2(16, 16)
 const MAX_CARDS = 2
 
 signal turn_finished
+signal card_drawn
 
 #### BUILT-IN ####
 
 func _ready():
 	var _err = connect("turn_finished", garden_node, "_on_turn_finished")
+	_err = connect("card_drawn", self, "_on_card_drawn")
 	var _nothing = roll()
 
 #### LOGIC ####
@@ -25,15 +27,8 @@ func _ready():
 # Clear every card in the hand, and generate a new hand
 # Make sure the hand rerolled is different form the last one
 func reroll():
-	var current_hand = get_current_cards_types()
-	var previous_hand : PoolStringArray = current_hand
 	clear()
-	
-	while(current_hand == previous_hand or previous_hand == current_hand.invert()):
-		var rdm_hand = roll()
-		current_hand.empty()
-		for card in rdm_hand:
-			current_hand.append(card.get_type())
+	var _nothing = roll()
 
 
 # Clear every card in the hand
@@ -59,21 +54,10 @@ func roll() -> Array:
 
 
 # Draw a new card
-func draw_card(card_index: int):
+func draw_card(card_index: int) -> Card:
 	var new_card = generate_card()
 	add_card(new_card, card_index)
-	
-	var other_card_id = 0
-	if card_index == 0:
-		other_card_id = 1
-	
-	var new_card_type = new_card.get_type()
-	var other_card = get_child(other_card_id)
-	var other_card_type = other_card.get_type()
-	
-	if new_card_type == other_card_type:
-		yield(new_card, "ready")
-		new_card.combined_effect()
+	return new_card
 
 
 # Return an array of the types names of the current cards in hand (as Strings)
@@ -106,6 +90,9 @@ func add_card(new_card: Card, card_index: int):
 	
 	if new_card.get_index() != card_index:
 		call_deferred("move_child", new_card, card_index)
+	
+	yield(new_card, "ready")
+	emit_signal("card_drawn")
 
 
 func set_cards_pickable(value: bool):
@@ -122,17 +109,27 @@ func _unhandled_input(_event):
 #### SIGNAL RESPONSES ####
 
 func _on_card_normal_effect_finished(card_index: int):
-	draw_card(card_index)
-	emit_signal("turn_finished")
+	yield(get_child(card_index), "tree_exited")
+	var _new_card = draw_card(card_index)
 
 
-func _on_card_combined_effect_finished():
+func _on_card_combined_effect_finished(card_index: int):
+	yield(get_child(card_index), "tree_exited")
 	reroll()
-	emit_signal("turn_finished")
+
+
+func _on_card_drawn():
+	if get_child_count() == 2:
+		emit_signal("turn_finished")
 
 
 func on_nature_turn_finished():
+	var first_card = get_child(0)
+	var second_card = get_child(1)
 	set_cards_pickable(true)
+	
+	if first_card.get_type() == second_card.get_type():
+		second_card.combined_effect()
 
 
 func _on_card_active_effect():

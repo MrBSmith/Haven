@@ -8,6 +8,8 @@
 script = ExtResource( 2 )
 dry_threshold = 700
 wet_threshold = 800
+more_dry_tile_type = "Soil"
+more_wet_tile_type = "Water"
 
 [node name="Sprite" parent="." index="0"]
 texture = ExtResource( 3 )

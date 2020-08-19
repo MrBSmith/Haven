@@ -136,6 +136,7 @@ func change_tile_type(tile_type_scene: PackedScene):
 	
 	if type:
 		type.queue_free()
+		yield(type, "tree_exited")
 	
 	call_deferred("add_child", new_tile_type)
 	type = new_tile_type
@@ -225,29 +226,43 @@ func get_tile_by_translation(trans: Vector2) -> Tile:
 
 #### SIGNALS REACTION ####
 
+# Called when the minimun wetness of this type of tile is reached
+# Change the tile type
 func _on_min_wetness_reached():
 	var tile_type_name = type.more_dry_tile_type
 	
 	if tile_type_name != "" && Globals.tiles_type.has(tile_type_name):
 		change_tile_type(Globals.tiles_type[tile_type_name])
 
+# Called when the maximum wetness of this type of tile is reached
+# Change the tile type
 func _on_max_wetness_reached():
 	var tile_type_name = type.more_wet_tile_type
 	
 	if tile_type_name != "" && Globals.tiles_type.has(tile_type_name):
 		change_tile_type(Globals.tiles_type[tile_type_name])
 
+
 # Called when the tile has finished beeing created
+# Kill every plant that can't grow on the new type
 func _on_type_changed():
-	pass
+	var current_type = get_type()
+	
+	for plant in get_all_plants():
+		if not current_type in plant.favorable_tile_types:
+			plant.die()
+
 
 # Called when a plant is added
 func _on_plant_added(_plant: Plant):
 	pass
 
+
 # Called when a plant die
 func _on_plant_died():
-	update_tile_type()
+	pass
+#	update_tile_type()
+
 
 # Called when wind is applied to this tile
 func on_wind_applied(wind_dir: Vector2, wind_force: int):

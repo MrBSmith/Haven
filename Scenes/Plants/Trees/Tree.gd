@@ -8,7 +8,6 @@ signal generate_seed(pos, velocity, tree_type)
 #### ACCESSORS ####
 
 
-
 #### BUILT-IN ####
 
 
@@ -19,6 +18,7 @@ func apply_wind(wind_dir: Vector2, wind_force: int):
 	if seed_rng < seed_spawn_chances:
 		emit_signal("generate_seed", global_position, wind_dir * wind_force, Globals.base_tree)
 
+
 #### VIRTUALS ####
 
 func get_category() -> String:
@@ -26,7 +26,6 @@ func get_category() -> String:
 
 
 #### INPUTS ####
-
 
 
 #### SIGNAL RESPONSES ####

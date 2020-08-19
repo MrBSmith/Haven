@@ -4,5 +4,5 @@
 
 [resource]
 script = ExtResource( 1 )
-wetness = 40.0
+wetness = 100.0
 wetness_variance = 50

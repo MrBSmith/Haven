@@ -14,6 +14,8 @@ var dehydration : int = 0 setget set_dehydration, get_dehydration
 
 var current_tile_weakref : WeakRef = null
 
+export var favorable_tile_types : PoolStringArray = ["Soil", "Grass", "Forest"]
+
 signal plant_died
 
 #### ACCESSORS ####
