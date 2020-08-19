@@ -126,7 +126,8 @@ func drain_wetness(value: int) -> int:
 
 
 # Change the type of the tile for the given one
-func change_tile_type(tile_type_scene: PackedScene):
+func change_tile_type(type_name: String):
+	var tile_type_scene = Globals.tiles_type[type_name]
 	var new_tile_type = tile_type_scene.instance()
 	
 	# If the type to be changed in is the same as the current type, abort
@@ -143,15 +144,15 @@ func change_tile_type(tile_type_scene: PackedScene):
 	type.tile = self
 	
 	yield(new_tile_type, "ready")
-	emit_signal("type_changed")
+	emit_signal("type_changed", type_name)
 
 
 # Check of the tile type need to be changed, and change it if necesary
 func update_tile_type():
 	if grass_group_node.get_child_count() >= 3:
-		change_tile_type(Globals.tiles_type["Grass"])
+		change_tile_type("Grass")
 	elif grass_group_node.get_child_count() < 3:
-		change_tile_type(Globals.tiles_type["Soil"])
+		change_tile_type("Soil")
 
 
 # Add the given plant to the tile, at the given local_pos, in the right group
@@ -231,25 +232,23 @@ func get_tile_by_translation(trans: Vector2) -> Tile:
 func _on_min_wetness_reached():
 	var tile_type_name = type.more_dry_tile_type
 	
-	if tile_type_name != "" && Globals.tiles_type.has(tile_type_name):
-		change_tile_type(Globals.tiles_type[tile_type_name])
+	if tile_type_name != "":
+		change_tile_type(tile_type_name)
 
 # Called when the maximum wetness of this type of tile is reached
 # Change the tile type
 func _on_max_wetness_reached():
 	var tile_type_name = type.more_wet_tile_type
 	
-	if tile_type_name != "" && Globals.tiles_type.has(tile_type_name):
-		change_tile_type(Globals.tiles_type[tile_type_name])
+	if tile_type_name != "":
+		change_tile_type(tile_type_name)
 
 
 # Called when the tile has finished beeing created
 # Kill every plant that can't grow on the new type
-func _on_type_changed():
-	var current_type = get_type()
-	
+func _on_type_changed(type_name: String):
 	for plant in get_all_plants():
-		if not current_type in plant.favorable_tile_types:
+		if not type_name in plant.favorable_tile_types:
 			plant.die()
 
 

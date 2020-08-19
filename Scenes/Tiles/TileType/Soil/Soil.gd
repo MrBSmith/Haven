@@ -14,4 +14,4 @@ func on_plant_added(plant: Plant):
 		var nb_grass = tile.grass_group_node.get_child_count()
 		
 		if nb_grass >= max_grass_nb:
-			tile.change_tile_type(Globals.grass_tile)
+			tile.change_tile_type("Grass")

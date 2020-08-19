@@ -27,14 +27,14 @@ func generate_grid():
 	
 	# Determine the number of water tile to place btw 5-8, then places it
 	var nb_water_tile = randi() % 4 + 5
-	place_tiles_on_grid(Globals.tiles_type["Water"], free_pos_array, nb_water_tile)
+	place_tiles_on_grid("Water", free_pos_array, nb_water_tile)
 	
 	# Determine the number of grass tile to place btw 15-20, then places it
 	var nb_grass_tile = randi() % 5 + 15
-	place_tiles_on_grid(Globals.tiles_type["Grass"], free_pos_array, nb_grass_tile)
+	place_tiles_on_grid("Grass", free_pos_array, nb_grass_tile)
 	
 	# Fill the rest with soil tiles
-	place_tiles_on_grid(Globals.tiles_type["Soil"], free_pos_array)
+	place_tiles_on_grid("Soil", free_pos_array)
 	
 	var last_tile = get_child(get_child_count() - 1)
 	yield(last_tile, "type_changed")
@@ -48,7 +48,7 @@ func generate_grid():
 
 # Place the given type of tile, the given number of time, in the free slot in the grid (stocked in the free_pos_array)
 # If no tile number is provided, fill the rest of the grid
-func place_tiles_on_grid(tile_type: PackedScene, free_pos_array: Array, nb_tile: int = 0):
+func place_tiles_on_grid(tile_type: String, free_pos_array: Array, nb_tile: int = 0):
 	for _i in range(nb_tile):
 		var rdm_tile_id = randi() % free_pos_array.size()
 		place_single_tile(tile_type, free_pos_array[rdm_tile_id])
@@ -62,7 +62,7 @@ func place_tiles_on_grid(tile_type: PackedScene, free_pos_array: Array, nb_tile:
 
 
 # Place a tile, and give it the given type
-func place_single_tile(tile_type: PackedScene, grid_position: Vector2):
+func place_single_tile(tile_type: String, grid_position: Vector2):
 	var tile_size = Globals.TILE_SIZE
 	var new_tile = Globals.tile.instance()
 	
