@@ -114,13 +114,13 @@ func is_pos_outside_grid(pos: Vector2):
 
 # Generate a moving seed at the given position, with the given velocity and tree_type
 func generate_moving_seed(init_pos: Vector2, init_velocity: Vector2, tree_type: PackedScene):
-	var new_plant = moving_seed_scene.instance()
-	new_plant.set_position(init_pos)
-	new_plant.set_velocity(init_velocity)
-	new_plant.set_tree_type(tree_type)
+	var new_seed = moving_seed_scene.instance()
+	new_seed.set_position(init_pos)
+	new_seed.set_velocity(init_velocity)
+	new_seed.set_tree_type(tree_type)
 	
-	new_plant.connect("seed_planted", self, "on_seed_planted")
-	$SeedsContainer.add_child(new_plant)
+	new_seed.connect("seed_planted", self, "on_seed_planted")
+	$SeedsContainer.add_child(new_seed)
 
 
 # Return the closest tile from the given world position
@@ -150,20 +150,21 @@ func _input(event):
 
 func on_seed_planted(pos: Vector2, tree_type: PackedScene):
 	var tile = get_tile_at_world_pos(pos)
-	var new_plant : Plant = tree_type.instance()
 	
 	if tile == null:
 		return
 	
+	var new_plant : Plant = tree_type.instance()
 	var tile_type : String = tile.get_type()
 	
-	if tile_type != "Soil" and tile_type != "Grass":
+	if (tile_type != "Soil" and tile_type != "Grass") or !tile.is_growable():
+		new_plant.queue_free()
 		return
 	
-	if !tile.is_growable():
-		return
+	var category = new_plant.get_category()
+	var plant_group = tile.get_plant_correct_group(category)
 	
-	tile.add_child(new_plant)
+	plant_group.add_child(new_plant)
 	new_plant.current_tile_weakref = weakref(tile)
 	new_plant.grid_node = self
 	new_plant.set_global_position(pos)

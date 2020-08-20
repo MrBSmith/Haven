@@ -248,7 +248,8 @@ func _on_max_wetness_reached():
 # Kill every plant that can't grow on the new type
 func _on_type_changed(type_name: String):
 	for plant in get_all_plants():
-		if not type_name in plant.favorable_tile_types:
+		var fav_type = plant.favorable_tile_types
+		if not type_name in fav_type:
 			plant.die()
 
 
