@@ -68,10 +68,12 @@ func exit_state(_next_state: StateBase):
 
 #### SIGNAL RESPONSES ####
 
+# When a bourasque finish, if the wind isn't over, launch another one
 func _on_bourasque_anim_finished():
 	if states_machine.get_state() == self:
 		bourasque_animation(wind_direction, wind_force)
 
+# Triggers the end of the wind
 func _on_wind_anim_timer_timeout():
 	states_machine.set_state("Idle")
 	bourasque_animation(Vector2.ZERO)

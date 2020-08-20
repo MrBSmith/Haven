@@ -12,6 +12,8 @@ signal generate_seed(pos, velocity, tree_type)
 
 func _ready():
 	randomize()
+	
+	var _err = $StatesMachine.connect("state_changed", self, "_on_state_changed")
 
 #### LOGIC ####
 
@@ -21,7 +23,6 @@ func apply_wind(wind_dir: Vector2, force: int):
 	
 	if seed_rng < seed_spawn_chances:
 		emit_signal("generate_seed", global_position, wind_dir * force, Globals.base_tree)
-
 
 
 #### VIRTUALS ####
@@ -34,3 +35,7 @@ func get_category() -> String:
 
 
 #### SIGNAL RESPONSES ####
+
+func _on_state_changed(current_state_name: String):
+	if current_state_name == "Idle":
+		Events.emit_signal("single_plant_animation_finished")

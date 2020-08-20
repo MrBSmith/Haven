@@ -60,6 +60,13 @@ func get_dehydration() -> int:
 func add_to_dehydration(value: int):
 	set_dehydration(get_dehydration() + value)
 
+func get_state() -> StateBase:
+	var state_machine = get_node_or_null("StatesMachine")
+	if state_machine == null:
+		return null
+	else:
+		return state_machine.get_state()
+
 
 #### BUILT-IN ####
 

@@ -1,0 +1,6 @@
+extends Node
+
+signal turn_finished
+signal single_plant_animation_finished
+signal flora_animation_finished
+
