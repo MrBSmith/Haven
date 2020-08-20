@@ -4,7 +4,7 @@ onready var grid_node = $Grid
 onready var hand_node = $Hand
 
 func _ready():
-	var _err = Events.connect("flora_animation_finished", self, "_on_flora_animation_finished")
+	var _err = Events.connect("single_plant_animation_finished", self, "_on_single_plant_animation_finished")
 	
 	grid_node.generate_grid()
 	var grid_pxl_size = Globals.get_grid_pixel_size()
@@ -24,6 +24,6 @@ func is_flora_animation_finished() -> bool:
 
 #### SIGNALS RESPONSES ####
 
-func _on_flora_animation_finished():
+func _on_single_plant_animation_finished():
 	if is_flora_animation_finished():
-		emit_signal("flora_animation_finished")
+		Events.emit_signal("flora_animation_finished")

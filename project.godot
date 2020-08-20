@@ -156,10 +156,6 @@ Globals="*res://Autoloads/Globals.gd"
 ScreenArea="*res://Autoloads/ScreenArea.tscn"
 Events="*res://Autoloads/Events.gd"
 
-[debug]
-
-gdscript/warnings/unused_signal=false
-
 [display]
 
 window/size/width=96
