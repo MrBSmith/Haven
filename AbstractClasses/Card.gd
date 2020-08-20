@@ -160,8 +160,10 @@ func _on_state_changed(state_name: String):
 		
 	elif state_name == "Destroy":
 		var previous_state = $StateMachine.previous_state.name
+		
 		if previous_state == "Effect":
 			emit_signal("normal_effect_finished", get_index())
+		
 		elif previous_state == "CombinedEffect":
 			emit_signal("combined_effect_finished", get_index())
 
