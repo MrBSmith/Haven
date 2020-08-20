@@ -118,6 +118,7 @@ func generate_moving_seed(init_pos: Vector2, init_velocity: Vector2, tree_type: 
 	new_seed.set_position(init_pos)
 	new_seed.set_velocity(init_velocity)
 	new_seed.set_tree_type(tree_type)
+	new_seed.grid_node = self
 	
 	new_seed.connect("seed_planted", self, "on_seed_planted")
 	$SeedsContainer.add_child(new_seed)
