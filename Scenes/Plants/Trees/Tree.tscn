@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scenes/Plants/Trees/Pine.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/Plants/Trees/Tree.gd" type="Script" id=2]
+[ext_resource path="res://AbstractClasses/StateMachine.gd" type="Script" id=3]
+[ext_resource path="res://Scenes/Plants/Trees/States/Idle.gd" type="Script" id=4]
+[ext_resource path="res://Scenes/Plants/Trees/Wind.gd" type="Script" id=5]
 
 [node name="Tree" type="Node2D"]
 z_index = 1
@@ -42,7 +45,16 @@ __meta__ = {
 "_edit_bone_": true
 }
 
-[node name="Tween" type="Tween" parent="."]
+[node name="StatesMachine" type="Node" parent="."]
+script = ExtResource( 3 )
 
-[node name="WindAnimTimer" type="Timer" parent="."]
+[node name="Idle" type="Node" parent="StatesMachine"]
+script = ExtResource( 4 )
+
+[node name="Wind" type="Node" parent="StatesMachine"]
+script = ExtResource( 5 )
+
+[node name="Tween" type="Tween" parent="StatesMachine/Wind"]
+
+[node name="WindAnimTimer" type="Timer" parent="StatesMachine/Wind"]
 one_shot = true
