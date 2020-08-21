@@ -18,7 +18,6 @@ signal card_drawn
 
 func _ready():
 	var _err = connect("card_drawn", self, "_on_card_drawn")
-	_err = Events.connect("flora_animation_finished", self, "_on_flora_animation_finished")
 	var _nothing = roll()
 
 #### LOGIC ####
@@ -119,13 +118,14 @@ func _on_card_combined_effect_finished(card_index: int):
 
 func _on_card_drawn():
 	if get_child_count() == 2:
-		Events.emit_signal("turn_finished")
+		_on_hand_refilled()
 
 
-func _on_flora_animation_finished():
+func _on_hand_refilled():
+	set_cards_pickable(true)
+	
 	var first_card = get_child(0)
 	var second_card = get_child(1)
-	set_cards_pickable(true)
 	
 	if first_card.get_type() == second_card.get_type():
 		second_card.combined_effect()
