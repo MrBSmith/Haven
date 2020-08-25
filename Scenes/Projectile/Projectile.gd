@@ -1,6 +1,19 @@
 extends KinematicBody2D
 class_name Projectile
 
+# Basic class for projectiles
+
+# The projetiles moves by calling the update_motion method of every motions in the array
+# You can use multiples motions combined to create a more complex one
+# (For exemple a Sine motion only will make it move up and down only, 
+# but if you add a line motion it will move as a sine wave)
+
+# The lifetime will trigger automaticaly, called by the _setup(), and when over, will queue_free()
+# the projectile
+
+# Override _setup() do write initialization logic, 
+# and _impact() to write the logic happing at impact
+
 export var motions : Array setget , get_motions
 export var direction := Vector2.ZERO
 export var lifetime : float = 1.0

@@ -1,6 +1,14 @@
 extends Projectile
 class_name MultiplePhaseProjectile
 
+# Basic class from projectile that have multiples movement phases
+
+# movement_phases should contains arrays that contains the motions, each array representing a phase
+# phases_durations contain the duration of each phase
+
+# When a phase is over, the code removes it and triggers the next on
+# When the last phase is over, triggers the lifetime timer
+
 export var movement_phases : Array = []
 export var phases_durations : PoolRealArray = []
 
