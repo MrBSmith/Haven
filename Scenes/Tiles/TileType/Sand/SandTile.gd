@@ -22,7 +22,7 @@ func get_type() -> String:
 #### SIGNAL RESPONSES ####
 
 # Called when wind is applied to this tile
-func on_wind_applied(wind_dir: Vector2, _wind_force: int):
+func on_wind_applied(wind_dir: Vector2, _wind_force: int, _duration: float):
 	var adjacent_tile = tile.get_tile_by_translation(wind_dir)
 	
 	if adjacent_tile != null && adjacent_tile.get_type() == "Soil":

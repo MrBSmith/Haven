@@ -114,14 +114,16 @@ func affect_tiles_wetness(tiles_array: Array, modifier : float = 1.0):
 # Apply wind on the given set of tiles, contained in tiles_array, with the given wind direction
 # The given minimun wind force, and the range of random value, 
 # going from force_min to force_min + force_range
-func apply_wind(tiles_array: Array, wind_dir: Vector2, force_range := 100, force_min = 50):
+func apply_wind(tiles_array: Array, wind_dir: Vector2, force_range := 100, force_min = 50, duration: float = 3.0):
 	randomize()
 	if wind_dir == Vector2.ZERO:
 		return
 	
 	for tile in tiles_array:
 		var rdm_force = randi() % force_range + force_min
-		tile.on_wind_applied(wind_dir, rdm_force)
+		tile.on_wind_applied(wind_dir, rdm_force, duration)
+	
+	Events.emit_signal("wind_animation_required", tiles_array, wind_dir, force_range, duration)
 
 
 

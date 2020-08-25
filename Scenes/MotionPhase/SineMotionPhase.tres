@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=4 format=2]
+
+[ext_resource path="res://Scenes/MotionPhase/MotionPhase.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Motion/LineMotion.tres" type="Resource" id=2]
+[ext_resource path="res://Scenes/Motion/SineMotion.tres" type="Resource" id=3]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource( 1 )
+motions = [ ExtResource( 3 ), ExtResource( 2 ) ]
+duration = 0.5

@@ -54,5 +54,5 @@ func on_min_wetness_reached():
 func on_max_wetness_reached():
 	pass
 
-func on_wind_applied(_wind_dir: Vector2, _wind_force: int):
+func on_wind_applied(_wind_dir: Vector2, _wind_force: int, _wind_duration : float):
 	pass

@@ -10,7 +10,7 @@ func _ready():
 
 
 func enter_state(_previous_state: StateBase):
-	area_node.set_area_active()
+	area_node.clear()
 	$Timer.start()
 
 

@@ -265,8 +265,8 @@ func _on_plant_died():
 
 
 # Called when wind is applied to this tile
-func on_wind_applied(wind_dir: Vector2, wind_force: int):
+func on_wind_applied(wind_dir: Vector2, wind_force: int, duration: float):
 	for tree in trees_group_node.get_children():
-		tree.apply_wind(wind_dir, wind_force)
+		tree.apply_wind(wind_dir, wind_force, duration)
 	
-	type.on_wind_applied(wind_dir, wind_force)
+	type.on_wind_applied(wind_dir, wind_force, duration)

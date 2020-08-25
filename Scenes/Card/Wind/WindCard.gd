@@ -13,6 +13,7 @@ func normal_effect(tiles_array: Array, wind_dir := Vector2.ZERO):
 	apply_wind(tiles_array, wind_dir)
 
 
+
 # Override from tile
 # Apply a strong wind on every tiles
 func combined_effect():

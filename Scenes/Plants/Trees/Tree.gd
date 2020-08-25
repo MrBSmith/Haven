@@ -17,9 +17,9 @@ func _ready():
 
 #### LOGIC ####
 
-func apply_wind(wind_dir: Vector2, force: int):
+func apply_wind(wind_dir: Vector2, force: int, duration: float):
 	var seed_rng = randi() % 100
-	$StatesMachine/Wind.start_wind_animation(wind_dir, force)
+	$StatesMachine/Wind.start_wind_animation(wind_dir, force, duration)
 	
 	if seed_rng < seed_spawn_chances:
 		emit_signal("generate_seed", global_position, wind_dir * force, Globals.base_tree)

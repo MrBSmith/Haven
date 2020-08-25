@@ -8,7 +8,6 @@ onready var wind_anim_timer_node = $WindAnimTimer
 var wind_direction := Vector2.ZERO
 var wind_force : float = 0
 
-
 #### ACCESSORS ####
 
 #### BUILT-IN ####
@@ -21,13 +20,12 @@ func _ready():
 #### LOGIC ####
 
 # Start the wind animation process
-func start_wind_animation(wind_dir: Vector2, force: float, variance: float = 70):
+func start_wind_animation(wind_dir: Vector2, force: float, _variance: float = 70, duration: float = 3.0):
 	states_machine.set_state(self)
 	wind_direction = wind_dir
 	wind_force = force
-	
-	var anim_duration := apply_variance(force / 100, variance)
-	wind_anim_timer_node.start(anim_duration)
+
+	wind_anim_timer_node.start(duration)
 	
 	bourasque_animation(wind_dir, force)
 
