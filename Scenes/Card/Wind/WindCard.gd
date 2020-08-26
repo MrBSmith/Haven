@@ -9,8 +9,9 @@ func get_type() -> String:
 
 # Override from tile
 # Apply wind on concerned tiles
-func normal_effect(tiles_array: Array, wind_dir := Vector2.ZERO):
-	apply_wind(tiles_array, wind_dir)
+func card_effect(tiles_array: Array, wind_dir := Vector2.ZERO, modifier: float = 1.0):
+	apply_wind(tiles_array, wind_dir, 100 * modifier)
+	.card_effect(tiles_array, wind_dir, modifier)
 
 
 
@@ -20,8 +21,7 @@ func combined_effect():
 	var grid_node = get_tree().get_current_scene().get_node("Grid")
 	var tiles_affected = grid_node.get_tile_array()
 	$Area.create_area(tiles_affected)
+	$StateMachine/Effect.combined = true
 	
 	var rdm_dir = random_wind_dir()
-	apply_wind(tiles_affected, rdm_dir, 150)
-	
-	call_deferred("set_state", "CombinedEffect")
+	card_effect(tiles_affected, rdm_dir, 1.5)

@@ -18,7 +18,8 @@ signal state_changed
 # Set the state to the first of the list
 func _ready():
 	yield(owner, "ready")
-	set_state(states_map[0])
+	if current_state == null:
+		set_state(states_map[0])
 
 
 # Call for the current state process at every frame of the physic process

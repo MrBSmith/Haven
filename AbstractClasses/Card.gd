@@ -13,8 +13,8 @@ var pickable : bool = true setget set_pickable, get_pickable
 var hand_index : int = -1 setget set_hand_index, get_hand_index
 
 signal active_effect
-signal normal_effect_finished
-signal combined_effect_finished
+signal effect_finished(card_index, was_combined_effect)
+signal destroyed
 
 const WIND_POSSIBLE_DIR : Array = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]
 
@@ -58,8 +58,7 @@ func _ready():
 	var _err = connect("mouse_entered", self, "_on_mouse_entered")
 	_err = connect("mouse_exited", self, "_on_mouse_exited")
 	_err = connect("active_effect", get_parent(), "_on_card_active_effect")
-	_err = connect("normal_effect_finished", get_parent(), "_on_card_normal_effect_finished")
-	_err = connect("combined_effect_finished", get_parent(), "_on_card_combined_effect_finished")
+	_err = connect("effect_finished", get_parent(), "_on_card_effect_finished")
 	_err = $StateMachine.connect("state_changed", self, "_on_state_changed")
 
 #### LOGIC ####
@@ -77,8 +76,12 @@ func random_wind_dir() -> Vector2:
 # Apply the effect of the card on the targeted tiles
 # Called by the target state, when going to the effect state
 # wind_dir can be used optionaly in the children classes 
-func normal_effect(tiles_array: Array, _wind_dir := Vector2.ZERO):
-	affect_tiles_wetness(tiles_array)
+func card_effect(tiles_array: Array, _wind_dir := Vector2.ZERO, modifier : float = 1.0):
+	trigger_meteo_animation(tiles_array)
+	set_state("Effect")
+	yield(self, "destroyed")
+	
+	affect_tiles_wetness(tiles_array, modifier)
 
 
 # Apply the effect, when the players got the same card twice in hand
@@ -86,10 +89,17 @@ func combined_effect():
 	var grid_node = get_tree().get_current_scene().get_node("Grid")
 	var tiles_affected = grid_node.get_tile_array()
 	$Area.create_area(tiles_affected)
+	$StateMachine/Effect.combined = true
 	
-	affect_tiles_wetness(tiles_affected, 1.5)
-	
-	call_deferred("set_state", "CombinedEffect")
+	card_effect(tiles_affected, Vector2.ZERO, 1.0)
+
+
+
+func trigger_meteo_animation(tiles_affected: Array):
+	if effect_on_tile.wetness > 0:
+		Events.emit_signal("rain_animation_required", tiles_affected, 3.0)
+	elif effect_on_tile.wetness < 0:
+		Events.emit_signal("sun_animation_required", tiles_affected, 3.0)
 
 
 # Affect the given tiles wetness by the value contained 
@@ -114,13 +124,13 @@ func affect_tiles_wetness(tiles_array: Array, modifier : float = 1.0):
 # Apply wind on the given set of tiles, contained in tiles_array, with the given wind direction
 # The given minimun wind force, and the range of random value, 
 # going from force_min to force_min + force_range
-func apply_wind(tiles_array: Array, wind_dir: Vector2, force_range := 100, force_min = 50, duration: float = 3.0):
+func apply_wind(tiles_array: Array, wind_dir: Vector2, force_range := 100.0, force_min = 50, duration: float = 3.0):
 	randomize()
 	if wind_dir == Vector2.ZERO:
 		return
 	
 	for tile in tiles_array:
-		var rdm_force = randi() % force_range + force_min
+		var rdm_force = randi() % int(force_range) + force_min
 		tile.on_wind_applied(wind_dir, rdm_force, duration)
 	
 	Events.emit_signal("wind_animation_required", tiles_array, wind_dir, force_range, duration)
@@ -140,7 +150,8 @@ func _unhandled_input(_event):
 	if Input.is_action_just_released("click"):
 		# Triggers the effect of the card
 		if get_state_name() == "Target" && $Area.get_child_count() > 0:
-			set_state("Effect")
+			var target_state = $StateMachine/Target
+			card_effect(target_state.affected_tiles_array, target_state.wind_direction)
 		
 		# The card was droped on an invalid position
 		else:
@@ -157,17 +168,16 @@ func _on_mouse_exited():
 
 
 func _on_state_changed(state_name: String):
-	if state_name == "Effect" or state_name == "CombinedEffect":
+	if state_name == "Effect":
 		emit_signal("active_effect")
 		
 	elif state_name == "Destroy":
 		var previous_state = $StateMachine.previous_state.name
 		
 		if previous_state == "Effect":
-			emit_signal("normal_effect_finished", get_index())
+			emit_signal("effect_finished", get_index(), $StateMachine/Effect.combined)
 		
-		elif previous_state == "CombinedEffect":
-			emit_signal("combined_effect_finished", get_index())
+		emit_signal("destroyed")
 
 
 func on_grid_entered():

@@ -35,15 +35,6 @@ script = ExtResource( 5 )
 [node name="Effect" type="Node" parent="StateMachine"]
 script = ExtResource( 6 )
 
-[node name="Timer" type="Timer" parent="StateMachine/Effect"]
-one_shot = true
-
-[node name="CombinedEffect" type="Node" parent="StateMachine"]
-script = ExtResource( 6 )
-
-[node name="Timer" type="Timer" parent="StateMachine/CombinedEffect"]
-one_shot = true
-
 [node name="Destroy" type="Node" parent="StateMachine"]
 script = ExtResource( 8 )
 

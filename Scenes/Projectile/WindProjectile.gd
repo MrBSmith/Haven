@@ -51,8 +51,7 @@ func randomize_wind_trail():
 		
 		movement_phases[1].append(circle)
 		phases_durations.push_back(rand_range(0.2, 0.7))
-	
-	pass
+
 
 
 func get_current_trail_angle() -> float:
@@ -64,21 +63,11 @@ func get_current_trail_angle() -> float:
 	
 	return previous_point.angle_to(last_point)
 
+
 #### VIRTUALS ####
 
 
 #### INPUTS ####
 
 
-#### SIGNAL RESPONSES ####
-
-func _on_motion_phase_finished():
-	movement_phases.remove(0)
-	phases_durations.remove(0)
-	
-	if movement_phases.empty() or movement_phases[0] == null:
-		emit_signal("every_movement_finished")
-	elif !movement_phases[0].empty():
-		var current_angle = get_current_trail_angle()
-		movement_phases[0][0].angle = current_angle
-		start_movement_phase()
+#### SIGNAL RESPONSES #### 

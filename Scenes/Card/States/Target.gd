@@ -71,6 +71,7 @@ func enter_state(_previous_state: StateBase):
 	# Get the relative grid pos of the tiles affected by the area
 	if area_of_effect.type == AOE.TYPES.CIRCLE:
 		AOE_relatives = get_circle_AOE([Vector2.ZERO], area_of_effect.i_size)
+	
 	elif area_of_effect.type == AOE.TYPES.RECT:
 		AOE_relatives = get_rect_AOE(area_of_effect.v_size)
 	
@@ -81,8 +82,6 @@ func exit_state(next_state: StateBase):
 	if next_state.name != "Effect":
 		owner.sprite_node.set_visible(true)
 		area_node.clear()
-	else:
-		owner.normal_effect(affected_tiles_array, wind_direction)
 
 
 #### LOGIC ####

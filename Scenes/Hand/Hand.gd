@@ -106,14 +106,13 @@ func _unhandled_input(_event):
 
 #### SIGNAL RESPONSES ####
 
-func _on_card_normal_effect_finished(card_index: int):
+func _on_card_effect_finished(card_index: int, combined: bool):
 	yield(get_child(card_index), "tree_exited")
-	var _new_card = draw_card(card_index)
-
-
-func _on_card_combined_effect_finished(card_index: int):
-	yield(get_child(card_index), "tree_exited")
-	reroll()
+	
+	if combined:
+		reroll()
+	else:
+		var _new_card = draw_card(card_index)
 
 
 func _on_card_drawn():

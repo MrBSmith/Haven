@@ -66,7 +66,8 @@ func _on_motion_phase_finished():
 	movement_phases.remove(0)
 	phases_durations.remove(0)
 	
-	if movement_phases.empty() or movement_phases[0] == null:
+	if movement_phases.empty() or movement_phases[0] == null\
+	or phases_durations.empty() or phases_durations[0] == null:
 		emit_signal("every_movement_finished")
 	else:
 		start_movement_phase()
