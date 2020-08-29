@@ -7,7 +7,6 @@ signal generate_seed(pos, velocity, tree_type)
 
 #### ACCESSORS ####
 
-
 #### BUILT-IN ####
 
 func _ready():
@@ -23,6 +22,11 @@ func apply_wind(wind_dir: Vector2, force: int, duration: float):
 	
 	if seed_rng < seed_spawn_chances:
 		emit_signal("generate_seed", global_position, wind_dir * force, Globals.base_tree)
+
+
+func set_fire():
+	var fire = Globals.fire_fx.instance()
+	$FirePosition.add_child(fire)
 
 
 #### VIRTUALS ####

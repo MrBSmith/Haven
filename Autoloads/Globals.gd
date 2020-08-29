@@ -20,6 +20,12 @@ const red_flower = preload("res://Scenes/Plants/SmallPlants/Flowers/RedFlower/Re
 var tree_types = [base_tree]
 var flower_types = [blue_flower, red_flower]
 
+
+const lighting_main_branch = preload("res://Scenes/Projectile/LightingMainBranch.tscn")
+const lighting_branch = preload("res://Scenes/Projectile/LightingProjectile.tscn")
+
+const fire_fx = preload("res://Scenes/VFX/Fire.tscn")
+
 var window_width = ProjectSettings.get_setting("display/window/size/width")
 var window_height = ProjectSettings.get_setting("display/window/size/height")
 var window_size = Vector2(window_width, window_height)

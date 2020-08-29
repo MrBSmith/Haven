@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scenes/VFX/Trail/Trail.tscn" type="PackedScene" id=1]
+
+[sub_resource type="Curve" id=1]
+bake_resolution = 200
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.498221, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.850534, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[node name="LightingTrail" instance=ExtResource( 1 )]
+width = 2.0
+width_curve = SubResource( 1 )
+default_color = Color( 1, 0.992157, 0.4, 1 )
+trail_max_lenght = 100

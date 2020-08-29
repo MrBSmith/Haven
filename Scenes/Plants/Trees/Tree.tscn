@@ -8,9 +8,13 @@
 
 [node name="Tree" type="Node2D" groups=[
 "Plant",
+"Tree",
 ]]
 z_index = 1
 script = ExtResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Sprite" type="Polygon2D" parent="."]
 offset = Vector2( 0, -4.5 )
@@ -60,3 +64,6 @@ script = ExtResource( 5 )
 
 [node name="WindAnimTimer" type="Timer" parent="StatesMachine/Wind"]
 one_shot = true
+
+[node name="FirePosition" type="Position2D" parent="."]
+position = Vector2( 0.059, -3 )

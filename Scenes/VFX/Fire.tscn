@@ -1,0 +1,60 @@
+[gd_scene load_steps=7 format=2]
+
+[sub_resource type="Environment" id=1]
+background_mode = 4
+glow_enabled = true
+glow_levels/1 = true
+glow_levels/2 = true
+glow_levels/4 = true
+glow_levels/6 = true
+glow_levels/7 = true
+glow_intensity = 4.0
+glow_hdr_threshold = 0.73
+glow_bicubic_upscale = true
+
+[sub_resource type="Gradient" id=2]
+offsets = PoolRealArray( 0.00941915, 0.032967, 0.0706436, 0.230769, 0.492936, 0.545455, 0.594406 )
+colors = PoolColorArray( 3, 3, 1, 0.85098, 9.83137, 12.2118, 0, 0.784314, 48.5608, 0.588235, 0.0313726, 0.639216, 0.678431, 0, 0, 0.780392, 0.168627, 0.0784314, 0.168627, 0.341176, 0.160784, 0.160784, 0.160784, 0.8, 0.27451, 0.27451, 0.27451, 0.537255 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+
+[sub_resource type="Curve" id=4]
+_data = [ Vector2( 0, 0 ), 0.0, 0.0, 0, 0, Vector2( 0.0178571, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), -2.96969, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=5]
+curve = SubResource( 4 )
+
+[sub_resource type="ParticlesMaterial" id=6]
+emission_shape = 1
+emission_sphere_radius = 1.0
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+spread = 93.0
+gravity = Vector3( 0, -100, 0 )
+initial_velocity = 20.0
+angular_velocity = 312.0
+angular_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+radial_accel = 19.61
+radial_accel_random = 0.31
+damping = 100.0
+angle = 228.0
+angle_random = 0.84
+scale = 2.0
+scale_curve = SubResource( 5 )
+color_ramp = SubResource( 3 )
+hue_variation = 0.01
+hue_variation_random = 1.0
+
+[node name="Fire" type="Node2D"]
+modulate = Color( 1, 1, 1, 0.407843 )
+z_index = 2
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 1 )
+
+[node name="Particles2D" type="Particles2D" parent="."]
+amount = 259
+process_material = SubResource( 6 )

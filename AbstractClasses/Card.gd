@@ -98,6 +98,8 @@ func combined_effect():
 func trigger_meteo_animation(tiles_affected: Array):
 	if effect_on_tile.wetness > 0:
 		Events.emit_signal("rain_animation_required", tiles_affected, 3.0)
+		if $StateMachine/Effect.combined == true:
+			Events.emit_signal("thunder_animation_required")
 	elif effect_on_tile.wetness < 0:
 		Events.emit_signal("sun_animation_required", tiles_affected, 3.0)
 

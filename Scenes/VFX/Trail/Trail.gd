@@ -18,8 +18,6 @@ func _physics_process(_delta):
 	if points.size() > trail_max_lenght:
 		remove_point(0)
 
-
-
 #### LOGIC ####
 
 #### INPUTS ####

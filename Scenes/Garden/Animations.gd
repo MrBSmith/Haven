@@ -1,5 +1,7 @@
 extends YSort
 
+var lightning_scene = preload("res://Scenes/Projectile/Lightning.tscn")
+
 #### ACCESSORS ####
 
 
@@ -7,9 +9,12 @@ extends YSort
 #### BUILT-IN ####
 
 func _ready():
+	randomize()
+	
 	var _err = Events.connect("wind_animation_required", self, "wind_animation")
 	_err = Events.connect("rain_animation_required", self, "rain_animation")
 	_err = Events.connect("sun_animation_required", self, "sun_animation")
+	_err = Events.connect("thunder_animation_required", self, "thunder_animation")
 
 
 #### LOGIC ####
@@ -18,16 +23,35 @@ func rain_animation(tiles_affected: Array, duration: float):
 	var anim = RainAnimation.new(tiles_affected, duration)
 	add_child(anim)
 
+
 func wind_animation(tiles_affected: Array, wind_dir: Vector2, wind_force: int, duration: float):
 	var spawn_rect = get_wind_spawn_rect(tiles_affected, wind_dir)
 	var anim = WindAnimation.new(spawn_rect, wind_dir, wind_force, duration)
 	add_child(anim)
+
 
 func sun_animation(tiles_affected: Array, duration: float):
 	var rect = tile_array_to_rect(tiles_affected)
 	var anim = SunAnimation.new(rect, duration)
 	add_child(anim)
 
+
+func thunder_animation():
+	var trees_array = get_tree().get_nodes_in_group("Tree")
+	
+	if trees_array.empty():
+		return
+	
+	var rdm_index = randi() % trees_array.size()
+	var target_tree = trees_array[rdm_index]
+	
+	var thunder = lightning_scene.instance()
+	thunder.impact_point = target_tree.get_global_position()
+	add_child(thunder)
+	
+	yield(thunder, "tree_exited")
+	
+	target_tree.set_fire()
 
 
 func tile_array_to_rect(tile_array: Array) -> Rect2:

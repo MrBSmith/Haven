@@ -49,6 +49,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scenes/Hand/Hand.gd"
 }, {
+"base": "LightningProjectile",
+"class": "LightningMainBranch",
+"language": "GDScript",
+"path": "res://Scenes/Projectile/LightingMainBranch.gd"
+}, {
+"base": "Projectile",
+"class": "LightningProjectile",
+"language": "GDScript",
+"path": "res://Scenes/Projectile/LightingProjectile.gd"
+}, {
 "base": "Motion",
 "class": "LineMotion",
 "language": "GDScript",
@@ -203,6 +213,8 @@ _global_script_class_icons={
 "Grass": "",
 "GrassTile": "",
 "Hand": "",
+"LightningMainBranch": "",
+"LightningProjectile": "",
 "LineMotion": "",
 "MeteoAnimation": "",
 "Motion": "",
@@ -303,5 +315,4 @@ RerollGrid={
 
 [rendering]
 
-quality/driver/driver_name="GLES2"
 environment/default_environment="res://default_env.tres"

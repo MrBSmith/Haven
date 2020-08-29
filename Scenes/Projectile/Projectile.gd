@@ -37,13 +37,7 @@ func _ready():
 
 
 func _physics_process(delta: float) -> void:
-	var movement := _update_movement(delta)
-	
-	var collision := move_and_collide(movement)
-	
-	if collision:
-		emit_signal("collided", collision.collider, collision.position)
-		_impact()
+	move(delta)
 
 
 #### LOGIC ####
@@ -68,6 +62,15 @@ func start_lifetime_timer():
 	add_child(lifetime_timer)
 	lifetime_timer.start(lifetime)
 
+
+func move(delta : float):
+	var movement := _update_movement(delta)
+	
+	var collision := move_and_collide(movement)
+	
+	if collision:
+		emit_signal("collided", collision.collider, collision.position)
+		_impact()
 
 #### VIRTUALS ####
 
