@@ -12,6 +12,7 @@ var growth_timer_node : Timer = null
 var growth : int = 3 setget set_growth, get_growth
 var dehydration : int = 0 setget set_dehydration, get_dehydration
 
+var hit_by_thunder : bool = false
 var current_tile_weakref : WeakRef = null
 
 var on_fire : bool = false setget , is_on_fire
@@ -76,11 +77,16 @@ func get_state() -> StateBase:
 
 #### BUILT-IN ####
 
+func _ready():
+	add_to_group("Plant")
+
 
 #### LOGIC ####
 
 func new_turn():
+	hit_by_thunder = false
 	try_to_grow()
+
 
 func try_to_grow():
 	if is_adult():
@@ -113,19 +119,22 @@ func die():
 
 
 func rain_applied():
-	if is_on_fire():
+	if is_on_fire() && !hit_by_thunder:
 		stop_fire()
 
 
 #### INPUTS ####
+
 
 #### VIRTUALS ####
 
 func get_category() -> String:
 	return ""
 
-func set_fire():
-	pass
+
+func set_fire(thunder: bool = false):
+	hit_by_thunder = thunder
+
 
 func stop_fire():
 	on_fire = false

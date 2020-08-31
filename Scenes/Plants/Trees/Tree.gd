@@ -15,6 +15,7 @@ var fire_propagation_dist : float = Globals.TILE_SIZE.x * 0.75
 func _ready():
 	randomize()
 	
+	add_to_group("Tree")
 	var _err = $StatesMachine.connect("state_changed", self, "_on_state_changed")
 
 
@@ -70,15 +71,19 @@ func is_angle_in_range(a1: float, a2: float, a_range: float) -> bool:
 func get_category() -> String:
 	return "Tree"
 
+
 func die():
 	remove_from_group("Plant")
 	remove_from_group("Tree")
 	queue_free()
 
-func set_fire():
+
+func set_fire(thunder: bool = false):
+	.set_fire(thunder)
 	var fire = Globals.fire_fx.instance()
 	$FirePosition.add_child(fire)
 	on_fire = true
+
 
 func stop_fire():
 	on_fire = false

@@ -32,16 +32,29 @@ func start_wind_animation(wind_dir: Vector2, force: float, _variance: float = 70
 
 # Animate one bourasque, based on the wind direction and its force
 func bourasque_animation(wind_dir := Vector2.ZERO, force: float = 0.0, variance: float = 40):
-	force = apply_variance(force, variance)
-	
 	var anim_duration : float = 0.4
-	if force != 0.0:
-		anim_duration = 10 / clamp(force, 1.0, INF)
+	var rotation_sign
+	var rotation_amount
+	
+	
+	# If the wind is horizontal: aplly a strong bourasque in the direction of the wind
+	if wind_dir.x != 0:
+		force = apply_variance(force, variance)
+		rotation_sign = sign(wind_dir.x)
+		rotation_amount = ((force / 3) * rotation_sign) - 90
+		if force != 0.0:
+			anim_duration = 10 / clamp(force, 1.0, INF)
+			
+	# If the wind is vertical: aplly a weak bourasque horizontal bourasque in a random direction
+	else:
+		force = apply_variance(force, variance / 2)
+		rotation_sign = sign(rand_range(-1.0, 1.0))
+		rotation_amount = ((force / 12) * rotation_sign) - 90
+		if force != 0.0:
+			anim_duration = 20 / clamp(force, 1.0, INF)
+	
 	
 	anim_duration = apply_variance(anim_duration, variance)
-	
-	var rotation_sign = sign(wind_dir.x)
-	var rotation_amount = ((force / 3) * rotation_sign) - 90
 	var foliage = owner.get_node("Skeleton2D/Foliage")
 	
 	tween_node.interpolate_property(foliage, "rotation_degrees",

@@ -17,7 +17,7 @@ func _ready():
 
 func is_flora_animation_finished() -> bool:
 	for plant in get_tree().get_nodes_in_group("Plant"):
-		if plant.get_state().name != "Idle":
+		if plant.get_state() == null or plant.get_state().name != "Idle":
 			return false
 	
 	return true
