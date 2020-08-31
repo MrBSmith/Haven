@@ -73,6 +73,9 @@ func get_state() -> StateBase:
 
 #### LOGIC ####
 
+func new_turn():
+	try_to_grow()
+
 func try_to_grow():
 	if is_adult():
 		return
@@ -82,7 +85,6 @@ func try_to_grow():
 		grow()
 	elif drained_water < float(drain_amount) / 2:
 		add_to_dehydration(1)
-
 
 func grow():
 	add_to_growth(1)

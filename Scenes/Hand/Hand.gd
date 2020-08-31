@@ -13,11 +13,13 @@ const CARD_SIZE = Vector2(16, 16)
 const MAX_CARDS = 2
 
 signal card_drawn
+signal new_turn_started
 
 #### BUILT-IN ####
 
 func _ready():
 	var _err = connect("card_drawn", self, "_on_card_drawn")
+	_err = connect("new_turn_started", get_parent(), "_on_new_turn_started")
 	var _nothing = roll()
 
 #### LOGIC ####
@@ -121,6 +123,7 @@ func _on_card_drawn():
 
 
 func _on_hand_refilled():
+	emit_signal("new_turn_started")
 	set_cards_pickable(true)
 	
 	var first_card = get_child(0)

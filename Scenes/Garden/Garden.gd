@@ -27,3 +27,7 @@ func is_flora_animation_finished() -> bool:
 func _on_single_plant_animation_finished():
 	if is_flora_animation_finished():
 		Events.emit_signal("flora_animation_finished")
+
+
+func _on_new_turn_started():
+	propagate_call("new_turn")

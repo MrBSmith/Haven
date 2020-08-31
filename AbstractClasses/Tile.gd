@@ -171,7 +171,7 @@ func add_plant(plant_node: Plant, pos: Vector2, garden_generation : bool = false
 	# Check if the plant doesn't reach the max capacity of the tile
 	if plant_group.get_child_count() < plant_max_nb:
 		plant_node.grid_node = grid_node
-		plant_group.add_child(plant_node)
+		plant_group.call_deferred("add_child", plant_node)
 		var _err = plant_node.connect("tree_exited", self, "_on_plant_died")
 	
 	# Connect the seed generation signal emited by the plant to the grid 
