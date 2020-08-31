@@ -39,7 +39,8 @@ func _on_lightning_collided(impact_pos : Vector2):
 	$Particles2D.set_emitting(true)
 	
 	var tween = $Tween
-	var environement = $WorldEnvironment.get_environment()
+	var world_enviroment = get_tree().get_current_scene().find_node("WorldEnvironment")
+	var environement = world_enviroment.get_environment()
 	
 	tween.interpolate_property(environement, "glow_strength",
 		 1.0, 0.0, 0.05,

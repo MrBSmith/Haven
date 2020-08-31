@@ -13,3 +13,6 @@ speed = 900.0
 script = ExtResource( 2 )
 motions = [ SubResource( 1 ) ]
 lifetime = 0.5
+
+[node name="LightingTrail" parent="." index="0"]
+default_color = Color( 24.27, 24.42, 0.4, 1 )
