@@ -227,6 +227,11 @@ func get_tile_by_translation(trans: Vector2) -> Tile:
 
 #### SIGNALS REACTION ####
 
+func on_rain_applied():
+	for plant in get_all_plants():
+		plant.rain_applied()
+
+
 # Called when the minimun wetness of this type of tile is reached
 # Change the tile type
 func _on_min_wetness_reached():
@@ -234,6 +239,7 @@ func _on_min_wetness_reached():
 	
 	if tile_type_name != "":
 		change_tile_type(tile_type_name)
+
 
 # Called when the maximum wetness of this type of tile is reached
 # Change the tile type

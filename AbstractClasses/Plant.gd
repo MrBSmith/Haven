@@ -14,11 +14,17 @@ var dehydration : int = 0 setget set_dehydration, get_dehydration
 
 var current_tile_weakref : WeakRef = null
 
+var on_fire : bool = false setget , is_on_fire
+
 export var favorable_tile_types : PoolStringArray = ["Soil", "Grass", "Forest"]
 
 signal plant_died
 
+
 #### ACCESSORS ####
+
+func is_on_fire() -> bool:
+	return on_fire
 
 func set_min_sibling_dist(value: float):
 	min_sibling_dist = value
@@ -106,12 +112,23 @@ func die():
 	emit_signal("plant_died", get_category())
 
 
+func rain_applied():
+	if is_on_fire():
+		stop_fire()
+
+
 #### INPUTS ####
 
 #### VIRTUALS ####
 
 func get_category() -> String:
 	return ""
+
+func set_fire():
+	pass
+
+func stop_fire():
+	on_fire = false
 
 #### SIGNAL RESPONSES ####
 

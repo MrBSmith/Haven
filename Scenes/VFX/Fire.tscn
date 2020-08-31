@@ -1,4 +1,6 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Scenes/VFX/Fire.gd" type="Script" id=1]
 
 [sub_resource type="Gradient" id=1]
 offsets = PoolRealArray( 0.00941915, 0.032967, 0.0706436, 0.230769, 0.492936, 0.545455, 0.594406 )
@@ -39,7 +41,11 @@ hue_variation_random = 1.0
 [node name="Fire" type="Node2D"]
 modulate = Color( 1, 1, 1, 0.407843 )
 z_index = 2
+script = ExtResource( 1 )
 
 [node name="Particles2D" type="Particles2D" parent="."]
 amount = 259
 process_material = SubResource( 5 )
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true

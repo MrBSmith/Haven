@@ -7,13 +7,7 @@ signal generate_seed(pos, velocity, tree_type)
 
 var fire_propagation_dist : float = Globals.TILE_SIZE.x * 0.75
 
-var on_fire : bool = false setget , is_on_fire
-
 #### ACCESSORS ####
-
-func is_on_fire() -> bool:
-	return on_fire
-
 
 
 #### BUILT-IN ####
@@ -43,12 +37,6 @@ func apply_wind(wind_dir: Vector2, force: int, duration: float):
 		
 	if is_on_fire():
 		propagate_fire(wind_dir)
-
-
-func set_fire():
-	var fire = Globals.fire_fx.instance()
-	$FirePosition.add_child(fire)
-	on_fire = true
 
 
 func propagate_fire(wind_dir := Vector2.ZERO):
@@ -87,6 +75,17 @@ func die():
 	remove_from_group("Tree")
 	queue_free()
 
+func set_fire():
+	var fire = Globals.fire_fx.instance()
+	$FirePosition.add_child(fire)
+	on_fire = true
+
+func stop_fire():
+	on_fire = false
+	var fire_array = $FirePosition.get_children()
+	
+	for fire in fire_array:
+		fire.extinguish()
 
 #### INPUTS ####
 

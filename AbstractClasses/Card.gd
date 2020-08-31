@@ -120,6 +120,9 @@ func affect_tiles_wetness(tiles_array: Array, modifier : float = 1.0):
 		var variance : float = wetness * (variance_rate / 100)
 		var wetness_change = (wetness + variance) * modifier
 		
+		if wetness > 0:
+			tile.on_rain_applied()
+		
 		tile.add_to_wetness(wetness_change)
 
 
