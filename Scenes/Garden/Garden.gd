@@ -9,6 +9,13 @@ func _ready():
 	grid_node.generate_grid()
 	var grid_pxl_size = Globals.get_grid_pixel_size()
 	
+	var clouds_node = $Grid/MeteoEffects/Clouds
+	clouds_node.set_position(grid_pxl_size / 2)
+	clouds_node.get_node("CloudShader").set_region(true)
+	clouds_node.get_node("CloudShader").set_region_rect(Rect2(Vector2.ZERO, grid_pxl_size))
+	clouds_node.get_node("ShadowsShader").set_region(true)
+	clouds_node.get_node("ShadowsShader").set_region_rect(Rect2(Vector2.ZERO, grid_pxl_size))
+	
 	var hand_space_size = Vector2(Globals.window_width, Globals.window_height - grid_pxl_size.y)
 	hand_node.set_position(Vector2(Globals.window_width / 2, grid_pxl_size.y + hand_space_size.y / 2))
 

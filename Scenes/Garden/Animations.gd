@@ -2,8 +2,9 @@ extends YSort
 
 var lightning_scene = preload("res://Scenes/Projectile/Lightning.tscn")
 
-#### ACCESSORS ####
+onready var clouds_node = $Clouds 
 
+#### ACCESSORS ####
 
 
 #### BUILT-IN ####
@@ -20,6 +21,8 @@ func _ready():
 #### LOGIC ####
 
 func rain_animation(tiles_affected: Array, duration: float):
+	$Clouds.meteo_effect(0.2, 0.87, 1.07, Color.gray)
+	yield($Clouds, "meteo_effect_ready")
 	var anim = RainAnimation.new(tiles_affected, duration)
 	add_child(anim)
 
@@ -31,6 +34,8 @@ func wind_animation(tiles_affected: Array, wind_dir: Vector2, wind_force: int, d
 
 
 func sun_animation(tiles_affected: Array, duration: float):
+	$Clouds.meteo_effect(0.05, 1.15, 1.5)
+	yield($Clouds, "meteo_effect_ready")
 	var rect = tile_array_to_rect(tiles_affected)
 	var anim = SunAnimation.new(rect, duration)
 	add_child(anim)

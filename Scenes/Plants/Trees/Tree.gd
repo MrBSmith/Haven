@@ -18,8 +18,6 @@ func _ready():
 	add_to_group("Tree")
 	var _err = $StatesMachine.connect("state_changed", self, "_on_state_changed")
 
-
-
 #### LOGIC ####
 
 func new_turn():
@@ -73,8 +71,10 @@ func get_category() -> String:
 
 
 func die():
-	remove_from_group("Plant")
-	remove_from_group("Tree")
+	if is_in_group("Plant"):
+	 remove_from_group("Plant")
+	if is_in_group("Tree"):
+		remove_from_group("Tree")
 	queue_free()
 
 
