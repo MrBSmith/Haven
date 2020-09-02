@@ -1,4 +1,4 @@
-extends Node2D
+extends StaticBody2D
 class_name Plant
 
 var grid_node : Node2D
@@ -23,6 +23,9 @@ signal plant_died
 
 
 #### ACCESSORS ####
+
+func is_type(type): return type == "Plant"
+func get_type(): return "Plant"
 
 func is_on_fire() -> bool:
 	return on_fire

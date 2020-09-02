@@ -28,6 +28,11 @@ func rain_animation(tiles_affected: Array, duration: float):
 
 
 func wind_animation(tiles_affected: Array, wind_dir: Vector2, wind_force: int, duration: float):
+	$Clouds.meteo_effect($Clouds.opacity_default, $Clouds.first_threshold_default, \
+		$Clouds.sec_threshold_default, $Clouds.first_color_default, \
+		$Clouds.sec_color_default, wind_dir)
+	yield($Clouds, "meteo_effect_ready")
+	
 	var spawn_rect = get_wind_spawn_rect(tiles_affected, wind_dir)
 	var anim = WindAnimation.new(spawn_rect, wind_dir, wind_force, duration)
 	add_child(anim)

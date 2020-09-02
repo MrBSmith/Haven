@@ -17,7 +17,8 @@ signal state_changed
 
 # Set the state to the first of the list
 func _ready():
-	yield(owner, "ready")
+	yield(get_parent(), "ready")
+	
 	if current_state == null:
 		set_state(states_map[0])
 

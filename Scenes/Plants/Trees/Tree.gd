@@ -9,6 +9,8 @@ var fire_propagation_dist : float = Globals.TILE_SIZE.x * 0.75
 
 #### ACCESSORS ####
 
+func is_type(type): return type == "Tree" or .is_type(type)
+func get_type(): return "Tree"
 
 #### BUILT-IN ####
 

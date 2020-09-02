@@ -86,6 +86,7 @@ func reroll_grid():
 	clear_grid()
 	generate_grid()
 
+
 # Return the tile at the given grid coordinates
 func get_tile_at_grid_pos(pos : Vector2) -> Tile:
 	var tile_array = get_tile_array()
