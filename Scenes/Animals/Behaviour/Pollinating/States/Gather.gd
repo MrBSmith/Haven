@@ -1,4 +1,4 @@
-extends StateBase
+extends AnimalState
 class_name GatherState
 
 onready var timer_node = $Timer
@@ -20,6 +20,16 @@ func _ready():
 
 func enter_state(_previous_state: StateBase):
 	timer_node.start()
+	
+	var flower = animal.get_target()
+	flower.set_pollinazer(weakref(animal))
+
+
+# Try to find a new target right away
+func exit_state(_next_state: StateBase):
+	var flower = animal.get_target()
+	flower.set_pollinazer(null)
+
 
 #### INPUTS ####
 
@@ -28,4 +38,8 @@ func enter_state(_previous_state: StateBase):
 #### SIGNAL RESPONSES ####
 
 func _on_timer_timeout():
-	states_machine.set_state("Wander")
+	var target = animal.find_target_in_view()
+	if target:
+		animal.reach_target(target)
+	else:
+		states_machine.set_state("Wander")

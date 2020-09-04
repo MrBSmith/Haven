@@ -53,6 +53,18 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="Animals" type="YSort" parent="Grid"]
+
+[node name="Bee" parent="Grid/Animals" instance=ExtResource( 9 )]
+
+[node name="Bee2" parent="Grid/Animals" instance=ExtResource( 9 )]
+
+[node name="Bee3" parent="Grid/Animals" instance=ExtResource( 9 )]
+
+[node name="Bee4" parent="Grid/Animals" instance=ExtResource( 9 )]
+
+[node name="Bee5" parent="Grid/Animals" instance=ExtResource( 9 )]
+
 [node name="MeteoEffects" type="YSort" parent="Grid"]
 script = ExtResource( 7 )
 
@@ -82,11 +94,6 @@ text = "CursorTile:"
 __meta__ = {
 "_edit_lock_": true
 }
-
-[node name="Animals" type="Node2D" parent="Grid"]
-
-[node name="Bee" parent="Grid/Animals" instance=ExtResource( 9 )]
-position = Vector2( 54.4562, 48.2199 )
 
 [node name="Hand" type="Node2D" parent="."]
 script = ExtResource( 2 )

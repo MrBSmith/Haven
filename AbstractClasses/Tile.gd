@@ -19,6 +19,8 @@ signal type_changed
 signal plant_added
 
 func _ready():
+	initiate_polygone_instance()
+	
 	var _err = connect("plant_added", self, "_on_plant_added")
 	_err = connect("type_changed", self, "_on_type_changed")
 
@@ -48,6 +50,20 @@ func add_to_wetness(value: int):
 
 
 #### LOGIC ####
+
+func initiate_polygone_instance():
+	var half_tile_size = Globals.TILE_SIZE / 2
+	
+	var nav_poly = $NavigationPolygonInstance
+	var polygone = NavigationPolygon.new()
+	nav_poly.set_navigation_polygon(polygone)
+	polygone.add_outline([
+		Vector2(-half_tile_size.x, -half_tile_size.y),
+		Vector2(-half_tile_size.x, half_tile_size.y),
+		Vector2(half_tile_size.x, -half_tile_size.y),
+		Vector2(half_tile_size.x, half_tile_size.y)
+	])
+	polygone.make_polygons_from_outlines()
 
 # Generate the flora of the tile, based on its type
 # Called by the grid when the tile is generated

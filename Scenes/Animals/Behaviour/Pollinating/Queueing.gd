@@ -1,0 +1,35 @@
+extends WanderState
+class_name QueueingState
+
+#### ACCESSORS ####
+
+
+
+#### BUILT-IN ####
+
+
+
+#### LOGIC ####
+
+
+func on_animal_arrived():
+	var flower = animal.get_target()
+	
+	if flower.get_pollinazer() == null or flower.get_pollinazer().get_ref() == null:
+		animal.reach_target(flower)
+	else:
+		wander_area_center = flower.get_global_position()
+		animal.set_move_path([find_new_destination(true)])
+
+#### VIRTUALS ####
+
+
+
+#### INPUTS ####
+
+
+
+#### SIGNAL RESPONSES ####
+
+func _on_timer_timeout():
+	pass

@@ -14,10 +14,16 @@ animations = [ {
 } ]
 
 [node name="Bee" instance=ExtResource( 1 )]
+z_index = 1
 script = ExtResource( 4 )
+speed = 0.5
 eatable_types = PoolStringArray( "Flower" )
 
 [node name="AnimatedSprite" parent="." index="0"]
 frames = SubResource( 1 )
+offset = Vector2( 0, -0.542 )
 
 [node name="Pollinating " parent="." index="1" instance=ExtResource( 3 )]
+
+[node name="Path2D" type="Path2D" parent="." index="3"]
+curve = null

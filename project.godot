@@ -54,7 +54,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scenes/Plants/SmallPlants/Flowers/Flower.gd"
 }, {
-"base": "StateBase",
+"base": "AnimalState",
 "class": "GatherState",
 "language": "GDScript",
 "path": "res://Scenes/Animals/Behaviour/Pollinating/States/Gather.gd"
@@ -104,7 +104,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scenes/MotionPhase/MotionPhase.gd"
 }, {
-"base": "StateBase",
+"base": "AnimalState",
 "class": "MoveToState",
 "language": "GDScript",
 "path": "res://Scenes/Animals/Behaviour/Pollinating/States/FlyTo.gd"
@@ -119,10 +119,20 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://AbstractClasses/Plant.gd"
 }, {
+"base": "Behaviour",
+"class": "Pollinating",
+"language": "GDScript",
+"path": "res://Scenes/Animals/Behaviour/Pollinating/Pollinating .gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Projectile",
 "language": "GDScript",
 "path": "res://Scenes/Projectile/Projectile.gd"
+}, {
+"base": "WanderState",
+"class": "QueueingState",
+"language": "GDScript",
+"path": "res://Scenes/Animals/Behaviour/Pollinating/Queueing.gd"
 }, {
 "base": "Card",
 "class": "Rain",
@@ -262,7 +272,9 @@ _global_script_class_icons={
 "MoveToState": "",
 "MultiplePhaseProjectile": "",
 "Plant": "",
+"Pollinating": "",
 "Projectile": "",
+"QueueingState": "",
 "Rain": "",
 "RainAnimation": "",
 "RainParticule": "",

@@ -10,3 +10,5 @@ script = ExtResource( 1 )
 [node name="Trees" type="YSort" parent="."]
 
 [node name="Flowers" type="YSort" parent="."]
+
+[node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="."]
