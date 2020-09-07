@@ -13,10 +13,10 @@ func get_pollinazer() -> WeakRef: return pollinazer
 
 #### BUILT-IN ####
 
-
+func _ready():
+	var _err = connect("is_being_ate", self, "_on_is_being_ate")
 
 #### LOGIC ####
-
 
 
 #### INPUTS ####
@@ -28,3 +28,11 @@ func get_category() -> String:
 	return "Flower"
 
 #### SIGNAL RESPONSES ####
+
+func _on_is_being_ate():
+	if pollinazer == null:
+		return
+	
+	var pol = pollinazer.get_ref()
+	if pol != null:
+		pol.go_away()

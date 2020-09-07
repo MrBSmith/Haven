@@ -7,8 +7,7 @@ export var wander_distance : float = 32.0 setget set_wander_distance, get_wander
 export var eatable_types : PoolStringArray = []
 export var view_radius : float = 12.0
 
-export var path_max_curvature : float = 100.0
-export var path_min_curvature : float = 20.0
+export var eating_time : float = 3.0
 
 var standby : bool = false setget set_standby, get_standby
 var target : PhysicsBody2D = null setget set_target, get_target
@@ -70,6 +69,7 @@ func _ready():
 
 #### LOGIC ####
 
+# Set the move path (Straight line to the target)
 func set_move_path(path_point_array: Array):
 	path_curve.clear_points()
 	path_curve.add_point(global_position)
@@ -79,16 +79,10 @@ func set_move_path(path_point_array: Array):
 		
 		if point == last_point:
 			continue
-		
-		var dist = last_point.distance_to(point)
-		var curvature = clamp(path_max_curvature * (1 / dist), path_min_curvature, path_max_curvature)
-		
-		path_curve.add_point(point, 
-		Vector2(rand_range(-curvature, curvature), rand_range(-curvature, curvature)), 
-		Vector2(rand_range(-curvature, curvature), rand_range(-curvature, curvature)))
+			
+		path_curve.add_point(point)
 	
 	path = path_curve.get_baked_points()
-
 
 
 # Give this animal the order to move toward the given position
@@ -105,13 +99,20 @@ func reach_target(tar: PhysicsBody2D):
 	move_to(tar.get_global_position())
 
 
-func gather():
+func eat():
 	if behaviour is Pollinating:
 		visited_targets.append(target)
 		if visited_targets.size() > 5:
 			visited_targets.remove(0)
 	
-	set_state("Gather")
+	if behaviour is Pollinating:
+		set_state("Gather")
+	elif behaviour is Herbivore:
+		set_state("Eating")
+
+
+func go_away():
+	set_state("Wander")
 
 
 # Move along the path
@@ -158,3 +159,4 @@ func find_target_in_view() -> PhysicsBody2D:
 
 
 #### SIGNAL RESPONSES ####
+

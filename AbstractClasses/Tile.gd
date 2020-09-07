@@ -59,9 +59,9 @@ func initiate_polygone_instance():
 	nav_poly.set_navigation_polygon(polygone)
 	polygone.add_outline([
 		Vector2(-half_tile_size.x, -half_tile_size.y),
-		Vector2(-half_tile_size.x, half_tile_size.y),
 		Vector2(half_tile_size.x, -half_tile_size.y),
-		Vector2(half_tile_size.x, half_tile_size.y)
+		Vector2(half_tile_size.x, half_tile_size.y),
+		Vector2(-half_tile_size.x, half_tile_size.y)
 	])
 	polygone.make_polygons_from_outlines()
 

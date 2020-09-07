@@ -7,6 +7,8 @@ export var min_sibling_dist : float = 2.0 setget set_min_sibling_dist, get_min_s
 export var drain_amount : int = 5
 export var growth_frequency_time : float = 1.2
 
+var eater : WeakRef = null setget set_eater, get_eater
+
 var adult : bool = false setget set_adult, is_adult
 var growth_timer_node : Timer = null
 var growth : int = 3 setget set_growth, get_growth
@@ -20,12 +22,19 @@ var on_fire : bool = false setget , is_on_fire
 export var favorable_tile_types : PoolStringArray = ["Soil", "Grass", "Forest"]
 
 signal plant_died
-
+signal is_being_ate
 
 #### ACCESSORS ####
 
 func is_type(type): return type == "Plant"
 func get_type(): return "Plant"
+
+func set_eater(value: WeakRef): 
+	eater = value
+	if eater != null:
+		emit_signal("is_being_ate")
+
+func get_eater(): return eater
 
 func is_on_fire() -> bool:
 	return on_fire
@@ -117,6 +126,10 @@ func drain_tile_water() -> int:
 
 
 func die():
+	queue_free()
+	emit_signal("plant_died", get_category())
+
+func ate():
 	queue_free()
 	emit_signal("plant_died", get_category())
 

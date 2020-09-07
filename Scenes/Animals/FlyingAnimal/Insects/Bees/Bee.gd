@@ -1,4 +1,4 @@
-extends Animal
+extends FlyingAnimal
 class_name Bee
 
 #### ACCESSORS ####
@@ -20,9 +20,5 @@ func get_type(): return "Bee"
 
 #### INPUTS ####
 
-func _input(event):
-	if event.is_action_pressed("click"):
-		var mouse_pos = get_global_mouse_position()
-		move_to(mouse_pos)
 
 #### SIGNAL RESPONSES ####

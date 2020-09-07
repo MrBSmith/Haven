@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/ButterflyBlue2.png-4700fb35eea4d251b70e56783ba674aa.stex"
+path="res://.import/Butterfly2.png-761b7a29ea58f19be0ddfab4ca29c8bf.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Scenes/Animals/Insects/Butterfly/Sprites/ButterflyBlue2.png"
-dest_files=[ "res://.import/ButterflyBlue2.png-4700fb35eea4d251b70e56783ba674aa.stex" ]
+source_file="res://Scenes/Animals/FlyingAnimal/Insects/Butterfly/Sprites/Butterfly2.png"
+dest_files=[ "res://.import/Butterfly2.png-761b7a29ea58f19be0ddfab4ca29c8bf.stex" ]
 
 [params]
 

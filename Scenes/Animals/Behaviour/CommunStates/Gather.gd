@@ -1,7 +1,7 @@
 extends AnimalState
 class_name GatherState
 
-onready var timer_node = $Timer
+onready var timer_node = Timer.new()
 
 #### ACCESSORS ####
 
@@ -10,6 +10,8 @@ onready var timer_node = $Timer
 #### BUILT-IN ####
 
 func _ready():
+	add_child(timer_node)
+	
 	var _err = timer_node.connect("timeout", self, "_on_timer_timeout")
 
 #### LOGIC ####
@@ -19,16 +21,24 @@ func _ready():
 #### VIRTUALS ####
 
 func enter_state(_previous_state: StateBase):
-	timer_node.start()
+	timer_node.start(animal.eating_time)
 	
-	var flower = animal.get_target()
-	flower.set_pollinazer(weakref(animal))
+	var target = animal.get_target()
+	
+	if target is FlowerBase && states_machine is Pollinating:
+		target.set_pollinazer(weakref(animal))
+	else:
+		target.set_eater(weakref(animal))
 
 
 # Try to find a new target right away
 func exit_state(_next_state: StateBase):
-	var flower = animal.get_target()
-	flower.set_pollinazer(null)
+	var target = animal.get_target()
+	
+	if target is FlowerBase && states_machine is Pollinating:
+		target.set_pollinazer(null)
+	else:
+		target.ate()
 
 
 #### INPUTS ####
