@@ -15,8 +15,11 @@ class_name QueueingState
 func on_animal_arrived():
 	var flower = animal.get_target()
 	
+	if flower == null:
+		states_machine.set_state("Wander")
+	
 	if flower.get_pollinazer() == null or flower.get_pollinazer().get_ref() == null:
-		animal.reach_target(flower)
+		animal.reach_for_target(flower)
 	else:
 		wander_area_center = flower.get_global_position()
 		animal.set_move_path([find_new_destination(true)])

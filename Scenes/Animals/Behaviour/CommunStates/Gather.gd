@@ -35,6 +35,9 @@ func enter_state(_previous_state: StateBase):
 func exit_state(_next_state: StateBase):
 	var target = animal.get_target()
 	
+	if target == null:
+		return
+	
 	if target is FlowerBase && states_machine is Pollinating:
 		target.set_pollinazer(null)
 	else:
@@ -50,6 +53,6 @@ func exit_state(_next_state: StateBase):
 func _on_timer_timeout():
 	var target = animal.find_target_in_view()
 	if target:
-		animal.reach_target(target)
+		animal.reach_for_target(target)
 	else:
 		states_machine.set_state("Wander")

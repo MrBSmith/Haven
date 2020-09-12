@@ -29,7 +29,7 @@ func _physics_process(delta):
 		return
 	state_name = current_state.update(delta)
 	if state_name:
-		set_state(get_node(state_name))
+		set_state(state_name)
 
 
 func get_state() -> StateBase:

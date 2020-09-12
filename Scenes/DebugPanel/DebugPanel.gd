@@ -31,6 +31,7 @@ func update_cursor_tile_label():
 	
 	var current_tile_pos = current_tile.get_grid_position()
 	$VBoxContainer/CursorTile.set_text("CursorTile: " + String(current_tile_pos))
+	$VBoxContainer/CursorPos.set_text("CursorPos: " + String(mouse_pos))
 
 
 #### INPUTS ####

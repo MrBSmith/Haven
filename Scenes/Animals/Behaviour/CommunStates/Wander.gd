@@ -50,7 +50,7 @@ func on_animal_arrived():
 	if tar == null:
 		animal.set_move_path([find_new_destination(animal.standby)])
 	else:
-		animal.reach_target(tar)
+		animal.reach_for_target(tar)
 
 
 #### VIRTUALS ####
@@ -82,6 +82,9 @@ func update(delta: float):
 
 
 func _on_timer_timeout():
+	if states_machine.get_state() != self:
+		return
+	
 	var target = animal.find_target_in_view()
 	if target:
-		animal.reach_target(target)
+		animal.reach_for_target(target)

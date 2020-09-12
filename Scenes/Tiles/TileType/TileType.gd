@@ -21,7 +21,11 @@ var tile = null
 
 #### ACCESSORS ####
 
+func get_type_name() -> String: return ""
 
+# Return true if the terrain is passable for the given type of animal
+func is_passable(terrestrial: bool = true) -> bool:
+	return (get_type_name() == "Water" or get_type_name() == "Swamp") != terrestrial
 
 #### BUILT-IN ####
 

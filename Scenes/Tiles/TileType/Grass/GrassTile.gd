@@ -1,7 +1,7 @@
 extends SoilTile
 class_name GrassTile
 
-func get_type() -> String:
+func get_type_name() -> String:
 	return "Grass"
 
 #### ACCESSORS ####

@@ -23,29 +23,17 @@ onready var behaviour : StatesMachine = find_behaviour()
 func is_type(type): return type == "Animal" or .is_type(type)
 func get_type(): return "Animal"
 
-func set_speed(value: float):
-	speed = value
+func set_speed(value: float): speed = value
+func get_speed() -> float: return speed
 
-func get_speed() -> float:
-	return speed
+func set_wander_distance(value: float): wander_distance = value
+func get_wander_distance() -> float: return wander_distance
 
-func set_wander_distance(value: float):
-	wander_distance = value
+func set_state(value: String): behaviour.set_state(value)
+func get_state_name() -> String: return behaviour.get_state_name()
 
-func get_wander_distance() -> float:
-	return wander_distance
-
-func set_state(value: String):
-	behaviour.set_state(value)
-
-func get_state_name() -> String:
-	return behaviour.get_state_name()
-
-func set_standby(value: bool):
-	standby = value
-
-func get_standby() -> bool:
-	return standby
+func set_standby(value: bool): standby = value
+func get_standby() -> bool: return standby
 
 func set_target(value: PhysicsBody2D):
 	if target is FlowerBase:
@@ -91,7 +79,7 @@ func move_to(pos: Vector2):
 	set_state("MoveTo")
 
 
-func reach_target(tar: PhysicsBody2D):
+func reach_for_target(tar: PhysicsBody2D):
 	set_target(tar)
 	if tar == null:
 		return

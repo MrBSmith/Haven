@@ -12,22 +12,25 @@ onready var plant_group_array = [grass_group_node, trees_group_node, flowers_gro
 var grid_position : Vector2 setget set_grid_position, get_grid_position
 var wetness : int = 500 setget set_wetness, get_wetness
 
-var type : TileType = null
+var tile_type : TileType = null
 
 signal tile_created
 signal type_changed
 signal plant_added
 
 func _ready():
-	initiate_polygone_instance()
+	add_to_group("Tile")
 	
 	var _err = connect("plant_added", self, "_on_plant_added")
 	_err = connect("type_changed", self, "_on_type_changed")
 
 #### ACCESSORS ####
 
-func get_type():
-	return type.get_type()
+func get_tile_type():
+	return tile_type
+
+func get_tile_type_name():
+	return tile_type.get_type_name()
 
 func set_grid_position(value: Vector2):
 	grid_position = value
@@ -37,9 +40,9 @@ func get_grid_position() -> Vector2:
 
 func set_wetness(value: int):
 	wetness = int(clamp(value, 0.0, 1000.0))
-	if wetness >= type.wet_threshold:
+	if wetness >= tile_type.wet_threshold:
 		_on_max_wetness_reached()
-	elif wetness < type.dry_threshold:
+	elif wetness < tile_type.dry_threshold:
 		_on_min_wetness_reached()
 
 func get_wetness() -> int:
@@ -51,26 +54,12 @@ func add_to_wetness(value: int):
 
 #### LOGIC ####
 
-func initiate_polygone_instance():
-	var half_tile_size = Globals.TILE_SIZE / 2
-	
-	var nav_poly = $NavigationPolygonInstance
-	var polygone = NavigationPolygon.new()
-	nav_poly.set_navigation_polygon(polygone)
-	polygone.add_outline([
-		Vector2(-half_tile_size.x, -half_tile_size.y),
-		Vector2(half_tile_size.x, -half_tile_size.y),
-		Vector2(half_tile_size.x, half_tile_size.y),
-		Vector2(-half_tile_size.x, half_tile_size.y)
-	])
-	polygone.make_polygons_from_outlines()
-
 # Generate the flora of the tile, based on its type
 # Called by the grid when the tile is generated
 func generate_flora():
-	generate_plant(Globals.grass, type.min_grass_nb, type.max_grass_nb, 70, true)
-	generate_plant(Globals.flower_types, type.min_flower_nb, type.max_flower_nb, 70, true)
-	generate_plant(Globals.base_tree, type.min_tree_nb, type.max_tree_nb, 40, true)
+	generate_plant(Globals.grass, tile_type.min_grass_nb, tile_type.max_grass_nb, 70, true)
+	generate_plant(Globals.flower_types, tile_type.min_flower_nb, tile_type.max_flower_nb, 70, true)
+	generate_plant(Globals.base_tree, tile_type.min_tree_nb, tile_type.max_tree_nb, 40, true)
 	
 	emit_signal("tile_created")
 
@@ -78,7 +67,7 @@ func generate_flora():
 # Set the wetness of the tile, based on its type at the middle of its wet range
 # Called by the grid when the tile is generated
 func generate_wetness():
-	var default_wetness = type.dry_threshold + (float(type.wet_threshold - type.dry_threshold) / 2)
+	var default_wetness = tile_type.dry_threshold + (float(tile_type.wet_threshold - tile_type.dry_threshold) / 2)
 	set_wetness(default_wetness)
 
 
@@ -123,7 +112,7 @@ func generate_plant(plant, min_nb: int, max_nb: int, spawn_chances: int, garden_
 
 # Return true if the tile is wet enough to grow plant
 func is_growable() -> bool:
-	return get_wetness() > type.growable_min_wetness
+	return get_wetness() > tile_type.growable_min_wetness
 
 
 # Return all the plants on the tile in an array
@@ -142,22 +131,25 @@ func drain_wetness(value: int) -> int:
 
 
 # Change the type of the tile for the given one
-func change_tile_type(type_name: String):
+func change_tile_type(type_name: String, generation: bool = false):
 	var tile_type_scene = Globals.tiles_type[type_name]
 	var new_tile_type = tile_type_scene.instance()
 	
 	# If the type to be changed in is the same as the current type, abort
-	if type != null && type.get_type() == new_tile_type.get_type():
+	if tile_type != null && tile_type.get_type_name() == new_tile_type.get_type_name():
 		new_tile_type.queue_free()
 		return
 	
-	if type:
-		type.queue_free()
-		yield(type, "tree_exited")
+	if !generation:
+		Events.emit_signal("tile_type_changed", self, tile_type, new_tile_type)
+	
+	if tile_type:
+		tile_type.queue_free()
+		yield(tile_type, "tree_exited")
 	
 	call_deferred("add_child", new_tile_type)
-	type = new_tile_type
-	type.tile = self
+	tile_type = new_tile_type
+	tile_type.tile = self
 	
 	yield(new_tile_type, "ready")
 	emit_signal("type_changed", type_name)
@@ -179,7 +171,7 @@ func add_plant(plant_node: Plant, pos: Vector2, garden_generation : bool = false
 	var plant_category = plant_node.get_category()
 	var plant_group = get_plant_correct_group(plant_category)
 	
-	var plant_max_nb = type.get_plant_cat_max(plant_category)
+	var plant_max_nb = tile_type.get_plant_cat_max(plant_category)
 	
 	if plant_group == null:
 		return
@@ -251,7 +243,7 @@ func on_rain_applied():
 # Called when the minimun wetness of this type of tile is reached
 # Change the tile type
 func _on_min_wetness_reached():
-	var tile_type_name = type.more_dry_tile_type
+	var tile_type_name = tile_type.more_dry_tile_type
 	
 	if tile_type_name != "":
 		change_tile_type(tile_type_name)
@@ -260,7 +252,7 @@ func _on_min_wetness_reached():
 # Called when the maximum wetness of this type of tile is reached
 # Change the tile type
 func _on_max_wetness_reached():
-	var tile_type_name = type.more_wet_tile_type
+	var tile_type_name = tile_type.more_wet_tile_type
 	
 	if tile_type_name != "":
 		change_tile_type(tile_type_name)
@@ -291,4 +283,4 @@ func on_wind_applied(wind_dir: Vector2, wind_force: int, duration: float):
 	for tree in trees_group_node.get_children():
 		tree.apply_wind(wind_dir, wind_force, duration)
 	
-	type.on_wind_applied(wind_dir, wind_force, duration)
+	tile_type.on_wind_applied(wind_dir, wind_force, duration)

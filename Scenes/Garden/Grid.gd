@@ -44,6 +44,7 @@ func generate_grid():
 			child.generate_flora()
 	
 	$GridArea.adapt_grid_area(nb_tiles.x, Globals.TILE_SIZE)
+	$Pathfinder.sample_map()
 
 
 # Place the given type of tile, the given number of time, in the free slot in the grid (stocked in the free_pos_array)
@@ -70,7 +71,7 @@ func place_single_tile(tile_type: String, grid_position: Vector2):
 	new_tile.set_grid_position(grid_position)
 	add_child(new_tile)
 	
-	new_tile.call_deferred("change_tile_type", tile_type)
+	new_tile.call_deferred("change_tile_type", tile_type, true)
 	new_tile.call_deferred("generate_wetness")
 
 
@@ -97,6 +98,7 @@ func get_tile_at_grid_pos(pos : Vector2) -> Tile:
 	return null
 
 
+### USE A RECT2 FOR BETTER PRECISION ###
 # Return the tile at the given grid coordinates
 func get_tile_at_world_pos(world_pos : Vector2) -> Tile:
 	if is_pos_outside_grid(world_pos):
@@ -157,7 +159,7 @@ func on_seed_planted(pos: Vector2, tree_type: PackedScene):
 		return
 	
 	var new_plant : Plant = tree_type.instance()
-	var tile_type : String = tile.get_type()
+	var tile_type : String = tile.get_tile_type_name()
 	
 	if (tile_type != "Soil" and tile_type != "Grass") or !tile.is_growable():
 		new_plant.queue_free()

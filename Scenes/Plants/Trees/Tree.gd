@@ -18,7 +18,11 @@ func _ready():
 	randomize()
 	
 	add_to_group("Tree")
+	add_to_group("Obstacle")
+	
 	var _err = $StatesMachine.connect("state_changed", self, "_on_state_changed")
+	
+	Events.emit_signal("new_tree_grown", self)
 
 #### LOGIC ####
 
@@ -75,8 +79,14 @@ func get_category() -> String:
 func die():
 	if is_in_group("Plant"):
 	 remove_from_group("Plant")
+	
 	if is_in_group("Tree"):
 		remove_from_group("Tree")
+		
+	if is_in_group("Obstacle"):
+		remove_from_group("Obstacle")
+	
+	Events.emit_signal("tree_died", self)
 	queue_free()
 
 

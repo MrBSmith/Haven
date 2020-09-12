@@ -1,7 +1,7 @@
 extends TileType
 class_name WaterTile
 
-func get_type() -> String:
+func get_type_name() -> String:
 	return "Water"
 
 #### SIGNAL RESPONSES ####

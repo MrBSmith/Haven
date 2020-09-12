@@ -7,10 +7,10 @@
 [ext_resource path="res://Scenes/Plants/Trees/Wind.gd" type="Script" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 2.98321, 4.63424 )
+extents = Vector2( 3, 2 )
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 2.5, 4.5 )
+extents = Vector2( 2.98321, 4.63424 )
 
 [node name="Tree" type="StaticBody2D"]
 z_index = 1
@@ -31,24 +31,27 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -0.5 )
+shape = SubResource( 1 )
+
 [node name="Skeleton2D" type="Skeleton2D" parent="."]
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="Foliage" type="Bone2D" parent="Skeleton2D"]
-position = Vector2( 0.0556812, -3.09031 )
+position = Vector2( 0, -3 )
 rotation = -1.5708
-rest = Transform2D( -4.37114e-08, -1, 1, -4.37114e-08, 0.0556812, -3.09031 )
+rest = Transform2D( -4.37114e-08, -1, 1, -4.37114e-08, 0, -3 )
 default_length = 5.0
 __meta__ = {
 "_edit_bone_": true
 }
 
 [node name="Trunc" type="Bone2D" parent="Skeleton2D"]
-position = Vector2( 0.0371637, -0.0650034 )
 rotation = -1.5708
-rest = Transform2D( -4.37114e-08, -1, 1, -4.37114e-08, 0.0371637, -0.0650034 )
+rest = Transform2D( -4.37114e-08, -1, 1, -4.37114e-08, 0, 0 )
 default_length = 3.0
 __meta__ = {
 "_edit_bone_": true
@@ -76,8 +79,4 @@ visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2( 0.0262785, -4.62493 )
-shape = SubResource( 1 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( -0.0264854, -4.54461 )
 shape = SubResource( 2 )

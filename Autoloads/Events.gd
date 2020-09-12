@@ -3,6 +3,12 @@ extends Node
 # warnings-disable
 
 signal turn_finished
+
+signal new_tree_grown(tree)
+signal tree_died(tree)
+
+signal tile_type_changed(tile, prev_type, next_type)
+
 signal meteo_animation_finished
 signal single_plant_animation_finished
 signal flora_animation_finished
