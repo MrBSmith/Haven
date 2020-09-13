@@ -24,6 +24,7 @@ func _ready():
 	
 	Events.emit_signal("new_tree_grown", self)
 
+
 #### LOGIC ####
 
 func new_turn():

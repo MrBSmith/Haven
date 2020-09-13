@@ -147,10 +147,8 @@ func rain_applied():
 func get_category() -> String:
 	return ""
 
-
 func set_fire(thunder: bool = false):
 	hit_by_thunder = thunder
-
 
 func stop_fire():
 	on_fire = false

@@ -61,8 +61,7 @@ func modify_obstacle(obstacle: Node2D, remove: bool = true):
 		var not_passable = is_point_in_unpassable_tile(point) or \
 			is_point_in_obstacle(point, obstacle if remove else null)
 		
-		if not_passable:
-			astar.set_point_disabled(id, not_passable)
+		astar.set_point_disabled(id, not_passable)
 
 
 # Called when a tile change type; update the passability of the point underneath it
