@@ -9,6 +9,8 @@ export var view_radius : float = 12.0
 
 export var eating_time : float = 3.0
 
+export var appearing_conditions : Array = []
+
 var standby : bool = false setget set_standby, get_standby
 var target : PhysicsBody2D = null setget set_target, get_target
 var path : PoolVector2Array

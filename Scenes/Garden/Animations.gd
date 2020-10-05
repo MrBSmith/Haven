@@ -61,7 +61,8 @@ func thunder_animation():
 	
 	yield(thunder, "tree_exited")
 	
-	target_tree.set_fire(true)
+	if target_tree:
+		target_tree.set_fire(true)
 
 
 func tile_array_to_rect(tile_array: Array) -> Rect2:

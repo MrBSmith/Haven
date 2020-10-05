@@ -48,6 +48,7 @@ __meta__ = {
 }
 
 [node name="PathVisualizer" type="Node2D" parent="Grid/Pathfinder"]
+visible = false
 modulate = Color( 1, 1, 1, 0.207843 )
 script = ExtResource( 12 )
 

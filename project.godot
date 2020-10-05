@@ -347,6 +347,7 @@ config/icon="res://icon.png"
 Globals="*res://Autoloads/Globals.gd"
 ScreenArea="*res://Autoloads/ScreenArea.tscn"
 Events="*res://Autoloads/Events.gd"
+AnimalSpawn="*res://Autoloads/AnimalSpawn.tscn"
 
 [display]
 

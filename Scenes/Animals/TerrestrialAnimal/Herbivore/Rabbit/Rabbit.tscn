@@ -16,6 +16,7 @@ animations = [ {
 z_index = 1
 eatable_types = PoolStringArray( "Grass", "Flower" )
 view_radius = 20.0
+appearing_conditions = [ [ "Grass", 6, 3.0 ] ]
 
 [node name="AnimatedSprite" parent="." index="0"]
 position = Vector2( 0, -4 )
