@@ -3,6 +3,8 @@ class_name Pathfinder
 
 var ready : bool = false 
 
+export var swimming_animal : bool = false
+
 onready var grid_pxl_size = Globals.TILE_SIZE * Globals.GRID_TILE_SIZE
 onready var astar = AStar2D.new()
 onready var grid_node = get_parent()
@@ -66,12 +68,12 @@ func modify_obstacle(obstacle: Node2D, remove: bool = true):
 
 # Called when a tile change type; update the passability of the point underneath it
 func modify_tile_type(tile: Tile, prev_type: TileType, next_type: TileType):
-	var add : bool = !next_type.is_passable()
+	var add : bool = !is_tile_passable(next_type)
 	var first_type : bool = prev_type == null
 	
 	# If its the first addition of a passable type
 	# Or if the passability haven't changed, abort
-	if (!add && first_type) or (!first_type && (next_type.is_passable() == prev_type.is_passable())):
+	if (!add && first_type) or (!first_type && (is_tile_passable(next_type) == is_tile_passable(prev_type))):
 		return
 	
 	for point in get_points_in_tile(tile):
@@ -129,8 +131,8 @@ func is_point_in_unpassable_tile(point: Vector2) -> bool:
 	if tile == null:
 		return true
 	
-	var tile_type = tile.get_tile_type_name()
-	return tile_type == "Water" or tile_type == "Swamp"
+	var tile_type = tile.get_tile_type()
+	return !is_tile_passable(tile_type)
 
 
 # Return true is the given point is inside an obstacle, false if not
@@ -196,6 +198,15 @@ func get_id_at_pos(pos: Vector2) -> int:
 # Take an id, and return its position
 func get_pos_from_id(id : int) -> Vector2:
 	return Vector2(id % int(grid_pxl_size.x), int(id / grid_pxl_size.x))
+
+
+# Return true if the given tile is passable, false if not
+func is_tile_passable(tile_type: TileType) -> bool:
+	if swimming_animal:
+		return tile_type is WetTile
+	else:
+		return tile_type is DryTile
+
 
 #### VIRTUALS ####
 

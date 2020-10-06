@@ -7,6 +7,7 @@ script = ExtResource( 1 )
 dir_path = "res://Scenes/Animals"
 targeted_class = "Animal"
 exceptions_array = [ "Animal.tscn" ]
+spawn_disabled = true
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.2

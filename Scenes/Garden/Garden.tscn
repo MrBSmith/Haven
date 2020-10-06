@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Scenes/Garden/Garden.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Hand/Hand.gd" type="Script" id=2]
@@ -8,10 +8,7 @@
 [ext_resource path="res://Scenes/DebugPanel/DebugPanel.gd" type="Script" id=6]
 [ext_resource path="res://Scenes/Garden/Animations.gd" type="Script" id=7]
 [ext_resource path="res://Scenes/VFX/Clouds/Clouds.tscn" type="PackedScene" id=8]
-[ext_resource path="res://Scenes/Animals/FlyingAnimal/Insects/Bees/Bee.tscn" type="PackedScene" id=9]
-[ext_resource path="res://Scenes/Animals/TerrestrialAnimal/Herbivore/Rabbit/Rabbit.tscn" type="PackedScene" id=10]
-[ext_resource path="res://Scenes/Garden/Pathfinder.gd" type="Script" id=11]
-[ext_resource path="res://Scenes/Garden/PathVisualizer.gd" type="Script" id=12]
+[ext_resource path="res://Scenes/Garden/Pathfinder/Pathfinder.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Scenes/Garden/AreaDebug.gd" type="Script" id=13]
 [ext_resource path="res://Scenes/Card/AOEArea.gd" type="Script" id=14]
 
@@ -43,16 +40,10 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Pathfinder" type="Node2D" parent="Grid"]
-script = ExtResource( 11 )
-__meta__ = {
-"_edit_lock_": true
-}
+[node name="TerresPathfinder" parent="Grid" instance=ExtResource( 11 )]
 
-[node name="PathVisualizer" type="Node2D" parent="Grid/Pathfinder"]
-visible = false
-modulate = Color( 1, 1, 1, 0.207843 )
-script = ExtResource( 12 )
+[node name="WaterPathfinder" parent="Grid" instance=ExtResource( 11 )]
+swimming_animal = true
 
 [node name="GridArea" type="Area2D" parent="Grid"]
 script = ExtResource( 4 )
@@ -73,19 +64,6 @@ __meta__ = {
 __meta__ = {
 "_edit_lock_": true
 }
-
-[node name="Bee" parent="Grid/Animals" instance=ExtResource( 9 )]
-
-[node name="Bee2" parent="Grid/Animals" instance=ExtResource( 9 )]
-
-[node name="Bee3" parent="Grid/Animals" instance=ExtResource( 9 )]
-
-[node name="Bee4" parent="Grid/Animals" instance=ExtResource( 9 )]
-
-[node name="Bee5" parent="Grid/Animals" instance=ExtResource( 9 )]
-
-[node name="Rabbit" parent="Grid/Animals" instance=ExtResource( 10 )]
-position = Vector2( 64.17, 44.1942 )
 
 [node name="MeteoEffects" type="YSort" parent="Grid"]
 script = ExtResource( 7 )

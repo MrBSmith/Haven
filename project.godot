@@ -147,7 +147,7 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "Pathfinder",
 "language": "GDScript",
-"path": "res://Scenes/Garden/Pathfinder.gd"
+"path": "res://Scenes/Garden/Pathfinder/Pathfinder.gd"
 }, {
 "base": "StaticBody2D",
 "class": "Plant",
@@ -243,6 +243,11 @@ _global_script_classes=[ {
 "class": "SwampTile",
 "language": "GDScript",
 "path": "res://Scenes/Tiles/TileType/WetTiles/Swamp/SwampTile.gd"
+}, {
+"base": "Animal",
+"class": "SwimmingAnimal",
+"language": "GDScript",
+"path": "res://Scenes/Animals/SwimmingAnimal/SwimmingAnimal.gd"
 }, {
 "base": "StateBase",
 "class": "TargetCardState",
@@ -352,6 +357,7 @@ _global_script_class_icons={
 "SunCard": "",
 "SunRay": "",
 "SwampTile": "",
+"SwimmingAnimal": "",
 "TargetCardState": "",
 "TerrestrialAnimal": "",
 "Tile": "",

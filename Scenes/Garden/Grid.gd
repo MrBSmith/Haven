@@ -44,7 +44,8 @@ func generate_grid():
 			child.generate_flora()
 	
 	$GridArea.adapt_grid_area(nb_tiles.x, Globals.TILE_SIZE)
-	$Pathfinder.sample_map()
+	$TerresPathfinder.sample_map()
+	$WaterPathfinder.sample_map()
 
 
 # Place the given type of tile, the given number of time, in the free slot in the grid (stocked in the free_pos_array)

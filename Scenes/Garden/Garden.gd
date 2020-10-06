@@ -39,7 +39,17 @@ func init_hand_size(grid_pxl_size: Vector2):
 	hand_node.set_position(Vector2(Globals.window_width / 2, grid_pxl_size.y + hand_space_size.y / 2))
 
 
+#### INPUTS ####
 
+
+# TEST FUNCTION, TO BE DISABLED
+func _input(_event):
+	if Input.is_action_just_pressed("click"):
+		var mouse_pos = get_global_mouse_position()
+		var fish_scene = AnimalSpawn.find_animal_scene("Fish")
+		var fish = fish_scene.instance()
+		$Grid/Animals.add_child(fish)
+		fish.set_global_position(mouse_pos)
 
 
 #### SIGNALS RESPONSES ####

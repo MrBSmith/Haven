@@ -9,7 +9,7 @@ export var view_radius : float = 12.0
 
 export var eating_time : float = 3.0
 
-export var avarage_presence_time : float = 10.0
+export var avarage_presence_time : float = 40.0
 
 export var appearing_conditions : Array = []
 export var appearing_cond_radius : int = 2
@@ -204,6 +204,9 @@ func is_appear_condition_verified(tile_array: Array, condition: AppearCondition)
 
 # Trigger the timer which determine when the animal wants to leave the board
 func trigger_presence_timer():
+	if avarage_presence_time <= 0:
+		return
+	
 	var rdm_sign = randi() % 2 * 2 -1
 	var variance = (avarage_presence_time * rand_range(0.1, 20.0) / 100) * rdm_sign
 	var presence_time = avarage_presence_time + variance

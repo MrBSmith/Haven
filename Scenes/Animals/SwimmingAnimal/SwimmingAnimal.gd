@@ -1,12 +1,12 @@
 extends Animal
-class_name TerrestrialAnimal
+class_name SwimmingAnimal
 
-onready var pathfinder = get_tree().get_current_scene().find_node("TerresPathfinder")
+onready var pathfinder = get_tree().get_current_scene().find_node("WaterPathfinder")
 
 #### ACCESSORS ####
 
-func is_type(type): return type == "TerrestrialAnimal" or .is_type(type)
-func get_type(): return "TerrestrialAnimal"
+func is_type(type): return type == "SwimmingAnimal" or .is_type(type)
+func get_type(): return "SwimmingAnimal"
 
 #### BUILT-IN ####
 
@@ -37,8 +37,6 @@ func set_move_path(path_point_array: Array):
 	path = path_curve.get_baked_points()
 
 
-func reach_for_target(tar: PhysicsBody2D):
-	.reach_for_target(tar)
 
 #### VIRTUALS ####
 
@@ -46,9 +44,6 @@ func reach_for_target(tar: PhysicsBody2D):
 
 #### INPUTS ####
 
-#func _input(event : InputEvent):
-#	if event.is_action_released("click"):
-#		var mouse_pos = get_global_mouse_position()
-#		move_to(mouse_pos)
+
 
 #### SIGNAL RESPONSES ####

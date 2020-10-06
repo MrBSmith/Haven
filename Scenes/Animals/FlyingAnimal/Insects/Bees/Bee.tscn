@@ -18,6 +18,7 @@ z_index = 1
 script = ExtResource( 2 )
 eatable_types = PoolStringArray( "Flower" )
 eating_time = 1.0
+avarage_presence_time = 0.0
 
 [node name="AnimatedSprite" parent="." index="0"]
 frames = SubResource( 1 )

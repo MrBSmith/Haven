@@ -149,7 +149,7 @@ func change_tile_type(type_name: String, generation: bool = false):
 	tile_type.tile = self
 	
 	yield(new_tile_type, "ready")
-	emit_signal("type_changed", type_name)
+	emit_signal("type_changed", tile_type)
 
 
 # Check of the tile type need to be changed, and change it if necesary
@@ -257,7 +257,8 @@ func _on_max_wetness_reached():
 
 # Called when the tile has finished beeing created
 # Kill every plant that can't grow on the new type
-func _on_type_changed(type_name: String):
+func _on_type_changed(type: TileType):
+	var type_name = type.get_type_name()
 	for plant in get_all_plants():
 		var fav_type = plant.favorable_tile_types
 		if not type_name in fav_type:

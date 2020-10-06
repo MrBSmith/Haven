@@ -8,7 +8,7 @@
 [sub_resource type="Resource" id=2]
 script = ExtResource( 4 )
 entity_type = "Grass"
-entity_number = 2
+entity_number = 5
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {

@@ -1,5 +1,7 @@
 extends ClassFinder
 
+export var spawn_disabled : bool = false
+
 var animals_node : Node = null
 var grid_node : Node = null
 
@@ -39,6 +41,17 @@ func spawn_animals():
 			instance.set_global_position(appear_tile.get_global_position())
 
 
+# Find the given animal in the list of animals and return its scene
+func find_animal_scene(animal_name: String) -> PackedScene:
+	for animal in target_array:
+		var singleton = animal[0]
+		var scene = animal[1]
+		
+		if singleton.name == animal_name:
+			return scene
+	return null
+
+
 #### VIRTUALS ####
 
 
@@ -50,4 +63,5 @@ func spawn_animals():
 #### SIGNAL RESPONSES ####
 
 func _on_timer_timeout():
-	spawn_animals()
+	if !spawn_disabled:
+		spawn_animals()

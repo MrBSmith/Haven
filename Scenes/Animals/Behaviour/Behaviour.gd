@@ -1,5 +1,5 @@
 extends StatesMachine
-class_name Behaviour
+class_name Behaviour 
 
 onready var animal = get_parent()
 
@@ -9,7 +9,8 @@ onready var animal = get_parent()
 
 #### BUILT-IN ####
 
-
+func _ready():
+	var _err = connect("state_changed", self, "_on_state_changed")
 
 #### LOGIC ####
 
@@ -25,3 +26,7 @@ func update(_delta: float):
 
 
 #### SIGNAL RESPONSES ####
+
+
+func _on_state_changed(state_name: String):
+	$Label.set_text(state_name)
