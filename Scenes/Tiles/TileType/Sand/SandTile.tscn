@@ -4,19 +4,19 @@
 [ext_resource path="res://Scenes/Tiles/TileType/Sand/SandTile.gd" type="Script" id=2]
 [ext_resource path="res://Scenes/Tiles/TileType/Sand/SandTile.png" type="Texture" id=3]
 
-[sub_resource type="Gradient" id=2]
+[sub_resource type="Gradient" id=1]
 colors = PoolColorArray( 0.828125, 0.652987, 0.187622, 1, 0.929412, 0.894118, 0.0509804, 0 )
 
-[sub_resource type="GradientTexture" id=3]
-gradient = SubResource( 2 )
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
 
-[sub_resource type="Curve" id=4]
+[sub_resource type="Curve" id=3]
 _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.154545 ), 0.0, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=5]
-curve = SubResource( 4 )
+[sub_resource type="CurveTexture" id=4]
+curve = SubResource( 3 )
 
-[sub_resource type="ParticlesMaterial" id=1]
+[sub_resource type="ParticlesMaterial" id=5]
 emission_shape = 2
 emission_box_extents = Vector3( 8, 8, 1 )
 flag_disable_z = true
@@ -25,8 +25,8 @@ gravity = Vector3( 0, 0, 0 )
 initial_velocity = 38.46
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
-scale_curve = SubResource( 5 )
-color_ramp = SubResource( 3 )
+scale_curve = SubResource( 4 )
+color_ramp = SubResource( 2 )
 
 [node name="SandTile" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
@@ -40,6 +40,6 @@ texture = ExtResource( 3 )
 emitting = false
 amount = 51
 lifetime = 0.8
-process_material = SubResource( 1 )
+process_material = SubResource( 5 )
 
 [node name="Timer" type="Timer" parent="." index="2"]

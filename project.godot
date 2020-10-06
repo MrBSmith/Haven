@@ -14,6 +14,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Resources/CardAOE/AOE.gd"
 }, {
+"base": "Node2D",
+"class": "AOE_area",
+"language": "GDScript",
+"path": "res://Scenes/Card/AOEArea.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Animal",
 "language": "GDScript",
@@ -48,6 +53,11 @@ _global_script_classes=[ {
 "class": "CircleMotion",
 "language": "GDScript",
 "path": "res://Scenes/Motion/CicrleMotion.gd"
+}, {
+"base": "Node",
+"class": "ClassFinder",
+"language": "GDScript",
+"path": "res://AbstractClasses/ClassFinder.gd"
 }, {
 "base": "Plant",
 "class": "FlowerBase",
@@ -281,6 +291,7 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "AOE": "",
+"AOE_area": "",
 "Animal": "",
 "AnimalState": "",
 "Bee": "",
@@ -288,6 +299,7 @@ _global_script_class_icons={
 "Card": "",
 "CardEffect": "",
 "CircleMotion": "",
+"ClassFinder": "",
 "FlowerBase": "",
 "FlyingAnimal": "",
 "GatherState": "",

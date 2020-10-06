@@ -143,6 +143,15 @@ func find_closest_tile(pos: Vector2) -> Tile:
 	return closest_tile
 
 
+# Returns every tiles in the given radius o
+func get_tiles_in_radius(grid_pos: Vector2, radius: int) -> Array:
+	var tile_array = get_tile_array()
+	var result_array : Array = []
+	for tile in tile_array:
+		if tile.get_grid_position().distance_to(grid_pos) <= radius:
+			result_array.append(tile)
+	return result_array
+
 #### INPUTS ####
 
 func _input(event):

@@ -6,4 +6,8 @@
 script = ExtResource( 1 )
 dir_path = "res://Scenes/Animals"
 targeted_class = "Animal"
-exceptions_array = [ "TerrestrialAnimal", "FlyingAnimal" ]
+exceptions_array = [ "Animal.tscn" ]
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.2
+autostart = true

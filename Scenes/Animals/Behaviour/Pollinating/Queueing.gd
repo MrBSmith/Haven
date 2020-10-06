@@ -17,6 +17,7 @@ func on_animal_arrived():
 	
 	if flower == null:
 		states_machine.set_state("Wander")
+		return
 	
 	if flower.get_pollinazer() == null or flower.get_pollinazer().get_ref() == null:
 		animal.reach_for_target(flower)

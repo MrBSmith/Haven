@@ -26,11 +26,8 @@ func _ready():
 
 #### ACCESSORS ####
 
-func get_tile_type():
-	return tile_type
-
-func get_tile_type_name():
-	return tile_type.get_type_name()
+func get_tile_type(): return tile_type
+func get_tile_type_name(): return tile_type.get_type_name()
 
 func set_grid_position(value: Vector2):
 	grid_position = value

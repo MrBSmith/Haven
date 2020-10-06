@@ -1,9 +1,7 @@
-extends Node
+extends ClassFinder
 
-export var dir_path : String = ""
-export var targeted_class : String = ""
-export var exceptions_array : Array = []
-var target_array : Array = []
+var animals_node : Node = null
+var grid_node : Node = null
 
 #### ACCESSORS ####
 
@@ -12,63 +10,33 @@ var target_array : Array = []
 #### BUILT-IN ####
 
 func _ready():
-	print_debug("    ----- FINDING " + targeted_class + " -----    ")
-	find_all_scene_of_class(dir_path) # Generate the chapter dynamicly
-
+	var _err = $Timer.connect("timeout", self, "_on_timer_timeout")
 
 #### LOGIC ####
 
-# Loop through every folders and files in the current dir
-# If it finds a target, store it, else continue digging
-func find_all_scene_of_class(path : String = ""):
-	if path == "":
-		print("ERROR: the find_all_script_of_class method has no specified path")
+func spawn_animals():
+	if !animals_node:
+		animals_node = get_tree().get_current_scene().find_node("Animals")
+	
+	if !grid_node:
+		grid_node = get_tree().get_current_scene().find_node("Grid")
+	
+	
+	if animals_node == null or grid_node == null:
 		return
 	
-	var dir = Directory.new()
-	if dir.open(path) == OK:
-		dir.list_dir_begin(true)
-		var current_file_name : String = dir.get_next()
+	for animal in target_array:
+		var singleton = animal[0]
+		var scene = animal[1]
 		
-		while current_file_name != "":
-			# Continue digging if the current file is a dir
-			if dir.current_is_dir():
-				print("Found directory: " + current_file_name)
-				var current_dir_path = get_current_file_path(dir, current_file_name)
-				find_all_scene_of_class(current_dir_path)
-			
-			# If the file is a targeted scene, store it in the target_array
-			else:
-				var current_scene_path = get_current_file_path(dir, current_file_name)
-				if current_scene_path.ends_with(".tscn"):
-					var scene = load(current_scene_path)
-					var instance = scene.instance()
-					
-					if instance.has_method("is_type") && instance.is_type(targeted_class) \
-						&& !is_exception(current_file_name):
-						target_array.append(instance)
-						print("       Found target file: " + current_file_name)
-					else:
-						instance.queue_free()
-			
-			# Access the next file/folder
-			current_file_name = dir.get_next()
-	
-	else:
-		print("ERROR : the directory '" + path + "' can't be found")
-
-
-# Retruns the path of the current file pointed by the dir object
-func get_current_file_path(dir : Directory, current_file_name : String) -> String:
-	return dir.get_current_dir() + "/" + current_file_name
-
-
-# Returns true if the given file is in the list of exceptions
-func is_exception(file_name: String) -> bool:
-	for exept in exceptions_array:
-		if exept.is_subsequence_of(file_name):
-			return true
-	return false
+		if !singleton.can_appear():
+			continue
+		
+		var appear_tile = singleton.find_appearing_tile(grid_node)
+		if appear_tile != null:
+			var instance = scene.instance()
+			animals_node.call_deferred("add_child", instance)
+			instance.set_global_position(appear_tile.get_global_position())
 
 
 #### VIRTUALS ####
@@ -80,3 +48,6 @@ func is_exception(file_name: String) -> bool:
 
 
 #### SIGNAL RESPONSES ####
+
+func _on_timer_timeout():
+	spawn_animals()

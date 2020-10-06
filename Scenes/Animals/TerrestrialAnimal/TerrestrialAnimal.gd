@@ -5,7 +5,8 @@ onready var pathfinder = get_tree().get_current_scene().find_node("Pathfinder")
 
 #### ACCESSORS ####
 
-
+func is_type(type): return type == "TerrestrialAnimal" or .is_type(type)
+func get_type(): return "TerrestrialAnimal"
 
 #### BUILT-IN ####
 

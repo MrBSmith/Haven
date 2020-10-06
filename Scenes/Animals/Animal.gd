@@ -10,6 +10,8 @@ export var view_radius : float = 12.0
 export var eating_time : float = 3.0
 
 export var appearing_conditions : Array = []
+export var appearing_cond_radius : int = 2
+export (float, 0.0, 100.0, 0.0) var appearing_probability : float = 0.0
 
 var standby : bool = false setget set_standby, get_standby
 var target : PhysicsBody2D = null setget set_target, get_target
@@ -22,7 +24,7 @@ onready var behaviour : StatesMachine = find_behaviour()
 
 #### ACCESSORS ####
 
-func is_type(type): return type == "Animal" or .is_type(type)
+func is_type(type): return type == "Animal"
 func get_type(): return "Animal"
 
 func set_speed(value: float): speed = value
@@ -139,6 +141,53 @@ func find_target_in_view() -> PhysicsBody2D:
 				return body
 	return null
 
+
+# Throw a random number to now if this animal can appear or not (If the conditions are met)
+func can_appear() -> bool:
+	var rng = rand_range(0.0, 100.0)
+	return rng <= appearing_probability
+
+
+# Find an appearing tile, and returns it. Return null if nothing was found
+func find_appearing_tile(grid_node: Node) -> Tile:
+	var tile_array = grid_node.get_tile_array()
+	tile_array.shuffle()
+	
+	for tile in tile_array:
+		
+		#### TO BE PLACED IN A STANDALONE FUNCTION
+		if self.is_type("TerrestrialAnimal"):
+			var tile_type_name = tile.get_tile_type_name() 
+			if tile_type_name == "Water" or tile_type_name == "Swamp":
+				continue
+		
+		var grid_pos = tile.get_grid_position()
+		var tile_area = grid_node.get_tiles_in_radius(grid_pos, appearing_cond_radius)
+		if is_area_favorable(tile_area):
+			return tile
+	return null
+
+
+# Check if an area is favorable for this animal to appear
+func is_area_favorable(tile_array: Array) -> bool:
+	for cond in appearing_conditions:
+		if !is_appear_condition_verified(tile_array, cond):
+			return false
+	return true
+
+
+# Check if a condition for appearing is verified
+func is_appear_condition_verified(tile_array: Array, condition: Array) -> bool:
+	var entity_type = condition[0]
+	var entity_number = condition[1]
+	var nb : int = 0
+	for tile in tile_array:
+		for plant in tile.get_all_plants():
+			if plant.is_type(entity_type):
+				nb += 1
+				if nb >= entity_number:
+					return true
+	return false
 
 #### VIRTUALS ####
 

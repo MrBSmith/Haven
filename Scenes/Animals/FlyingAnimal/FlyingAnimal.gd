@@ -6,7 +6,8 @@ export var path_min_curvature : float = 20.0
 
 #### ACCESSORS ####
 
-
+func is_type(type): return type == "FlyingAnimal" or .is_type(type)
+func get_type(): return "FlyingAnimal"
 
 #### BUILT-IN ####
 

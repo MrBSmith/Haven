@@ -1,4 +1,5 @@
 extends Node2D
+class_name AOE_area
 
 var tile_area_scene = preload("res://Scenes/TileArea/TileArea.tscn")
 
