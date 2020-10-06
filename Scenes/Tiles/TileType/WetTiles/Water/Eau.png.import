@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Marais.png-194bc55be800ea6346acc7b74f16760c.stex"
+path="res://.import/Eau.png-cd20a8d19542d40cecda9a0ef3086153.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Scenes/Tiles/TileType/Swamp/Marais.png"
-dest_files=[ "res://.import/Marais.png-194bc55be800ea6346acc7b74f16760c.stex" ]
+source_file="res://Scenes/Tiles/TileType/WetTiles/Water/Eau.png"
+dest_files=[ "res://.import/Eau.png-cd20a8d19542d40cecda9a0ef3086153.stex" ]
 
 [params]
 

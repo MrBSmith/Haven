@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Eau.png-ff70565c56d1a0bed320346b980b45e4.stex"
+path="res://.import/Grass.png-5a0dc7713bef60acd5dd815df3e1f6f5.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Scenes/Tiles/TileType/Water/Eau.png"
-dest_files=[ "res://.import/Eau.png-ff70565c56d1a0bed320346b980b45e4.stex" ]
+source_file="res://Scenes/Tiles/TileType/DryTiles/Grass/Grass.png"
+dest_files=[ "res://.import/Grass.png-5a0dc7713bef60acd5dd815df3e1f6f5.stex" ]
 
 [params]
 

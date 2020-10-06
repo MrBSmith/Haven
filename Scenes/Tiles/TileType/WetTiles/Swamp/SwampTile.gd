@@ -1,4 +1,4 @@
-extends TileType
+extends WetTile
 class_name SwampTile
 
 func get_type_name() -> String:

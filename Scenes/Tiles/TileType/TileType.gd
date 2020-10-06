@@ -23,6 +23,7 @@ var tile = null
 
 func get_type_name() -> String: return ""
 
+#### NO LONGER NEEDED, TO BE REMOVED (TO DO WITH THE PATHFINDER REFACTO) ####
 # Return true if the terrain is passable for the given type of animal
 func is_passable(terrestrial: bool = true) -> bool:
 	return (get_type_name() == "Water" or get_type_name() == "Swamp") != terrestrial

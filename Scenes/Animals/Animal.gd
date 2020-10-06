@@ -154,18 +154,26 @@ func find_appearing_tile(grid_node: Node) -> Tile:
 	tile_array.shuffle()
 	
 	for tile in tile_array:
-		
-		#### TO BE PLACED IN A STANDALONE FUNCTION
-		if self.is_type("TerrestrialAnimal"):
-			var tile_type_name = tile.get_tile_type_name() 
-			if tile_type_name == "Water" or tile_type_name == "Swamp":
-				continue
+		if !is_tile_passable(tile):
+			continue
 		
 		var grid_pos = tile.get_grid_position()
 		var tile_area = grid_node.get_tiles_in_radius(grid_pos, appearing_cond_radius)
 		if is_area_favorable(tile_area):
 			return tile
 	return null
+
+
+# Return true if the given tile is passable for this animal, false if not
+func is_tile_passable(tile: Tile) -> bool:
+	var tile_type = tile.get_tile_type()
+	if self.is_type("TerrestrialAnimal"):
+		return tile_type is DryTile
+		
+	elif self.is_type("SwimingAnimal"):
+		return tile_type is WetTile
+		
+	return true
 
 
 # Check if an area is favorable for this animal to appear
@@ -177,9 +185,9 @@ func is_area_favorable(tile_array: Array) -> bool:
 
 
 # Check if a condition for appearing is verified
-func is_appear_condition_verified(tile_array: Array, condition: Array) -> bool:
-	var entity_type = condition[0]
-	var entity_number = condition[1]
+func is_appear_condition_verified(tile_array: Array, condition: AppearCondition) -> bool:
+	var entity_type = condition.entity_type
+	var entity_number = condition.entity_number
 	var nb : int = 0
 	for tile in tile_array:
 		for plant in tile.get_all_plants():
@@ -188,6 +196,8 @@ func is_appear_condition_verified(tile_array: Array, condition: Array) -> bool:
 				if nb >= entity_number:
 					return true
 	return false
+
+
 
 #### VIRTUALS ####
 

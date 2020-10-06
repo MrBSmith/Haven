@@ -117,7 +117,7 @@ func get_points_in_obstacle(obstacle: Node2D) -> PoolVector2Array:
 func get_unpassable_tiles(tiles_array: Array) -> Array:
 	var unpassable_tiles_array : Array = []
 	for tile in tiles_array:
-		if tile.type is WaterTile or tile.type is SwampTile:
+		if tile.type is WetTile:
 			unpassable_tiles_array.append(tile)
 	
 	return unpassable_tiles_array

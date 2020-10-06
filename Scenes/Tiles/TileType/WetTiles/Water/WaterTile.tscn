@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Scenes/Tiles/TileType/TileType.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Scenes/Tiles/TileType/Water/WaterTile.gd" type="Script" id=2]
-[ext_resource path="res://Scenes/Tiles/TileType/Water/Eau.png" type="Texture" id=3]
+[ext_resource path="res://Scenes/Tiles/TileType/WetTiles/Water/WaterTile.gd" type="Script" id=2]
+[ext_resource path="res://Scenes/Tiles/TileType/WetTiles/Water/Eau.png" type="Texture" id=3]
 
 [node name="WaterTile" instance=ExtResource( 1 )]
 script = ExtResource( 2 )

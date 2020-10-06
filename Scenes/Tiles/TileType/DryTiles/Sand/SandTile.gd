@@ -1,4 +1,4 @@
-extends TileType
+extends DryTile
 class_name SandTile
 
 #### ACCESSORS ####

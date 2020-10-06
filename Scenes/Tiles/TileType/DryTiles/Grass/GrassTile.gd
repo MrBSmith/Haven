@@ -1,4 +1,4 @@
-extends SoilTile
+extends DryTile
 class_name GrassTile
 
 func get_type_name() -> String:

@@ -5,11 +5,11 @@ extends Node
 const tile = preload("res://Scenes/Tiles/Tile.tscn")
 
 var tiles_type = {
-	"Swamp" : preload("res://Scenes/Tiles/TileType/Swamp/SwampTile.tscn"),
-	"Soil" : preload("res://Scenes/Tiles/TileType/Soil/SoilTile.tscn"),
-	"Water" : preload("res://Scenes/Tiles/TileType/Water/WaterTile.tscn"),
-	"Grass" : preload("res://Scenes/Tiles/TileType/Grass/GrassTile.tscn"),
-	"Sand" : preload("res://Scenes/Tiles/TileType/Sand/SandTile.tscn")
+	"Swamp" : preload("res://Scenes/Tiles/TileType/WetTiles/Swamp/SwampTile.tscn"),
+	"Soil" : preload("res://Scenes/Tiles/TileType/DryTiles/Soil/SoilTile.tscn"),
+	"Water" : preload("res://Scenes/Tiles/TileType/WetTiles/Water/WaterTile.tscn"),
+	"Grass" : preload("res://Scenes/Tiles/TileType/DryTiles/Grass/GrassTile.tscn"),
+	"Sand" : preload("res://Scenes/Tiles/TileType/DryTiles/Sand/SandTile.tscn")
 }
 
 const base_tree = preload("res://Scenes/Plants/Trees/Tree.tscn")

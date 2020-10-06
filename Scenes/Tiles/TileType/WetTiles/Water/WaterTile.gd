@@ -1,4 +1,4 @@
-extends TileType
+extends WetTile
 class_name WaterTile
 
 func get_type_name() -> String:
@@ -15,5 +15,3 @@ func _on_tile_created():
 # Called when the tile is wetness passed 100% and is over his threshold
 func _on_over_wetness_threshold_reached():
 	pass
-
-
