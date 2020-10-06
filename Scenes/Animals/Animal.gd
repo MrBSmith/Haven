@@ -9,6 +9,8 @@ export var view_radius : float = 12.0
 
 export var eating_time : float = 3.0
 
+export var avarage_presence_time : float = 10.0
+
 export var appearing_conditions : Array = []
 export var appearing_cond_radius : int = 2
 export (float, 0.0, 100.0, 0.0) var appearing_probability : float = 0.0
@@ -57,7 +59,9 @@ func _ready():
 	
 	var shape = $Area2D/CollisionShape2D.get_shape()
 	shape.set_radius(view_radius)
-
+	
+	var _err = $PresenceTimer.connect("timeout", self, "on_presence_timer_timeout")
+	trigger_presence_timer()
 
 #### LOGIC ####
 
@@ -198,6 +202,13 @@ func is_appear_condition_verified(tile_array: Array, condition: AppearCondition)
 	return false
 
 
+# Trigger the timer which determine when the animal wants to leave the board
+func trigger_presence_timer():
+	var rdm_sign = randi() % 2 * 2 -1
+	var variance = (avarage_presence_time * rand_range(0.1, 20.0) / 100) * rdm_sign
+	var presence_time = avarage_presence_time + variance
+	$PresenceTimer.start(presence_time)
+
 
 #### VIRTUALS ####
 
@@ -209,3 +220,5 @@ func is_appear_condition_verified(tile_array: Array, condition: AppearCondition)
 
 #### SIGNAL RESPONSES ####
 
+func on_presence_timer_timeout():
+	queue_free()

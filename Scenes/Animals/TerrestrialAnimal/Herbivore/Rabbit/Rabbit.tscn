@@ -24,7 +24,7 @@ eatable_types = PoolStringArray( "Grass", "Flower" )
 view_radius = 20.0
 appearing_conditions = [ SubResource( 2 ) ]
 appearing_cond_radius = 3
-appearing_probability = 70.0
+appearing_probability = 5.0
 
 [node name="AnimatedSprite" parent="." index="0"]
 position = Vector2( 0, -4 )
