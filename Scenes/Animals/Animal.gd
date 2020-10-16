@@ -1,6 +1,8 @@
 extends KinematicBody2D
 class_name Animal
 
+var is_ready : bool = false
+
 export var speed : float = 1.0 setget set_speed, get_speed
 export var wander_distance : float = 32.0 setget set_wander_distance, get_wander_distance
 
@@ -15,11 +17,12 @@ export var appearing_conditions : Array = []
 export var appearing_cond_radius : int = 2
 export (float, 0.0, 100.0, 0.0) var appearing_probability : float = 0.0
 
-var standby : bool = false setget set_standby, get_standby
+export var standby : bool = false setget set_standby, get_standby
 var target : PhysicsBody2D = null setget set_target, get_target
 var path : PoolVector2Array
 
 var visited_targets : Array = []
+var wander_area_center := Vector2.ZERO setget set_wander_area_center, get_wander_area_center
 
 onready var path_curve = Curve2D.new()
 onready var behaviour : StatesMachine = find_behaviour()
@@ -38,8 +41,18 @@ func get_wander_distance() -> float: return wander_distance
 func set_state(value: String): behaviour.set_state(value)
 func get_state_name() -> String: return behaviour.get_state_name()
 
-func set_standby(value: bool): standby = value
+func set_standby(value: bool): 
+	standby = value
+	if standby:
+		if !is_ready:
+			yield(self, "ready")
+		
+		set_wander_area_center(get_global_position())
+
 func get_standby() -> bool: return standby
+
+func set_wander_area_center(value: Vector2): wander_area_center = value
+func get_wander_area_center() -> Vector2: return wander_area_center
 
 func set_target(value: PhysicsBody2D):
 	if target is FlowerBase:
@@ -62,6 +75,8 @@ func _ready():
 	
 	var _err = $PresenceTimer.connect("timeout", self, "on_presence_timer_timeout")
 	trigger_presence_timer()
+	
+	is_ready = true
 
 #### LOGIC ####
 
@@ -87,6 +102,7 @@ func move_to(pos: Vector2):
 	set_state("MoveTo")
 
 
+# Give this animal the order to rech for the given target
 func reach_for_target(tar: PhysicsBody2D):
 	set_target(tar)
 	if tar == null:
@@ -95,6 +111,7 @@ func reach_for_target(tar: PhysicsBody2D):
 	move_to(tar.get_global_position())
 
 
+# Give this animal the order to eat
 func eat():
 	if behaviour is Pollinating:
 		visited_targets.append(target)
@@ -107,6 +124,7 @@ func eat():
 		set_state("Eating")
 
 
+# Give this animal the order to go away from the board
 func go_away():
 	set_state("Wander")
 

@@ -4,7 +4,6 @@ class_name WanderState
 onready var timer_node = Timer.new()
 
 export var wait_time : float = 0.2 
-var wander_area_center := Vector2.ZERO
 
 #### ACCESSORS ####
 
@@ -37,20 +36,27 @@ func find_new_destination(fix_radius: bool = false) -> Vector2:
 		var dir = Vector2(cos(rad_angle), sin(rad_angle))
 		var rdm_dist = rand_range(animal.wander_distance / 3, animal.wander_distance)
 		
-		var area_center = wander_area_center if fix_radius else animal.global_position
+		var area_center = animal.get_wander_area_center() if fix_radius else animal.global_position
 		
 		dest = area_center + dir * rdm_dist
-	
 	return dest
 
 
+# Called when an animal is arrived to destination
+# Either find a target, or a new destination
 func on_animal_arrived():
-	var tar = animal.find_target_in_view()
-	
-	if tar == null:
-		animal.set_move_path([find_new_destination(animal.standby)])
+	search_new_destination()
+
+
+# Find a new target or wander destination
+func search_new_destination():
+	var tar = null
+	if animal.get_standby():
+		animal.set_move_path([find_new_destination(true)])
 	else:
-		animal.reach_for_target(tar)
+		tar = animal.find_target_in_view()
+		if tar != null:
+			animal.reach_for_target(tar)
 
 
 #### VIRTUALS ####
@@ -67,7 +73,7 @@ func update(delta: float):
 	var path = animal.path
 	
 	if path.empty():
-		animal.set_move_path([find_new_destination(animal.standby)])
+		return
 	
 	animal.move(delta, 0.5)
 	if path.size() == 0:
@@ -85,6 +91,4 @@ func _on_timer_timeout():
 	if states_machine.get_state() != self:
 		return
 	
-	var target = animal.find_target_in_view()
-	if target:
-		animal.reach_for_target(target)
+	search_new_destination()

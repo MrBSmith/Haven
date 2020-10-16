@@ -37,6 +37,7 @@ func set_move_path(path_point_array: Array):
 	path = path_curve.get_baked_points()
 
 
+# Ask this animal to reach a target
 func reach_for_target(tar: PhysicsBody2D):
 	.reach_for_target(tar)
 
@@ -46,6 +47,7 @@ func reach_for_target(tar: PhysicsBody2D):
 
 #### INPUTS ####
 
+# Go there you dummie
 #func _input(event : InputEvent):
 #	if event.is_action_released("click"):
 #		var mouse_pos = get_global_mouse_position()

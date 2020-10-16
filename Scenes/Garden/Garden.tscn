@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Scenes/Garden/Garden.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Hand/Hand.gd" type="Script" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Scenes/DebugPanel/DebugPanel.gd" type="Script" id=6]
 [ext_resource path="res://Scenes/Garden/Animations.gd" type="Script" id=7]
 [ext_resource path="res://Scenes/VFX/Clouds/Clouds.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Scenes/Animals/TerrestrialAnimal/Herbivore/Rabbit/Rabbit.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Scenes/Garden/Pathfinder/Pathfinder.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Scenes/Garden/AreaDebug.gd" type="Script" id=13]
 [ext_resource path="res://Scenes/Card/AOEArea.gd" type="Script" id=14]
@@ -64,6 +65,10 @@ __meta__ = {
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="Rabbit" parent="Grid/Animals" instance=ExtResource( 9 )]
+position = Vector2( 46.0139, 45.7779 )
+standby = true
 
 [node name="MeteoEffects" type="YSort" parent="Grid"]
 script = ExtResource( 7 )

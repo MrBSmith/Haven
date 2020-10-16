@@ -2,8 +2,9 @@
 
 [ext_resource path="res://Scenes/Animals/FlyingAnimal/Insects/Bees/Bee.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/Animals/FlyingAnimal/Insects/Bees/Bee.gd" type="Script" id=2]
-[ext_resource path="res://Scenes/Animals/Behaviour/Pollinating/Pollinating .tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Animals/Behaviour/Pollinating/Pollinating.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scenes/Animals/FlyingAnimal/FlyingAnimal.tscn" type="PackedScene" id=4]
+
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
