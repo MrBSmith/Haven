@@ -5,12 +5,12 @@
 [ext_resource path="res://Scenes/Animals/Behaviour/Herbivore/Herbivore.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scenes/Animals/AppearCondition/AppearCondition.gd" type="Script" id=4]
 
-[sub_resource type="Resource" id=2]
+[sub_resource type="Resource" id=1]
 script = ExtResource( 4 )
 entity_type = "Grass"
 entity_number = 5
 
-[sub_resource type="SpriteFrames" id=1]
+[sub_resource type="SpriteFrames" id=2]
 animations = [ {
 "frames": [ ExtResource( 2 ) ],
 "loop": true,
@@ -22,13 +22,13 @@ animations = [ {
 z_index = 1
 eatable_types = PoolStringArray( "Grass", "Flower" )
 view_radius = 20.0
-appearing_conditions = [ SubResource( 2 ) ]
+appearing_conditions = [ SubResource( 1 ) ]
 appearing_cond_radius = 3
 appearing_probability = 5.0
 
 [node name="AnimatedSprite" parent="." index="0"]
 position = Vector2( 0, -4 )
-frames = SubResource( 1 )
+frames = SubResource( 2 )
 
 [node name="CollisionShape2D" parent="Area2D" index="0"]
 position = Vector2( 0, -4 )
