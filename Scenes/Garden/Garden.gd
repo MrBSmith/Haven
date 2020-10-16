@@ -1,17 +1,27 @@
 extends Node2D
 
+##### TURN ORDER #####
+
+# 1) The player choose his meteo effect he wants to play
+# 2) The meteo effect take place, and affect tiles
+# 3) The new animals appear
+# 4) The animals behave
+# 5) The leaving animal leave the board
+
+
 onready var grid_node = $Grid
 onready var hand_node = $Hand
 
 func _ready():
 	var _err = Events.connect("single_plant_animation_finished", self, "_on_single_plant_animation_finished")
+	_err = Events.connect("meteo_animation_finished", self, "_on_meteo_animation_finished")
+	_err = Events.connect("animal_phase_finished", self, "_on_animal_phase_finished")
 	
 	grid_node.generate_grid()
 	var grid_pxl_size = Globals.get_grid_pixel_size()
 	
 	init_clouds(grid_pxl_size)
 	init_hand_size(grid_pxl_size)
-
 
 
 #### LOGIC ####
@@ -48,6 +58,11 @@ func _on_single_plant_animation_finished():
 	if is_flora_animation_finished():
 		Events.emit_signal("flora_animation_finished")
 
+func _on_animal_phase_finished():
+	propagate_call("animal_leaving_phase")
+
+func _on_meteo_animation_finished():
+	propagate_call("set_standby", [false])
 
 func _on_new_turn_started():
-	propagate_call("new_turn")
+	propagate_call("set_standby", [true])

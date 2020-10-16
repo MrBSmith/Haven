@@ -11,7 +11,9 @@ export var view_radius : float = 12.0
 
 export var eating_time : float = 3.0
 
-export var avarage_presence_time : float = 40.0
+# Exepressed in turns
+var presence_time : int = 0
+export var prensence_time_fork : PoolIntArray = [1, 3]
 
 export var appearing_conditions : Array = []
 export var appearing_cond_radius : int = 2
@@ -68,17 +70,21 @@ func get_target() -> PhysicsBody2D:
 func _ready():
 	randomize()
 	
+	compute_presence_time()
 	path_curve.set_bake_interval(0.7)
 	
 	var shape = $Area2D/CollisionShape2D.get_shape()
 	shape.set_radius(view_radius)
 	
-	var _err = $PresenceTimer.connect("timeout", self, "on_presence_timer_timeout")
-	trigger_presence_timer()
-	
 	is_ready = true
 
 #### LOGIC ####
+
+func compute_presence_time():
+	var min_time = float(prensence_time_fork[0])
+	var max_time = float(prensence_time_fork[1] + 1)
+	presence_time = int(rand_range(min_time, max_time))
+	
 
 # Set the move path (Straight line to the target)
 func set_move_path(path_point_array: Array):
@@ -220,17 +226,6 @@ func is_appear_condition_verified(tile_array: Array, condition: AppearCondition)
 	return false
 
 
-# Trigger the timer which determine when the animal wants to leave the board
-func trigger_presence_timer():
-	if avarage_presence_time <= 0:
-		return
-	
-	var rdm_sign = randi() % 2 * 2 -1
-	var variance = (avarage_presence_time * rand_range(0.1, 20.0) / 100) * rdm_sign
-	var presence_time = avarage_presence_time + variance
-	$PresenceTimer.start(presence_time)
-
-
 #### VIRTUALS ####
 
 
@@ -241,5 +236,10 @@ func trigger_presence_timer():
 
 #### SIGNAL RESPONSES ####
 
-func on_presence_timer_timeout():
+func on_presence_time_finished():
 	queue_free()
+
+func on_animal_leaving_phase():
+	presence_time -= 1
+	if presence_time <= 0:
+		on_presence_time_finished()

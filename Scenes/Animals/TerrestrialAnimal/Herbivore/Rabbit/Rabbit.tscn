@@ -22,6 +22,7 @@ animations = [ {
 z_index = 1
 eatable_types = PoolStringArray( "Grass", "Flower" )
 view_radius = 20.0
+prensence_time_fork = PoolIntArray( 2, 2 )
 appearing_conditions = [ SubResource( 1 ) ]
 appearing_cond_radius = 3
 appearing_probability = 5.0
@@ -34,3 +35,5 @@ frames = SubResource( 2 )
 position = Vector2( 0, -4 )
 
 [node name="Herbivore" parent="." index="2" instance=ExtResource( 3 )]
+
+[node name="PresenceTimer" type="Timer" parent="." index="3"]
