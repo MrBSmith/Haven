@@ -29,6 +29,9 @@ var wander_area_center := Vector2.ZERO setget set_wander_area_center, get_wander
 onready var path_curve = Curve2D.new()
 onready var behaviour : StatesMachine = find_behaviour()
 
+
+signal standby_changed(value)
+
 #### ACCESSORS ####
 
 func is_type(type): return type == "Animal"
@@ -44,12 +47,15 @@ func set_state(value: String): behaviour.set_state(value)
 func get_state_name() -> String: return behaviour.get_state_name()
 
 func set_standby(value: bool): 
+	var changed = value != standby
 	standby = value
 	if standby:
 		if !is_ready:
 			yield(self, "ready")
-		
 		set_wander_area_center(get_global_position())
+	
+	if changed:
+		emit_signal("standby_changed", standby)
 
 func get_standby() -> bool: return standby
 

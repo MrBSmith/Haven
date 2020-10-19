@@ -2,8 +2,9 @@ extends AnimalState
 class_name WanderState
 
 onready var timer_node = Timer.new()
-
 export var wait_time : float = 0.2 
+
+var is_waiting : bool = true
 
 #### ACCESSORS ####
 
@@ -16,7 +17,11 @@ func _ready():
 	
 	add_child(timer_node)
 	timer_node.set_wait_time(wait_time)
+	timer_node.set_one_shot(true)
 	var _err = timer_node.connect("timeout", self, "_on_timer_timeout")
+	
+	yield(owner, "ready")
+	_err = animal.connect("standby_changed", self, "on_standby_changed")
 
 
 #### LOGIC ####
@@ -40,12 +45,6 @@ func find_new_destination(fix_radius: bool = false) -> Vector2:
 		
 		dest = area_center + dir * rdm_dist
 	return dest
-
-
-# Called when an animal is arrived to destination
-# Either find a target, or a new destination
-func on_animal_arrived():
-	search_new_destination()
 
 
 # Find a new target or wander destination
@@ -72,12 +71,11 @@ func exit_state(_next_state: StateBase):
 func update(delta: float):
 	var path = animal.path
 	
-	if path.empty():
-		return
+	if path.empty() && !is_waiting:
+		on_animal_arrived()
 	
 	animal.move(delta, 0.5)
-	if path.size() == 0:
-		on_animal_arrived()
+
 
 
 #### INPUTS ####
@@ -91,4 +89,19 @@ func _on_timer_timeout():
 	if states_machine.get_state() != self:
 		return
 	
+	is_waiting = false
 	search_new_destination()
+
+# Called when an animal is arrived to destination
+# Either find a target, or a new destination
+func on_animal_arrived():
+	timer_node.start()
+	is_waiting = true
+
+
+# When the standby of the animal change, update the wait timer
+func on_standby_changed(standby : bool):
+	if standby:
+		timer_node.set_wait_time(wait_time * 5)
+	else:
+		timer_node.set_wait_time(wait_time)
