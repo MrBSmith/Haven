@@ -4,7 +4,9 @@ class_name Animal
 var is_ready : bool = false
 
 export var speed : float = 1.0 setget set_speed, get_speed
-export var wander_distance : float = 32.0 setget set_wander_distance, get_wander_distance
+
+# Wander maximum distance, expressed in tiles
+export var wander_distance : float = 1.5 setget set_wander_distance, get_wander_distance
 
 export var eatable_types : PoolStringArray = []
 export var view_radius : float = 12.0

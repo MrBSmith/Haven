@@ -30,6 +30,7 @@ func _ready():
 func find_new_destination(fix_radius: bool = false) -> Vector2:
 	var dest = Vector2(-1.0, -1.0)
 	var grid_node = get_tree().get_current_scene().find_node("Grid")
+	var wander_dist_pixels = animal.get_wander_distance() * Globals.TILE_SIZE.x
 	
 	if grid_node == null:
 		return Vector2.ZERO
@@ -39,7 +40,7 @@ func find_new_destination(fix_radius: bool = false) -> Vector2:
 		var rad_angle = deg2rad(rdm_deg_angle)
 		
 		var dir = Vector2(cos(rad_angle), sin(rad_angle))
-		var rdm_dist = rand_range(animal.wander_distance / 3, animal.wander_distance)
+		var rdm_dist = rand_range(wander_dist_pixels / 3, wander_dist_pixels)
 		
 		var area_center = animal.get_wander_area_center() if fix_radius else animal.global_position
 		
