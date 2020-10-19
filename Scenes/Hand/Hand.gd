@@ -20,7 +20,7 @@ var last_card_played_index : int = 0
 
 func _ready():
 	var _err = connect("card_drawn", self, "_on_card_drawn")
-	var _nothing = roll()
+	roll()
 
 #### LOGIC ####
 
@@ -36,7 +36,7 @@ func draw():
 # Make sure the hand rerolled is different form the last one
 func reroll():
 	clear()
-	var _nothing = roll()
+	roll()
 
 
 # Clear every card in the hand
@@ -46,7 +46,7 @@ func clear():
 
 
 # Generate the hand, without duplicate
-func roll() -> Array:
+func roll():
 	randomize()
 	var card_types = card_types_array.duplicate()
 	var new_hand : Array = []
@@ -57,8 +57,6 @@ func roll() -> Array:
 		card_types.remove(rng)
 		new_hand.append(new_card)
 		add_card(new_card, index)
-	
-	return new_hand
 
 
 # Draw a new card
@@ -124,20 +122,24 @@ func _on_card_effect_finished(card_index: int, _combined: bool):
 	last_card_played_index = card_index
 
 
+# Called by the garden node, authorize the player to pick a card
+func on_new_turn_started():
+	set_cards_pickable(true)
+
+
+# Called by the garden node, block the player from picking a card
+func meteo_animation_started():
+	set_cards_pickable(false)
+
+
 func _on_card_drawn():
 	if get_child_count() == 2:
 		_on_hand_refilled()
 
 
 func _on_hand_refilled():
-	set_cards_pickable(true)
-	
 	var first_card = get_child(0)
 	var second_card = get_child(1)
 	
 	if first_card.get_type() == second_card.get_type():
 		second_card.combined_effect()
-
-
-func _on_card_active_effect():
-	set_cards_pickable(false)

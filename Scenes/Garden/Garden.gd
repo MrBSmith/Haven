@@ -83,10 +83,12 @@ func _on_single_plant_animation_finished():
 		Events.emit_signal("flora_animation_finished")
 
 func _on_new_turn_started():
+	propagate_call("on_new_turn_started")
 	propagate_call("set_standby", [true])
 	set_phase("Choose Meteo Effect")
 
 func _on_meteo_animation_started():
+	propagate_call("meteo_animation_started")
 	set_phase("Meteo animation")
 
 func _on_meteo_animation_finished():

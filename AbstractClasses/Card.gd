@@ -57,7 +57,6 @@ func _ready():
 	shape.set_extents(sprite_size / 2)
 	var _err = connect("mouse_entered", self, "_on_mouse_entered")
 	_err = connect("mouse_exited", self, "_on_mouse_exited")
-	_err = connect("active_effect", get_parent(), "_on_card_active_effect")
 	_err = connect("effect_finished", get_parent(), "_on_card_effect_finished")
 	_err = $StateMachine.connect("state_changed", self, "_on_state_changed")
 
