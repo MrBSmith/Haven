@@ -20,16 +20,16 @@ var last_card_played_index : int = 0
 
 func _ready():
 	var _err = connect("card_drawn", self, "_on_card_drawn")
-	roll()
+	
 
 #### LOGIC ####
 
 func draw():
 	var nb_children = get_child_count()
 	match nb_children:
-		0: return
+		0: roll()
 		1: draw_card(last_card_played_index)
-		2: reroll()
+		2: return
 
 
 # Clear every card in the hand, and generate a new hand
@@ -142,4 +142,5 @@ func _on_hand_refilled():
 	var second_card = get_child(1)
 	
 	if first_card.get_type() == second_card.get_type():
+		first_card.destroy()
 		second_card.combined_effect()

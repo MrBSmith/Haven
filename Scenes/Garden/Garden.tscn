@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Scenes/Garden/Garden.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Hand/Hand.gd" type="Script" id=2]
@@ -11,8 +11,13 @@
 [ext_resource path="res://Scenes/Animals/TerrestrialAnimal/Herbivore/Rabbit/Rabbit.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Scenes/Animals/FlyingAnimal/Insects/Bees/Bee.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Scenes/Garden/Pathfinder/Pathfinder.tscn" type="PackedScene" id=11]
+[ext_resource path="res://AbstractClasses/StateMachine.gd" type="Script" id=12]
 [ext_resource path="res://Scenes/Garden/AreaDebug.gd" type="Script" id=13]
 [ext_resource path="res://Scenes/Card/AOEArea.gd" type="Script" id=14]
+[ext_resource path="res://Scenes/Garden/Phases/AnimalLeaving.gd" type="Script" id=15]
+[ext_resource path="res://Scenes/Garden/Phases/ChooseMeteoEffect.gd" type="Script" id=16]
+[ext_resource path="res://Scenes/Garden/Phases/MeteoAnimation.gd" type="Script" id=17]
+[ext_resource path="res://Scenes/Garden/Phases/AnimalBehaviour.gd" type="Script" id=18]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -32,6 +37,28 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="Phases" type="Node" parent="."]
+script = ExtResource( 12 )
+
+[node name="ChooseMeteoEffect" type="Node" parent="Phases"]
+script = ExtResource( 16 )
+
+[node name="MeteoAnimation" type="Node" parent="Phases"]
+script = ExtResource( 17 )
+
+[node name="AnimalBehaviour" type="Node" parent="Phases"]
+script = ExtResource( 18 )
+
+[node name="Timer" type="Timer" parent="Phases/AnimalBehaviour"]
+wait_time = 2.0
+one_shot = true
+
+[node name="AnimalLeaving" type="Node" parent="Phases"]
+script = ExtResource( 15 )
+
+[node name="Timer" type="Timer" parent="Phases/AnimalLeaving"]
+one_shot = true
 
 [node name="Grid" type="Node2D" parent="."]
 script = ExtResource( 3 )
@@ -138,13 +165,6 @@ script = ExtResource( 2 )
 __meta__ = {
 "_edit_lock_": true
 }
-
-[node name="AnimalPhaseTimer" type="Timer" parent="."]
-wait_time = 2.0
-one_shot = true
-
-[node name="AnimalLeavingTimer" type="Timer" parent="."]
-one_shot = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 3 )
