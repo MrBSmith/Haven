@@ -13,16 +13,24 @@ const CARD_SIZE = Vector2(16, 16)
 const MAX_CARDS = 2
 
 signal card_drawn
-signal new_turn_started
+
+var last_card_played_index : int = 0
 
 #### BUILT-IN ####
 
 func _ready():
 	var _err = connect("card_drawn", self, "_on_card_drawn")
-	_err = connect("new_turn_started", get_parent(), "_on_new_turn_started")
 	var _nothing = roll()
 
 #### LOGIC ####
+
+func draw():
+	var nb_children = get_child_count()
+	match nb_children:
+		0: return
+		1: draw_card(last_card_played_index)
+		2: reroll()
+
 
 # Clear every card in the hand, and generate a new hand
 # Make sure the hand rerolled is different form the last one
@@ -54,10 +62,9 @@ func roll() -> Array:
 
 
 # Draw a new card
-func draw_card(card_index: int) -> Card:
+func draw_card(card_index: int):
 	var new_card = generate_card()
 	add_card(new_card, card_index)
-	return new_card
 
 
 # Return an array of the types names of the current cards in hand (as Strings)
@@ -69,6 +76,7 @@ func get_current_cards_types() -> PoolStringArray:
 	return type_array
 
 
+# Generate a random card from th pool of types
 func generate_card() -> Card:
 	randomize()
 	var rng = randi() % 3
@@ -76,6 +84,7 @@ func generate_card() -> Card:
 	return new_card
 
 
+# Add the given card to the hand
 func add_card(new_card: Card, card_index: int):
 	var pos := Vector2.ZERO
 	
@@ -95,6 +104,7 @@ func add_card(new_card: Card, card_index: int):
 	emit_signal("card_drawn")
 
 
+# Set every cards pickable or not
 func set_cards_pickable(value: bool):
 	for card in get_children():
 		card.set_pickable(value)
@@ -108,13 +118,10 @@ func _unhandled_input(_event):
 
 #### SIGNAL RESPONSES ####
 
-func _on_card_effect_finished(card_index: int, combined: bool):
+func _on_card_effect_finished(card_index: int, _combined: bool):
 	yield(get_child(card_index), "tree_exited")
 	
-	if combined:
-		reroll()
-	else:
-		var _new_card = draw_card(card_index)
+	last_card_played_index = card_index
 
 
 func _on_card_drawn():
@@ -123,7 +130,6 @@ func _on_card_drawn():
 
 
 func _on_hand_refilled():
-	emit_signal("new_turn_started")
 	set_cards_pickable(true)
 	
 	var first_card = get_child(0)

@@ -9,6 +9,8 @@ var grid_node : Node2D
 #### BUILT-IN ####
 
 func _ready():
+	var _err = owner.connect("phase_changed", self, "on_phase_changed")
+	
 	yield(get_parent(), "ready")
 	grid_node = get_parent()
 
@@ -39,3 +41,6 @@ func update_cursor_tile_label():
 
 
 #### SIGNAL RESPONSES ####
+
+func on_phase_changed(new_phase : String):
+	$VBoxContainer/GamePhase.set_text(new_phase)

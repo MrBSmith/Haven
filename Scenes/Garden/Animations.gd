@@ -21,6 +21,8 @@ func _ready():
 #### LOGIC ####
 
 func rain_animation(tiles_affected: Array, duration: float):
+	Events.emit_signal("meteo_animation_started")
+	
 	$Clouds.meteo_effect(0.2, 0.87, 1.07, Color.gray)
 	yield($Clouds, "meteo_effect_ready")
 	var anim = RainAnimation.new(tiles_affected, duration)
@@ -28,6 +30,8 @@ func rain_animation(tiles_affected: Array, duration: float):
 
 
 func wind_animation(tiles_affected: Array, wind_dir: Vector2, wind_force: int, duration: float):
+	Events.emit_signal("meteo_animation_started")
+	
 	$Clouds.meteo_effect($Clouds.opacity_default, $Clouds.first_threshold_default, \
 		$Clouds.sec_threshold_default, $Clouds.first_color_default, \
 		$Clouds.sec_color_default, wind_dir)
@@ -39,6 +43,8 @@ func wind_animation(tiles_affected: Array, wind_dir: Vector2, wind_force: int, d
 
 
 func sun_animation(tiles_affected: Array, duration: float):
+	Events.emit_signal("meteo_animation_started")
+	
 	$Clouds.meteo_effect(0.05, 1.15, 1.5)
 	yield($Clouds, "meteo_effect_ready")
 	var rect = tile_array_to_rect(tiles_affected)
