@@ -42,7 +42,6 @@ void fragment() {
 	}
 }
 "
-custom_defines = ""
 
 [sub_resource type="ShaderMaterial" id=2]
 shader = SubResource( 1 )
@@ -75,12 +74,14 @@ script = ExtResource( 3 )
 
 [node name="CloudShader" type="Sprite" parent="."]
 material = SubResource( 2 )
+scale = Vector2( 50, 50 )
 z_index = 999
 texture = ExtResource( 1 )
 
 [node name="ShadowsShader" type="Sprite" parent="."]
 material = SubResource( 3 )
 position = Vector2( 0, -0.148651 )
+scale = Vector2( 50, 50 )
 texture = ExtResource( 1 )
 
 [node name="Tween" type="Tween" parent="."]

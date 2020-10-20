@@ -16,8 +16,7 @@ more_dry_tile_type = "Swamp"
 [node name="Water" parent="." index="0" instance=ExtResource( 4 )]
 position = Vector2( 0.282334, -0.282334 )
 scale = Vector2( 7.80368, 7.80368 )
-z_index = -1
+z_index = -2
 
 [node name="Sprite" parent="." index="1"]
-z_index = 0
 texture = ExtResource( 3 )

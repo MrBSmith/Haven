@@ -4,8 +4,9 @@ class_name Pathfinder
 var ready : bool = false 
 
 export var swimming_animal : bool = false
+export var sampling_frequency : int = 50
 
-onready var grid_pxl_size = Globals.TILE_SIZE * Globals.GRID_TILE_SIZE
+onready var grid_point_size = Globals.TILE_SIZE * Globals.GRID_TILE_SIZE / sampling_frequency
 onready var astar = AStar2D.new()
 onready var grid_node = get_parent()
 
@@ -27,23 +28,24 @@ func get_simple_path(origin: Vector2, dest: Vector2) -> PoolVector2Array:
 	if !ready or grid_node.is_pos_outside_grid(dest):
 		return PoolVector2Array()
 	
-	var id_path = astar.get_id_path(get_id_at_pos(origin), get_id_at_pos(dest))
+	var id_path = astar.get_id_path(get_id_at_world_pos(origin), get_id_at_world_pos(dest))
 	var path := PoolVector2Array()
 	
 	for id in id_path:
-		var point = get_pos_from_id(id)
+		var point = get_world_pos_from_id(id)
 		path.append(point)
 	
 	return path
 
 
-# Sample every pixel of the map, and feed the Astar with it
+# Sample every point of the map, based on the sie of a tile / samplingfrequency
+# and feed the Astar with it
 # Set the water & swamp tile as non walkable
 # Then connect every points
 func sample_map():
 	var id = 0
-	for i in range(grid_pxl_size.y):
-		for j in range(grid_pxl_size.x):
+	for i in range(grid_point_size.y):
+		for j in range(grid_point_size.x):
 			var point = Vector2(j, i)
 			astar.add_point(id, point)
 			
@@ -87,30 +89,36 @@ func modify_tile_type(tile: Tile, prev_type: TileType, next_type: TileType):
 
 # Return a PoolVector2Array of points contained in the given tile
 func get_points_in_tile(tile: Tile) -> PoolVector2Array:
-	var upper_left = tile.get_global_position() - (Globals.TILE_SIZE / 2)
+	var upper_left = tile.get_global_position() - (Globals.TILE_SIZE / 2) / sampling_frequency
 	var points_array := PoolVector2Array()
 	
-	for i in range(Globals.TILE_SIZE.y):
-		for j in range(Globals.TILE_SIZE.x):
-			points_array.append(Vector2(int(j + upper_left.x), int(i + upper_left.y)))
+	for i in range(Globals.TILE_SIZE.y / sampling_frequency):
+		for j in range(Globals.TILE_SIZE.x / sampling_frequency):
+			var pos = Vector2(j, i)
+			points_array.append(Vector2(int(pos.x + upper_left.x), int(pos.y + upper_left.y)))
 	
 	return points_array
 
 
 # Return a PoolVector2Array of points inside the given obstacle
+#### THE COLLISION SHAPE HAVE TO BE RECTANGULAR (MAY BE INPROVED) ####
 func get_points_in_obstacle(obstacle: Node2D) -> PoolVector2Array:
 	var collision_shape = obstacle.get_node("CollisionShape2D")
 	var collision_rect := get_collision_rect(collision_shape)
 	var points_array := PoolVector2Array()
 	
-	var rect_pos = collision_rect.position
-	rect_pos = Vector2(clamp(rect_pos.x, 0.0, grid_pxl_size.x), \
-						clamp(rect_pos.y, 0.0, grid_pxl_size.y))
-	var rect_size = collision_rect.size
+	# Rect position, expressed in point position
+	var rect_pos = collision_rect.position / sampling_frequency
+	rect_pos = rect_pos.round()
 	
-	for i in range(rect_size.y):
-		for j in range(rect_size.x):
-			points_array.append(Vector2(int(j + rect_pos.x), int(i + rect_pos.y)))
+	rect_pos = Vector2(clamp(rect_pos.x, 0.0, grid_point_size.x), \
+						clamp(rect_pos.y, 0.0, grid_point_size.y))
+	var rect_size_pxl = collision_rect.size
+	
+	for i in range(rect_size_pxl.y / sampling_frequency):
+		for j in range(rect_size_pxl.x / sampling_frequency):
+			var point = Vector2(j, i) + rect_pos
+			points_array.append(point)
 	
 	return points_array
 
@@ -159,8 +167,8 @@ func get_collision_rect(collision_shape: CollisionShape2D) -> Rect2:
 
 # Connect every point in the grid
 func connect_all_points():
-	for i in range(grid_pxl_size.x):
-		for j in range(grid_pxl_size.y):
+	for i in range(grid_point_size.x / sampling_frequency):
+		for j in range(grid_point_size.y / sampling_frequency):
 			connect_relatives(Vector2(i, j))
 
 
@@ -183,21 +191,30 @@ func connect_relatives(point_pos: Vector2, diagonal: bool = true):
 		]
 	
 	for rel in relatives_pos:
-		if rel.x >= grid_pxl_size.x or rel.y >= grid_pxl_size.y or rel.x < 0 or rel.y < 0:
+		if rel.x >= grid_point_size.x or rel.y >= grid_point_size.y or rel.x < 0 or rel.y < 0:
 			continue
 		
 		var rel_id = get_id_at_pos(rel)
 		astar.connect_points(point_id, rel_id)
 
 
-# Take a position, and returns its point id
+# Take a position expressed in sampled point position, and returns its point id
 func get_id_at_pos(pos: Vector2) -> int:
-	return int(pos.y) * grid_pxl_size.x + int(pos.x)
+	return int(pos.y) * (grid_point_size.x) + int(pos.x)
 
 
-# Take an id, and return its position
+# Take a world position, and return the id of the corresponding point
+func get_id_at_world_pos(world_pos: Vector2) -> int:
+	return get_id_at_pos(world_pos / sampling_frequency)
+
+# Take an id, and return its position expressed in sampled point position 
 func get_pos_from_id(id : int) -> Vector2:
-	return Vector2(id % int(grid_pxl_size.x), int(id / grid_pxl_size.x))
+	return Vector2(id % int(grid_point_size.x), int(id / grid_point_size.x))
+
+
+# Take an point id, and return the corresponding world position of this point
+func get_world_pos_from_id(id: int) -> Vector2:
+	return get_pos_from_id(id) * sampling_frequency
 
 
 # Return true if the given tile is passable, false if not
