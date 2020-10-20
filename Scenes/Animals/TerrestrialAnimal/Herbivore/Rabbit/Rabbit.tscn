@@ -20,7 +20,6 @@ animations = [ {
 
 [node name="Rabbit" instance=ExtResource( 1 )]
 z_index = 1
-wander_distance = 1.5
 eatable_types = PoolStringArray( "Grass", "Flower" )
 view_radius = 20.0
 prensence_time_fork = PoolIntArray( 2, 2 )

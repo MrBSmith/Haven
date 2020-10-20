@@ -26,4 +26,4 @@ func enter_state(_previous_state):
 #### SIGNAL RESPONSES ####
 
 func _on_timer_timeout():
-	owner.set_phase("ChooseMeteoEffect")
+	owner.set_phase("Draw")

@@ -247,6 +247,7 @@ func is_appear_condition_verified(tile_array: Array, condition: AppearCondition)
 func on_presence_time_finished():
 	queue_free()
 
+
 func on_animal_leaving_phase():
 	presence_time -= 1
 	if presence_time <= 0:
