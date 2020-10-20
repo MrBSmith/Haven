@@ -57,7 +57,6 @@ func _ready():
 	shape.set_extents(sprite_size / 2)
 	var _err = connect("mouse_entered", self, "_on_mouse_entered")
 	_err = connect("mouse_exited", self, "_on_mouse_exited")
-	_err = connect("active_effect", get_parent(), "_on_card_active_effect")
 	_err = connect("effect_finished", get_parent(), "_on_card_effect_finished")
 	_err = $StateMachine.connect("state_changed", self, "_on_state_changed")
 
@@ -79,9 +78,10 @@ func random_wind_dir() -> Vector2:
 func card_effect(tiles_array: Array, _wind_dir := Vector2.ZERO, modifier : float = 1.0):
 	trigger_meteo_animation(tiles_array)
 	set_state("Effect")
-	yield(self, "destroyed")
+	yield(Events, "meteo_animation_finished")
 	
 	affect_tiles_wetness(tiles_array, modifier)
+	destroy()
 
 
 # Apply the effect, when the players got the same card twice in hand

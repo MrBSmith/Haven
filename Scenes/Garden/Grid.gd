@@ -99,7 +99,7 @@ func get_tile_at_grid_pos(pos : Vector2) -> Tile:
 	return null
 
 
-### USE A RECT2 FOR BETTER PRECISION ###
+### TO BE REFACTORED: USE A RECT2 FOR BETTER PRECISION ###
 # Return the tile at the given grid coordinates
 func get_tile_at_world_pos(world_pos : Vector2) -> Tile:
 	if is_pos_outside_grid(world_pos):

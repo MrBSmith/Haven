@@ -22,7 +22,6 @@ func on_animal_arrived():
 	if flower.get_pollinazer() == null or flower.get_pollinazer().get_ref() == null:
 		animal.reach_for_target(flower)
 	else:
-		wander_area_center = flower.get_global_position()
 		animal.set_move_path([find_new_destination(true)])
 
 #### VIRTUALS ####

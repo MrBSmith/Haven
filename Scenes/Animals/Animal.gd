@@ -1,28 +1,38 @@
 extends KinematicBody2D
 class_name Animal
 
+var is_ready : bool = false
+
 export var speed : float = 1.0 setget set_speed, get_speed
-export var wander_distance : float = 32.0 setget set_wander_distance, get_wander_distance
+
+# Wander maximum distance, expressed in tiles
+export var wander_distance : float = 1.5 setget set_wander_distance, get_wander_distance
 
 export var eatable_types : PoolStringArray = []
 export var view_radius : float = 12.0
 
 export var eating_time : float = 3.0
 
-export var avarage_presence_time : float = 40.0
+# Exepressed in turns
+var presence_time : int = 0
+export var prensence_time_fork : PoolIntArray = [1, 3]
 
 export var appearing_conditions : Array = []
 export var appearing_cond_radius : int = 2
 export (float, 0.0, 100.0, 0.0) var appearing_probability : float = 0.0
 
-var standby : bool = false setget set_standby, get_standby
+export var standby : bool = false setget set_standby, get_standby
 var target : PhysicsBody2D = null setget set_target, get_target
 var path : PoolVector2Array
 
 var visited_targets : Array = []
+var wander_area_center := Vector2.ZERO setget set_wander_area_center, get_wander_area_center
 
 onready var path_curve = Curve2D.new()
 onready var behaviour : StatesMachine = find_behaviour()
+
+
+signal standby_changed(value)
 
 #### ACCESSORS ####
 
@@ -38,8 +48,21 @@ func get_wander_distance() -> float: return wander_distance
 func set_state(value: String): behaviour.set_state(value)
 func get_state_name() -> String: return behaviour.get_state_name()
 
-func set_standby(value: bool): standby = value
+func set_standby(value: bool): 
+	var changed = value != standby
+	standby = value
+	if standby:
+		if !is_ready:
+			yield(self, "ready")
+		set_wander_area_center(get_global_position())
+	
+	if changed:
+		emit_signal("standby_changed", standby)
+
 func get_standby() -> bool: return standby
+
+func set_wander_area_center(value: Vector2): wander_area_center = value
+func get_wander_area_center() -> Vector2: return wander_area_center
 
 func set_target(value: PhysicsBody2D):
 	if target is FlowerBase:
@@ -55,15 +78,21 @@ func get_target() -> PhysicsBody2D:
 func _ready():
 	randomize()
 	
+	compute_presence_time()
 	path_curve.set_bake_interval(0.7)
 	
 	var shape = $Area2D/CollisionShape2D.get_shape()
 	shape.set_radius(view_radius)
 	
-	var _err = $PresenceTimer.connect("timeout", self, "on_presence_timer_timeout")
-	trigger_presence_timer()
+	is_ready = true
 
 #### LOGIC ####
+
+func compute_presence_time():
+	var min_time = float(prensence_time_fork[0])
+	var max_time = float(prensence_time_fork[1] + 1)
+	presence_time = int(rand_range(min_time, max_time))
+	
 
 # Set the move path (Straight line to the target)
 func set_move_path(path_point_array: Array):
@@ -87,6 +116,7 @@ func move_to(pos: Vector2):
 	set_state("MoveTo")
 
 
+# Give this animal the order to rech for the given target
 func reach_for_target(tar: PhysicsBody2D):
 	set_target(tar)
 	if tar == null:
@@ -95,6 +125,7 @@ func reach_for_target(tar: PhysicsBody2D):
 	move_to(tar.get_global_position())
 
 
+# Give this animal the order to eat
 func eat():
 	if behaviour is Pollinating:
 		visited_targets.append(target)
@@ -107,6 +138,7 @@ func eat():
 		set_state("Eating")
 
 
+# Give this animal the order to go away from the board
 func go_away():
 	set_state("Wander")
 
@@ -202,17 +234,6 @@ func is_appear_condition_verified(tile_array: Array, condition: AppearCondition)
 	return false
 
 
-# Trigger the timer which determine when the animal wants to leave the board
-func trigger_presence_timer():
-	if avarage_presence_time <= 0:
-		return
-	
-	var rdm_sign = randi() % 2 * 2 -1
-	var variance = (avarage_presence_time * rand_range(0.1, 20.0) / 100) * rdm_sign
-	var presence_time = avarage_presence_time + variance
-	$PresenceTimer.start(presence_time)
-
-
 #### VIRTUALS ####
 
 
@@ -223,5 +244,11 @@ func trigger_presence_timer():
 
 #### SIGNAL RESPONSES ####
 
-func on_presence_timer_timeout():
+func on_presence_time_finished():
 	queue_free()
+
+
+func on_animal_leaving_phase():
+	presence_time -= 1
+	if presence_time <= 0:
+		on_presence_time_finished()

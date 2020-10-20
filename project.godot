@@ -157,7 +157,7 @@ _global_script_classes=[ {
 "base": "Behaviour",
 "class": "Pollinating",
 "language": "GDScript",
-"path": "res://Scenes/Animals/Behaviour/Pollinating/Pollinating .gd"
+"path": "res://Scenes/Animals/Behaviour/Pollinating/Pollinating.gd"
 }, {
 "base": "KinematicBody2D",
 "class": "Projectile",

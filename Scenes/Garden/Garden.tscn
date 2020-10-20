@@ -1,21 +1,26 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Scenes/Garden/Garden.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Hand/Hand.gd" type="Script" id=2]
 [ext_resource path="res://Scenes/Garden/Grid.gd" type="Script" id=3]
 [ext_resource path="res://Scenes/Garden/GridArea.gd" type="Script" id=4]
-[ext_resource path="res://Asset/Fonts/BoldCapsPixel.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://Asset/Fonts/PixelFont.tres" type="DynamicFont" id=5]
 [ext_resource path="res://Scenes/DebugPanel/DebugPanel.gd" type="Script" id=6]
 [ext_resource path="res://Scenes/Garden/Animations.gd" type="Script" id=7]
 [ext_resource path="res://Scenes/VFX/Clouds/Clouds.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Scenes/Animals/TerrestrialAnimal/Herbivore/Rabbit/Rabbit.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Scenes/Animals/FlyingAnimal/Insects/Bees/Bee.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Scenes/Garden/Pathfinder/Pathfinder.tscn" type="PackedScene" id=11]
+[ext_resource path="res://AbstractClasses/StateMachine.gd" type="Script" id=12]
 [ext_resource path="res://Scenes/Garden/AreaDebug.gd" type="Script" id=13]
 [ext_resource path="res://Scenes/Card/AOEArea.gd" type="Script" id=14]
+[ext_resource path="res://Scenes/Garden/Phases/AnimalLeaving.gd" type="Script" id=15]
+[ext_resource path="res://Scenes/Garden/Phases/ChooseMeteoEffect.gd" type="Script" id=16]
+[ext_resource path="res://Scenes/Garden/Phases/MeteoAnimation.gd" type="Script" id=17]
+[ext_resource path="res://Scenes/Garden/Phases/AnimalBehaviour.gd" type="Script" id=18]
+[ext_resource path="res://Scenes/Garden/Phases/Draw.gd" type="Script" id=19]
 
 [sub_resource type="RectangleShape2D" id=1]
-
-[sub_resource type="DynamicFont" id=2]
-font_data = ExtResource( 5 )
 
 [sub_resource type="Environment" id=3]
 background_mode = 4
@@ -33,6 +38,31 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="Phases" type="Node" parent="."]
+script = ExtResource( 12 )
+
+[node name="Draw" type="Node" parent="Phases"]
+script = ExtResource( 19 )
+
+[node name="ChooseMeteoEffect" type="Node" parent="Phases"]
+script = ExtResource( 16 )
+
+[node name="MeteoAnimation" type="Node" parent="Phases"]
+script = ExtResource( 17 )
+
+[node name="AnimalBehaviour" type="Node" parent="Phases"]
+script = ExtResource( 18 )
+
+[node name="Timer" type="Timer" parent="Phases/AnimalBehaviour"]
+wait_time = 2.0
+one_shot = true
+
+[node name="AnimalLeaving" type="Node" parent="Phases"]
+script = ExtResource( 15 )
+
+[node name="Timer" type="Timer" parent="Phases/AnimalLeaving"]
+one_shot = true
 
 [node name="Grid" type="Node2D" parent="."]
 script = ExtResource( 3 )
@@ -65,6 +95,12 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="Rabbit" parent="Grid/Animals" instance=ExtResource( 9 )]
+position = Vector2( 46.0139, 45.7779 )
+
+[node name="Bee" parent="Grid/Animals" instance=ExtResource( 10 )]
+position = Vector2( 68.195, 19.8214 )
+
 [node name="MeteoEffects" type="YSort" parent="Grid"]
 script = ExtResource( 7 )
 __meta__ = {
@@ -89,20 +125,30 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CursorTile" type="Label" parent="Grid/DebugPanel/VBoxContainer"]
+[node name="GamePhase" type="Label" parent="Grid/DebugPanel/VBoxContainer"]
 margin_right = 192.0
 margin_bottom = 13.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = ExtResource( 5 )
+text = "Phase:"
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CursorTile" type="Label" parent="Grid/DebugPanel/VBoxContainer"]
+margin_top = 17.0
+margin_right = 192.0
+margin_bottom = 30.0
+custom_fonts/font = ExtResource( 5 )
 text = "CursorTile:"
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="CursorPos" type="Label" parent="Grid/DebugPanel/VBoxContainer"]
-margin_top = 17.0
+margin_top = 34.0
 margin_right = 192.0
-margin_bottom = 30.0
-custom_fonts/font = SubResource( 2 )
+margin_bottom = 47.0
+custom_fonts/font = ExtResource( 5 )
 text = "CursorPos:"
 __meta__ = {
 "_edit_lock_": true
@@ -111,12 +157,18 @@ __meta__ = {
 [node name="AreaDebug" type="Node2D" parent="Grid"]
 visible = false
 script = ExtResource( 13 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="AOEarea" type="Node2D" parent="Grid/AreaDebug"]
 script = ExtResource( 14 )
 
 [node name="Hand" type="Node2D" parent="."]
 script = ExtResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 3 )

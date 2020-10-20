@@ -2,9 +2,9 @@ extends AnimalState
 class_name WanderState
 
 onready var timer_node = Timer.new()
-
 export var wait_time : float = 0.2 
-var wander_area_center := Vector2.ZERO
+
+var is_waiting : bool = true
 
 #### ACCESSORS ####
 
@@ -17,7 +17,11 @@ func _ready():
 	
 	add_child(timer_node)
 	timer_node.set_wait_time(wait_time)
+	timer_node.set_one_shot(true)
 	var _err = timer_node.connect("timeout", self, "_on_timer_timeout")
+	
+	yield(owner, "ready")
+	_err = animal.connect("standby_changed", self, "on_standby_changed")
 
 
 #### LOGIC ####
@@ -26,6 +30,7 @@ func _ready():
 func find_new_destination(fix_radius: bool = false) -> Vector2:
 	var dest = Vector2(-1.0, -1.0)
 	var grid_node = get_tree().get_current_scene().find_node("Grid")
+	var wander_dist_pixels = animal.get_wander_distance() * Globals.TILE_SIZE.x
 	
 	if grid_node == null:
 		return Vector2.ZERO
@@ -35,22 +40,23 @@ func find_new_destination(fix_radius: bool = false) -> Vector2:
 		var rad_angle = deg2rad(rdm_deg_angle)
 		
 		var dir = Vector2(cos(rad_angle), sin(rad_angle))
-		var rdm_dist = rand_range(animal.wander_distance / 3, animal.wander_distance)
+		var rdm_dist = rand_range(wander_dist_pixels / 3, wander_dist_pixels)
 		
-		var area_center = wander_area_center if fix_radius else animal.global_position
+		var area_center = animal.get_wander_area_center() if fix_radius else animal.global_position
 		
 		dest = area_center + dir * rdm_dist
-	
 	return dest
 
 
-func on_animal_arrived():
-	var tar = animal.find_target_in_view()
-	
-	if tar == null:
-		animal.set_move_path([find_new_destination(animal.standby)])
+# Find a new target or wander destination
+func search_new_destination():
+	var tar = null
+	if animal.get_standby():
+		animal.set_move_path([find_new_destination(true)])
 	else:
-		animal.reach_for_target(tar)
+		tar = animal.find_target_in_view()
+		if tar != null:
+			animal.reach_for_target(tar)
 
 
 #### VIRTUALS ####
@@ -66,12 +72,11 @@ func exit_state(_next_state: StateBase):
 func update(delta: float):
 	var path = animal.path
 	
-	if path.empty():
-		animal.set_move_path([find_new_destination(animal.standby)])
+	if path.empty() && !is_waiting:
+		on_animal_arrived()
 	
 	animal.move(delta, 0.5)
-	if path.size() == 0:
-		on_animal_arrived()
+
 
 
 #### INPUTS ####
@@ -85,6 +90,19 @@ func _on_timer_timeout():
 	if states_machine.get_state() != self:
 		return
 	
-	var target = animal.find_target_in_view()
-	if target:
-		animal.reach_for_target(target)
+	is_waiting = false
+	search_new_destination()
+
+# Called when an animal is arrived to destination
+# Either find a target, or a new destination
+func on_animal_arrived():
+	timer_node.start()
+	is_waiting = true
+
+
+# When the standby of the animal change, update the wait timer
+func on_standby_changed(standby : bool):
+	if standby:
+		timer_node.set_wait_time(wait_time * 5)
+	else:
+		timer_node.set_wait_time(wait_time)

@@ -39,3 +39,6 @@ func update_cursor_tile_label():
 
 
 #### SIGNAL RESPONSES ####
+
+func on_phase_changed(new_phase : String):
+	$VBoxContainer/GamePhase.set_text(new_phase)

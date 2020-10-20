@@ -1,17 +1,41 @@
 extends Node2D
 
+##### TURN ORDER #####
+
+### -> See the statemachine Phases ###
+
+# 0) The player draw a new card, which triggers his new turn
+# 1) The player choose his meteo effect he wants to play
+# 2) The meteo effect take place, and affect tiles
+# 3) The new animals appear
+# 4) The animals behave
+# 5) The leaving animal leave the board
+
 onready var grid_node = $Grid
 onready var hand_node = $Hand
 
+onready var phase_state_machine = $Phases
+
+#### ACCESSORS ####
+
+func set_phase(value: String): phase_state_machine.set_state(value)
+func get_phase_name() -> String: return phase_state_machine.get_state_name()
+
+
+#### BUILT-IN ####
+
 func _ready():
 	var _err = Events.connect("single_plant_animation_finished", self, "_on_single_plant_animation_finished")
+	_err = Events.connect("meteo_animation_started", self, "_on_meteo_animation_started")
+	_err = Events.connect("meteo_animation_finished", self, "_on_meteo_animation_finished")
+	
+	_err = phase_state_machine.connect("state_changed", $Grid/DebugPanel, "on_phase_changed")
 	
 	grid_node.generate_grid()
 	var grid_pxl_size = Globals.get_grid_pixel_size()
 	
 	init_clouds(grid_pxl_size)
 	init_hand_size(grid_pxl_size)
-
 
 
 #### LOGIC ####
@@ -49,5 +73,8 @@ func _on_single_plant_animation_finished():
 		Events.emit_signal("flora_animation_finished")
 
 
-func _on_new_turn_started():
-	propagate_call("new_turn")
+func _on_meteo_animation_started():
+	set_phase("MeteoAnimation")
+
+func _on_meteo_animation_finished():
+	set_phase("AnimalBehaviour")
