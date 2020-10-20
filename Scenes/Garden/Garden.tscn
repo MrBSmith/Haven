@@ -22,7 +22,7 @@
 
 [sub_resource type="RectangleShape2D" id=1]
 
-[sub_resource type="Environment" id=3]
+[sub_resource type="Environment" id=2]
 background_mode = 4
 glow_enabled = true
 glow_levels/1 = true
@@ -171,4 +171,4 @@ __meta__ = {
 }
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 3 )
+environment = SubResource( 2 )
