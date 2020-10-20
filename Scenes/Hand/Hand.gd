@@ -8,12 +8,13 @@ const sun_card_scene = preload("res://Scenes/Card/Sun/SunCard.tscn")
 const rain_card_scene = preload("res://Scenes/Card/Rain/RainCard.tscn")
 
 const card_types_array : Array = [wind_card_scene, sun_card_scene, rain_card_scene]
-
-const CARD_SIZE = Vector2(16, 16)
 const MAX_CARDS = 2
+
+
 
 signal card_drawn
 
+var hand_size := Vector2.ZERO 
 var last_card_played_index : int = 0
 
 #### BUILT-IN ####
@@ -84,12 +85,7 @@ func generate_card() -> Card:
 
 # Add the given card to the hand
 func add_card(new_card: Card, card_index: int):
-	var pos := Vector2.ZERO
-	
-	if card_index == 0:
-		pos = Vector2(- CARD_SIZE.x, 0)
-	else:
-		pos = Vector2(CARD_SIZE.x, 0)
+	var pos = Vector2(-hand_size.x / 5, 0) if card_index == 0 else Vector2(hand_size.x / 5, 0)
 	
 	new_card.set_position(pos)
 	new_card.set_default_position(pos)

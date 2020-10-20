@@ -19,6 +19,7 @@ animations = [ {
 } ]
 
 [node name="Rabbit" instance=ExtResource( 1 )]
+scale = Vector2( 20, 20 )
 z_index = 1
 eatable_types = PoolStringArray( "Grass", "Flower" )
 view_radius = 20.0

@@ -18,12 +18,18 @@ z_index = 1
 script = ExtResource( 2 )
 eatable_types = PoolStringArray( "Flower" )
 eating_time = 1.0
+path_max_curvature = 2000.0
+path_min_curvature = 400.0
 
 [node name="AnimatedSprite" parent="." index="0"]
+scale = Vector2( 20, 20 )
 frames = SubResource( 1 )
 offset = Vector2( 0, -0.542 )
 
 [node name="Pollinating " parent="." index="1" instance=ExtResource( 3 )]
+
+[node name="Area2D" parent="." index="2"]
+scale = Vector2( 20, 20 )
 
 [node name="Path2D" type="Path2D" parent="." index="3"]
 curve = null
