@@ -48,10 +48,10 @@ func reach_for_target(tar: PhysicsBody2D):
 #### INPUTS ####
 
 # Go there you dummie
-#func _input(event : InputEvent):
-#	if event.is_action_released("click"):
-#		var mouse_pos = get_global_mouse_position()
-#		move_to(mouse_pos)
+func _input(event : InputEvent):
+	if event.is_action_released("click"):
+		var mouse_pos = get_global_mouse_position()
+		move_to(mouse_pos)
 
 #### SIGNAL RESPONSES ####
 

@@ -53,10 +53,10 @@ func add_to_wetness(value: int):
 
 # Generate the flora of the tile, based on its type
 # Called by the grid when the tile is generated
-func generate_flora():
-	generate_plant(Globals.grass, tile_type.min_grass_nb, tile_type.max_grass_nb, 70, true)
-	generate_plant(Globals.flower_types, tile_type.min_flower_nb, tile_type.max_flower_nb, 70, true)
-	generate_plant(Globals.base_tree, tile_type.min_tree_nb, tile_type.max_tree_nb, 40, true)
+func generate_flora(astar_sample_freq: float):
+	generate_plant(Globals.grass, tile_type.min_grass_nb, tile_type.max_grass_nb, 70, true, astar_sample_freq)
+	generate_plant(Globals.flower_types, tile_type.min_flower_nb, tile_type.max_flower_nb, 70, true, astar_sample_freq)
+	generate_plant(Globals.base_tree, tile_type.min_tree_nb, tile_type.max_tree_nb, 40, true, astar_sample_freq)
 	
 	emit_signal("tile_created")
 
@@ -73,7 +73,8 @@ func generate_wetness():
 # The plant argument can also be an array, if this is the case, 
 # A random member will be picked each time
 # Called when the garden is generated
-func generate_plant(plant, min_nb: int, max_nb: int, spawn_chances: int, garden_generation : bool = false):
+func generate_plant(plant, min_nb: int, max_nb: int, spawn_chances: int,
+			garden_generation : bool = false, astar_sample_freq: float = 1.0):
 	if max_nb == 0:
 		return
 	
@@ -96,9 +97,9 @@ func generate_plant(plant, min_nb: int, max_nb: int, spawn_chances: int, garden_
 			var min_dist = new_plant.get_min_sibling_dist()
 			
 			# Generate new positions until one is correct
-			var pos = random_plant_position()
+			var pos = Vector2(-1, -1)
 			while(!is_plant_correct_position(new_plant, pos, min_dist)):
-				pos = random_plant_position()
+				pos = random_plant_position().snapped(Vector2(astar_sample_freq, astar_sample_freq))
 			
 			add_plant(new_plant, pos, true)
 			plant_array.append(new_plant)
@@ -197,7 +198,8 @@ func is_plant_correct_position(plant_node: Plant, pos: Vector2, min_dist: float 
 	var plant_array := get_plant_correct_group(plant_category).get_children()
 	
 	for plant in plant_array:
-		if plant.get_position().distance_to(pos) < min_dist:
+		if plant.get_position().distance_to(pos) < min_dist \
+		or pos < Vector2.ZERO or pos > Globals.GRID_TILE_SIZE:
 			return false
 	return true
 

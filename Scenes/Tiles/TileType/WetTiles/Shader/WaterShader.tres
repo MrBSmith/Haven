@@ -60,6 +60,6 @@ render_priority = 1
 shader = SubResource( 1 )
 shader_param/fog_color = Color( 0.121569, 0.635294, 0.733333, 1 )
 shader_param/distort_speed = Vector2( 1.671, 1.323 )
-shader_param/speed_multiplier = 0.292
+shader_param/speed_multiplier = 1.0
 shader_param/opacity = 1.0
 shader_param/OCTAVES = 3

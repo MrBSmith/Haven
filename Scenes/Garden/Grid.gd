@@ -2,6 +2,8 @@ extends Node2D
 
 var moving_seed_scene = preload("res://Scenes/Animations/MovingSeed/MovingSeed.tscn")
 
+export var sampling_frequency : int = 50
+
 #### ACCESSORS ####
 
 func get_tile_array() -> Array:
@@ -23,7 +25,6 @@ func generate_grid():
 	for i in range(nb_tiles.x):
 		for j in range(nb_tiles.y):
 			free_pos_array.append(Vector2(i, j))
-			
 	
 	# Determine the number of water tile to place btw 5-8, then places it
 	var nb_water_tile = randi() % 4 + 5
@@ -41,10 +42,10 @@ func generate_grid():
 	
 	for child in get_children():
 		if child is Tile:
-			child.generate_flora()
+			child.generate_flora(sampling_frequency)
 	
 	$GridArea.adapt_grid_area(nb_tiles.x, Globals.TILE_SIZE)
-	$TerresPathfinder.sample_map()
+	$TerresPathfinder.sample_map(sampling_frequency)
 
 
 # Place the given type of tile, the given number of time, in the free slot in the grid (stocked in the free_pos_array)

@@ -4,9 +4,10 @@ class_name Pathfinder
 var ready : bool = false 
 
 export var swimming_animal : bool = false
-export var sampling_frequency : int = 50
 
-onready var grid_point_size = Globals.TILE_SIZE * Globals.GRID_TILE_SIZE / sampling_frequency
+var sampling_frequency : int = -1.0
+var grid_point_size 
+
 onready var astar = AStar2D.new()
 onready var grid_node = get_parent()
 
@@ -25,6 +26,9 @@ func _ready():
 
 # Return the shortest path between the origin point and the destination point
 func get_simple_path(origin: Vector2, dest: Vector2) -> PoolVector2Array:
+	if sampling_frequency == -1.0:
+		return PoolVector2Array()
+	
 	if !ready or grid_node.is_pos_outside_grid(dest):
 		return PoolVector2Array()
 	
@@ -42,7 +46,11 @@ func get_simple_path(origin: Vector2, dest: Vector2) -> PoolVector2Array:
 # and feed the Astar with it
 # Set the water & swamp tile as non walkable
 # Then connect every points
-func sample_map():
+func sample_map(frequency: int = 50):
+	
+	sampling_frequency = frequency
+	grid_point_size = Globals.TILE_SIZE * Globals.GRID_TILE_SIZE / sampling_frequency
+	
 	var id = 0
 	for i in range(grid_point_size.y):
 		for j in range(grid_point_size.x):
@@ -108,17 +116,14 @@ func get_points_in_obstacle(obstacle: Node2D) -> PoolVector2Array:
 	var points_array := PoolVector2Array()
 	
 	# Rect position, expressed in point position
-	var rect_pos = collision_rect.position / sampling_frequency
-	rect_pos = rect_pos.round()
+	var rect_pos = collision_rect.position
+	var rect_size_pxl = collision_rect.size * scale
 	
-	rect_pos = Vector2(clamp(rect_pos.x, 0.0, grid_point_size.x), \
-						clamp(rect_pos.y, 0.0, grid_point_size.y))
-	var rect_size_pxl = collision_rect.size
-	
-	for i in range(rect_size_pxl.y / sampling_frequency):
-		for j in range(rect_size_pxl.x / sampling_frequency):
-			var point = Vector2(j, i) + rect_pos
-			points_array.append(point)
+	for i in range(rect_size_pxl.y):
+		for j in range(rect_size_pxl.x):
+			var point = world_pos_to_point(Vector2(j, i) + rect_pos)
+			if !point in points_array:
+				points_array.append(point)
 	
 	return points_array
 
@@ -135,7 +140,7 @@ func get_unpassable_tiles(tiles_array: Array) -> Array:
 
 # Return true if the given point is in an unpassable tile
 func is_point_in_unpassable_tile(point: Vector2) -> bool:
-	var tile = grid_node.get_tile_at_world_pos(point)
+	var tile = grid_node.get_tile_at_world_pos(point_to_world_pos(point))
 	if tile == null:
 		return true
 	
@@ -146,6 +151,7 @@ func is_point_in_unpassable_tile(point: Vector2) -> bool:
 # Return true is the given point is inside an obstacle, false if not
 func is_point_in_obstacle(point : Vector2, exeption: Node2D = null) -> bool:
 	var obstacles_array = get_tree().get_nodes_in_group("Obstacle")
+	var point_world_pos = point_to_world_pos(point)
 	
 	for obstacle in obstacles_array:
 		if obstacle == exeption:
@@ -153,7 +159,8 @@ func is_point_in_obstacle(point : Vector2, exeption: Node2D = null) -> bool:
 		
 		var collision_shape = obstacle.find_node("CollisionShape2D")
 		var collision_rect = get_collision_rect(collision_shape)
-		if collision_rect.has_point(point):
+		collision_rect.size *= obstacle.scale
+		if collision_rect.has_point(point_world_pos):
 			return true
 	return false
 
@@ -167,8 +174,8 @@ func get_collision_rect(collision_shape: CollisionShape2D) -> Rect2:
 
 # Connect every point in the grid
 func connect_all_points():
-	for i in range(grid_point_size.x / sampling_frequency):
-		for j in range(grid_point_size.y / sampling_frequency):
+	for i in range(grid_point_size.x):
+		for j in range(grid_point_size.y):
 			connect_relatives(Vector2(i, j))
 
 
@@ -206,6 +213,16 @@ func get_id_at_pos(pos: Vector2) -> int:
 # Take a world position, and return the id of the corresponding point
 func get_id_at_world_pos(world_pos: Vector2) -> int:
 	return get_id_at_pos(world_pos / sampling_frequency)
+
+
+# Take a world position and return its corresponding point position in the A* 
+func world_pos_to_point(world_pos: Vector2) -> Vector2:
+	return (world_pos / sampling_frequency).round()
+
+# Take a point position of the A* and return the corresponding world position
+func point_to_world_pos(point: Vector2) -> Vector2:
+	return point * sampling_frequency
+
 
 # Take an id, and return its position expressed in sampled point position 
 func get_pos_from_id(id : int) -> Vector2:
