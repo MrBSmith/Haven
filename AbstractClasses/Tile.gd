@@ -82,6 +82,7 @@ func generate_plant(plant, min_nb: int, max_nb: int, spawn_chances: int,
 	
 	var plant_array : Array = []
 	var nb_plant_rng = randi() % max_nb + min_nb
+	var grid_snap = Globals.TILE_SIZE / astar_sample_freq
 	
 	for _i in range(nb_plant_rng):
 		var rng_plant = randi() % 100
@@ -97,9 +98,9 @@ func generate_plant(plant, min_nb: int, max_nb: int, spawn_chances: int,
 			var min_dist = new_plant.get_min_sibling_dist()
 			
 			# Generate new positions until one is correct
-			var pos = Vector2(-1, -1)
+			var pos = Vector2.INF
 			while(!is_plant_correct_position(new_plant, pos, min_dist)):
-				pos = random_plant_position().snapped(Vector2(astar_sample_freq, astar_sample_freq))
+				pos = random_plant_position().snapped(grid_snap)
 			
 			add_plant(new_plant, pos, true)
 			plant_array.append(new_plant)
@@ -194,12 +195,14 @@ func add_plant(plant_node: Plant, pos: Vector2, garden_generation : bool = false
 # Return true if the given position is far enough (the minimum distance is defined by min_dist)
 # from every seed in the seed array
 func is_plant_correct_position(plant_node: Plant, pos: Vector2, min_dist: float = 4.0) -> bool:
+	if pos == Vector2.INF:
+		return false
+	
 	var plant_category = plant_node.get_category()
 	var plant_array := get_plant_correct_group(plant_category).get_children()
 	
 	for plant in plant_array:
-		if plant.get_position().distance_to(pos) < min_dist \
-		or pos < Vector2.ZERO or pos > Globals.GRID_TILE_SIZE:
+		if plant.get_position().distance_to(pos) < min_dist:
 			return false
 	return true
 
