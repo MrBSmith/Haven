@@ -73,7 +73,8 @@ func modify_obstacle(obstacle: Node2D, remove: bool = true):
 		var not_passable = is_point_in_unpassable_tile(point) or \
 			is_point_in_obstacle(point, obstacle if remove else null)
 		
-		astar.set_point_disabled(id, not_passable)
+		if astar.has_point(id):
+			astar.set_point_disabled(id, not_passable)
 
 
 # Called when a tile change type; update the passability of the point underneath it
@@ -109,15 +110,30 @@ func get_points_in_tile(tile: Tile) -> PoolVector2Array:
 
 
 # Return a PoolVector2Array of points inside the given obstacle
-#### THE COLLISION SHAPE HAVE TO BE RECTANGULAR (MAY BE INPROVED) ####
+# !!! Works only with RectangleShape2D and CircleShape2D !!!
 func get_points_in_obstacle(obstacle: Node2D) -> PoolVector2Array:
-	var collision_shape = obstacle.get_node("CollisionShape2D")
-	var collision_rect := get_collision_rect(collision_shape)
+	var points_array = PoolVector2Array()
+	var shape = obstacle.get_node("CollisionShape2D").get_shape()
+	var obst_pos = obstacle.get_global_position()
+	var obst_scale = obstacle.get_scale()
+	
+	if shape is RectangleShape2D:
+		points_array = get_points_in_rect(get_collision_rect(obst_pos, shape, obst_scale))
+	
+	elif shape is CircleShape2D:
+		var circle_radius = shape.get_radius()
+		points_array = get_points_in_circle(circle_radius, obst_pos, obst_scale)
+	
+	return points_array
+
+
+# Returns an array of points inside a given rect
+func get_points_in_rect(rect: Rect2) -> PoolVector2Array:
 	var points_array := PoolVector2Array()
 	
 	# Rect position, expressed in point position
-	var rect_pos = collision_rect.position
-	var rect_size_pxl = collision_rect.size * scale
+	var rect_pos = rect.position
+	var rect_size_pxl = rect.size
 	
 	for i in range(rect_size_pxl.y):
 		for j in range(rect_size_pxl.x):
@@ -126,6 +142,23 @@ func get_points_in_obstacle(obstacle: Node2D) -> PoolVector2Array:
 				points_array.append(point)
 	
 	return points_array
+
+# Returns an array of points inside a given circle
+# !!! Doesn't support non-perfect circles !!! #
+func get_points_in_circle(radius: float, circle_pos: Vector2, obst_scale: Vector2):
+	var astar_points = astar.get_points()
+	var points_array := PoolVector2Array()
+	
+	for point_id in astar_points:
+		if is_point_in_circle(point_id, circle_pos, radius, obst_scale):
+			points_array.append(get_pos_from_id(point_id))
+	return points_array
+
+
+func is_point_in_circle(point_id: int, circle_pos: Vector2, 
+					radius: float, circle_scale:= Vector2.ONE):
+	var point_world_pos = get_world_pos_from_id(point_id)
+	return point_world_pos.distance_to(circle_pos) <= radius * circle_scale.x
 
 
 # Return every unpassable tiles
@@ -157,19 +190,26 @@ func is_point_in_obstacle(point : Vector2, exeption: Node2D = null) -> bool:
 		if obstacle == exeption:
 			continue
 		
-		var collision_shape = obstacle.find_node("CollisionShape2D")
-		var collision_rect = get_collision_rect(collision_shape)
-		collision_rect.size *= obstacle.scale
-		if collision_rect.has_point(point_world_pos):
-			return true
+		var obst_pos = obstacle.get_global_position()
+		var obst_scale = obstacle.get_scale()
+		var shape = obstacle.find_node("CollisionShape2D").get_shape()
+		
+		if shape is RectangleShape2D:
+			var collision_rect = get_collision_rect(obst_pos, shape, obst_scale)
+			if collision_rect.has_point(point_world_pos):
+				return true
+		elif shape is CircleShape2D:
+			var radius = shape.get_radius()
+			var point_id = get_id_at_pos(point)
+			if is_point_in_circle(point_id, obst_pos, radius, obst_scale):
+				return true
 	return false
 
 
 # Return the given collision shape (Must be a RectangleShape) as a Rect2
-func get_collision_rect(collision_shape: CollisionShape2D) -> Rect2:
-	var shape_pos = collision_shape.get_global_position()
-	var shape_ext = collision_shape.get_shape().get_extents()
-	return Rect2(shape_pos - shape_ext, shape_ext * 2)
+func get_collision_rect(pos: Vector2, rect_shape: RectangleShape2D, obst_scale := Vector2.ONE) -> Rect2:
+	var shape_ext = rect_shape.get_extents() * obst_scale
+	return Rect2(pos - shape_ext, shape_ext * 2)
 
 
 # Connect every point in the grid
