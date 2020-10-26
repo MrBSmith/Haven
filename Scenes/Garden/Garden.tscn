@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Scenes/Garden/Garden.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Hand/Hand.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Scenes/Garden/Animations.gd" type="Script" id=7]
 [ext_resource path="res://Scenes/VFX/Clouds/Clouds.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Scenes/Animals/TerrestrialAnimal/Herbivore/Rabbit/Rabbit.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Scenes/Garden/Camera2D.gd" type="Script" id=10]
 [ext_resource path="res://Scenes/Garden/Pathfinder/Pathfinder.tscn" type="PackedScene" id=11]
 [ext_resource path="res://AbstractClasses/StateMachine.gd" type="Script" id=12]
 [ext_resource path="res://Scenes/Garden/AreaDebug.gd" type="Script" id=13]
@@ -173,4 +174,5 @@ environment = SubResource( 2 )
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
 current = true
-zoom = Vector2( 6.2, 6.2 )
+zoom = Vector2( 6.25, 6.25 )
+script = ExtResource( 10 )

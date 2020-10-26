@@ -1,7 +1,7 @@
 extends Projectile
 class_name LightningProjectile
 
-var width : float = 4.0
+var width : float = 4.0 * Globals.get_tile_upscale().x
 
 var stroke_average_duration : float
 var new_branch_cooldown_duration : float
@@ -23,10 +23,11 @@ func _setup():
 	compute_individal_values()
 	
 	if int(width) != 0:
-		$LightingTrail.trail_max_lenght = 16
 		nb_strokes = randi() % int(width) + 2
 	
 	$LightingTrail.width = width / 2
+	motions[0].speed *= Globals.get_tile_upscale().x
+	
 	
 	stroke_timer = Timer.new()
 	new_branch_cooldown = Timer.new()

@@ -20,6 +20,8 @@ func _setup():
 	
 	$LightingTrail.width = width / 2
 	
+	motions[0].speed *= Globals.get_tile_upscale().x
+	
 	new_branch_cooldown = Timer.new()
 	var _err = new_branch_cooldown.connect("timeout", self, "_on_new_branch_timeout")
 	add_child(new_branch_cooldown)
@@ -56,7 +58,7 @@ func reverse_direction(dir: Vector2):
 
 # Compute in advance the path of the main branch, so it is determinist
 func compute_path():
-	var dist = 30
+	var dist = 30 * Globals.get_tile_upscale().x
 	var current_point = impact_point
 	path.push_front(current_point)
 	for i in nb_strokes - 1:

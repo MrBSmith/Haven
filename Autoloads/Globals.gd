@@ -1,4 +1,4 @@
-extends Node
+extends Node2D
 
 #### GLOBALS AUTOLOAD ####
 
@@ -20,7 +20,7 @@ const red_flower = preload("res://Scenes/Plants/SmallPlants/Flowers/RedFlower/Re
 var tree_types = [base_tree]
 var flower_types = [blue_flower, red_flower]
 
-
+const lightning_scene = preload("res://Scenes/Projectile/Lightning.tscn")
 const lighting_main_branch = preload("res://Scenes/Projectile/LightingMainBranch.tscn")
 const lighting_branch = preload("res://Scenes/Projectile/LightingProjectile.tscn")
 
@@ -52,8 +52,23 @@ func toggle_debug_state():
 func get_grid_pixel_size():
 	return TILE_SIZE * GRID_TILE_SIZE
 
+# Retrun the upsacling of the current tile size form the former 16*16 size
+func get_tile_upscale() -> Vector2:
+	return Vector2(TILE_SIZE / Vector2(16, 16))
+
 #### INPUT ####
 
 func _input(event: InputEvent):
 	if event.is_action_pressed("toggle_debug"):
 		toggle_debug_state()
+	if event.is_action_pressed("click"):
+		generate_thunder_debug(get_global_mouse_position())
+
+
+#### DEBUG FUNCTIONS ####
+
+func generate_thunder_debug(pos: Vector2):
+	var lightning = lightning_scene.instance()
+	lightning.impact_point = pos
+	add_child(lightning)
+  

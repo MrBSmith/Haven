@@ -18,6 +18,9 @@ func _ready():
 	
 	add_child(lifetime_timer)
 	lifetime_timer.start(total_lifetime)
+	
+	set_emission_sphere_radius(Globals.TILE_SIZE.x / 2)
+
 
 #### LOGIC ####
 

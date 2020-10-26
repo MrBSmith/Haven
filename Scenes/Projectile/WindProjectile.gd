@@ -23,18 +23,20 @@ func _setup():
 #### LOGIC ####
 
 func randomize_wind_trail():
-	$Line2D.width = rand_range(0.4, 0.8)
-	$Line2D.trail_max_lenght = int(rand_range(18.0, 30.0))
+	var tile_upscale = Globals.get_tile_upscale().x
+	
+	$Line2D.width = rand_range(0.4, 0.8) * tile_upscale
+	$Line2D.trail_max_lenght = int(rand_range(18.0, 30.0)) * tile_upscale
 	
 	var line = line_motion.duplicate()
 	var sine = sine_motion.duplicate()
 	
 	# Random speed, frequency and amplitude
 	var speed = rand_range(90.0, 130.0)
-	line.speed = speed
+	line.speed = speed * tile_upscale
 	sine.frequency = rand_range(3.5, 7.0)
-	sine.amplitude = rand_range(3.5, 7.0)
-	
+	sine.amplitude = rand_range(3.5, 7.0) * tile_upscale
+		
 	movement_phases = [[line, sine], []]
 	
 	# Random sine duration
@@ -44,8 +46,9 @@ func randomize_wind_trail():
 	# If so, randomly set its size and duration
 	if randi() % 4 == 0:
 		var circle = circle_motion.duplicate()
-		circle.radius = rand_range(0.7, 1.2)
+		circle.radius = rand_range(0.7, 1.2) * tile_upscale
 		circle.speed = speed / 7
+		circle.orbit_damping *= tile_upscale
 		if direction == Vector2.LEFT:
 			circle.clockwise = false
 		
