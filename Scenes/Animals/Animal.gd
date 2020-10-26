@@ -13,6 +13,8 @@ export var view_radius : float = 12.0
 
 export var eating_time : float = 3.0
 
+export var debug : bool = false
+
 # Exepressed in turns
 var presence_time : int = 0
 export var prensence_time_fork : PoolIntArray = [1, 3]

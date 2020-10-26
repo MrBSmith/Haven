@@ -6,7 +6,7 @@
 [ext_resource path="res://Scenes/Plants/Trees/States/Idle.gd" type="Script" id=4]
 [ext_resource path="res://Scenes/Plants/Trees/Wind.gd" type="Script" id=5]
 
-[sub_resource type="RectangleShape2D" id=3]
+[sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 5, 5 )
 
 [sub_resource type="RectangleShape2D" id=2]
@@ -34,7 +34,7 @@ __meta__ = {
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, -0.5 )
-shape = SubResource( 3 )
+shape = SubResource( 1 )
 
 [node name="Skeleton2D" type="Skeleton2D" parent="."]
 __meta__ = {

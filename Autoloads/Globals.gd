@@ -58,11 +58,13 @@ func get_tile_upscale() -> Vector2:
 
 #### INPUT ####
 
-func _input(event: InputEvent):
-	if event.is_action_pressed("toggle_debug"):
+func _input(_event: InputEvent):
+	if Input.is_action_just_pressed("toggle_debug"):
 		toggle_debug_state()
-	if event.is_action_pressed("click"):
-		generate_thunder_debug(get_global_mouse_position())
+		
+	# Lightning test onclick generation
+#	if Input.is_action_just_pressed("click"):
+#		generate_thunder_debug(get_global_mouse_position())
 
 
 #### DEBUG FUNCTIONS ####

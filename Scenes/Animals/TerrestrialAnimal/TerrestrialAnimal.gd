@@ -49,7 +49,7 @@ func reach_for_target(tar: PhysicsBody2D):
 
 # Go there you dummie
 func _input(event : InputEvent):
-	if event.is_action_released("click"):
+	if event.is_action_released("click") && debug:
 		var mouse_pos = get_global_mouse_position()
 		move_to(mouse_pos)
 

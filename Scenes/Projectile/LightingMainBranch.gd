@@ -15,12 +15,14 @@ var path : Array = []
 func _setup():
 	randomize()
 	
-	nb_strokes = int(rand_range(4, 5))
+	game_upscale = Globals.get_tile_upscale().x
+	
+	nb_strokes_remaining = int(rand_range(4, 5))
+	total_nb_strokes = nb_strokes_remaining
+	
 	compute_individal_values()
 	
 	$LightingTrail.width = width / 2
-	
-	motions[0].speed *= Globals.get_tile_upscale().x
 	
 	new_branch_cooldown = Timer.new()
 	var _err = new_branch_cooldown.connect("timeout", self, "_on_new_branch_timeout")
@@ -33,15 +35,14 @@ func _setup():
 
 
 func move(delta: float) -> void:
-	var speed = motions[0].speed
-	var movement : Vector2 = speed * global_position.direction_to(path[0]) * delta
-	var projected_pos = global_position + movement
+	var speed = motions[0].speed * delta
+	var velocity : Vector2 = global_position.direction_to(path[0]) * speed
 
-	if global_position.distance_to(projected_pos) >= global_position.distance_to(path[0]):
+	if global_position.distance_to(path[0]) <= speed:
 		global_position = path.pop_front()
 		_on_path_point_reached()
 	else:
-		global_position = projected_pos
+		global_position += velocity
 
 
 #### LOGIC ####
@@ -58,11 +59,12 @@ func reverse_direction(dir: Vector2):
 
 # Compute in advance the path of the main branch, so it is determinist
 func compute_path():
-	var dist = 30 * Globals.get_tile_upscale().x
+	var dist = 30 * game_upscale
 	var current_point = impact_point
 	path.push_front(current_point)
-	for i in nb_strokes - 1:
-		var dir = compute_rdm_direction(direction, 0.2)
+	
+	for _i in range(nb_strokes_remaining - 1):
+		var dir = compute_rdm_direction(direction, 0.2, 0.3)
 		dir = reverse_direction(dir)
 		current_point += dir * dist
 		path.push_front(current_point)
@@ -78,7 +80,7 @@ func compute_path():
 #### SIGNAL RESPONSES ####
 
 func _on_path_point_reached():
-	nb_strokes -= 1
+	nb_strokes_remaining -= 1
 	
 	if path.empty():
 		direction = Vector2.ZERO
