@@ -4,6 +4,7 @@
 [ext_resource path="res://Scenes/Animations/MovingSeed/MovingSeed.gd" type="Script" id=2]
 
 [node name="MovingSeed" type="Node2D"]
+scale = Vector2( 20, 20 )
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]

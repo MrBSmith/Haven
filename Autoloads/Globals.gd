@@ -2,30 +2,6 @@ extends Node2D
 
 #### GLOBALS AUTOLOAD ####
 
-const tile = preload("res://Scenes/Tiles/Tile.tscn")
-
-var tiles_type = {
-	"Swamp" : preload("res://Scenes/Tiles/TileType/WetTiles/Swamp/SwampTile.tscn"),
-	"Soil" : preload("res://Scenes/Tiles/TileType/DryTiles/Soil/SoilTile.tscn"),
-	"Water" : preload("res://Scenes/Tiles/TileType/WetTiles/Water/WaterTile.tscn"),
-	"Grass" : preload("res://Scenes/Tiles/TileType/DryTiles/Grass/GrassTile.tscn"),
-	"Sand" : preload("res://Scenes/Tiles/TileType/DryTiles/Sand/SandTile.tscn")
-}
-
-const base_tree = preload("res://Scenes/Plants/Trees/Tree.tscn")
-const grass = preload("res://Scenes/Plants/SmallPlants/Grass.tscn")
-const blue_flower = preload("res://Scenes/Plants/SmallPlants/Flowers/BlueFlower/BlueFlower.tscn")
-const red_flower = preload("res://Scenes/Plants/SmallPlants/Flowers/RedFlower/RedFlower.tscn")
-
-var tree_types = [base_tree]
-var flower_types = [blue_flower, red_flower]
-
-const lightning_scene = preload("res://Scenes/Projectile/Lightning.tscn")
-const lighting_main_branch = preload("res://Scenes/Projectile/LightingMainBranch.tscn")
-const lighting_branch = preload("res://Scenes/Projectile/LightingProjectile.tscn")
-
-const fire_fx = preload("res://Scenes/VFX/Fire.tscn")
-
 var window_width = ProjectSettings.get_setting("display/window/size/width")
 var window_height = ProjectSettings.get_setting("display/window/size/height")
 var window_size = Vector2(window_width, window_height)
@@ -70,7 +46,7 @@ func _input(_event: InputEvent):
 #### DEBUG FUNCTIONS ####
 
 func generate_thunder_debug(pos: Vector2):
-	var lightning = lightning_scene.instance()
+	var lightning = Resource_Loader.lightning_scene.instance()
 	lightning.impact_point = pos
 	add_child(lightning)
   

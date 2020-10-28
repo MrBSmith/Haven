@@ -8,7 +8,7 @@ export var trail_max_lenght: int = 20
 func _ready():
 	set_as_toplevel(true)
 	
-	trail_max_lenght *= Globals.get_tile_upscale().x
+	trail_max_lenght = int(trail_max_lenght * Globals.get_tile_upscale().x)
 
 
 #### BUILT-IN ####

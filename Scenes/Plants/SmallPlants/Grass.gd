@@ -27,7 +27,7 @@ func prolifarate():
 		return
 	
 	var local_pos = rdm_pos - tile_under_pos.get_global_position()
-	var new_grass = Globals.grass.instance()
+	var new_grass = Resource_Loader.grass.instance()
 	
 	if tile_under_pos.is_plant_correct_position(new_grass, rdm_pos, min_sibling_dist):
 		tile_under_pos.add_plant(new_grass, local_pos)

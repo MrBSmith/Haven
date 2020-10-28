@@ -23,4 +23,3 @@ sharp_limit = 0.0
 round_precision = 1
 antialiased = true
 script = ExtResource( 4 )
-trail_max_lenght = 6

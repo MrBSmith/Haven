@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scenes/Plants/Trees/Oak/OakBase.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/Plants/Trees/Oak/OldOak.png" type="Texture" id=2]
+
+[node name="OldOak" instance=ExtResource( 1 )]
+tree_growth_state = {
+"Medium": "res://Scenes/Plants/Trees/Oak/MediumOak.tscn",
+"Old": "res://Scenes/Plants/Trees/Oak/OldOak.tscn",
+"Young": "res://Scenes/Plants/Trees/Oak/YoungOak.tscn"
+}
+
+[node name="Sprite" parent="." index="1"]
+texture = ExtResource( 2 )
+
+[node name="Foliage" parent="Skeleton2D" index="0"]
+position = Vector2( 0, -200 )
+default_length = 200.0
+
+[node name="Trunc" parent="Skeleton2D" index="1"]
+default_length = 200.0

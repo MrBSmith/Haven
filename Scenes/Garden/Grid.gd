@@ -66,7 +66,7 @@ func place_tiles_on_grid(tile_type: String, free_pos_array: Array, nb_tile: int 
 # Place a tile, and give it the given type
 func place_single_tile(tile_type: String, grid_position: Vector2):
 	var tile_size = Globals.TILE_SIZE
-	var new_tile = Globals.tile.instance()
+	var new_tile = Resource_Loader.tile.instance()
 	
 	new_tile.set_position(grid_position * tile_size + (tile_size / 2))
 	new_tile.set_grid_position(grid_position)

@@ -91,7 +91,7 @@ func generate_new_branch():
 	if new_width < 1.0:
 		return
 	
-	var new_branch = Globals.lighting_branch.instance()
+	var new_branch = Resource_Loader.lighting_branch.instance()
 	new_branch.width = new_width
 	
 	new_branch.direction = compute_rdm_direction(direction)

@@ -25,7 +25,7 @@ func transform_in_tree():
 		print_debug("The tile reference doesn't exists")
 		return
 	
-	var tree = Globals.tree_types[0].instance()
+	var tree = Resource_Loader.tree_types[0].instance()
 	tree.set_position(get_position())
 	tile.call_deferred("add_child", tree)
 	

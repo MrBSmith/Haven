@@ -54,9 +54,11 @@ func add_to_wetness(value: int):
 # Generate the flora of the tile, based on its type
 # Called by the grid when the tile is generated
 func generate_flora(astar_sample_freq: float):
-	generate_plant(Globals.grass, tile_type.min_grass_nb, tile_type.max_grass_nb, 70, true, astar_sample_freq)
-	generate_plant(Globals.flower_types, tile_type.min_flower_nb, tile_type.max_flower_nb, 70, true, astar_sample_freq)
-	generate_plant(Globals.base_tree, tile_type.min_tree_nb, tile_type.max_tree_nb, 40, true, astar_sample_freq)
+	generate_plant(Resource_Loader.grass, tile_type.min_grass_nb, tile_type.max_grass_nb, 70, true, astar_sample_freq)
+	generate_plant(Resource_Loader.flower_types, tile_type.min_flower_nb, tile_type.max_flower_nb, 70, true, astar_sample_freq)
+	
+	var tree_scene = load(Resource_Loader.oak.get_random_growth_state())
+	generate_plant(tree_scene, tile_type.min_tree_nb, tile_type.max_tree_nb, 40, true, astar_sample_freq)
 	
 	emit_signal("tile_created")
 
@@ -131,7 +133,7 @@ func drain_wetness(value: int) -> int:
 
 # Change the type of the tile for the given one
 func change_tile_type(type_name: String, generation: bool = false):
-	var tile_type_scene = Globals.tiles_type[type_name]
+	var tile_type_scene = Resource_Loader.tiles_type[type_name]
 	var new_tile_type = tile_type_scene.instance()
 	
 	# If the type to be changed in is the same as the current type, abort

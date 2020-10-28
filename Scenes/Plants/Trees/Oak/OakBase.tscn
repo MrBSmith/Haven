@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scenes/Plants/Trees/Tree.tscn" type="PackedScene" id=1]
+
+[node name="OakBase" instance=ExtResource( 1 )]
+tree_growth_state = {
+"Medium": "res://Scenes/Plants/Trees/Oak/MediumOak.tscn",
+"Old": "res://Scenes/Plants/Trees/Oak/OldOak.tscn",
+"Young": "res://Scenes/Plants/Trees/Oak/YoungOak.tscn"
+}
+
+[node name="Sprite" parent="." index="1"]
+position = Vector2( -2.47487, -210.718 )
+
+[node name="Foliage" parent="Skeleton2D" index="0"]
+position = Vector2( 0, -70 )
+rest = Transform2D( 0, -1, 1, 0, 0, -70 )
+default_length = 70.0
+
+[node name="Trunc" parent="Skeleton2D" index="1"]
+rest = Transform2D( 0, -1, 1, 0, 0, 0 )
+default_length = 70.0

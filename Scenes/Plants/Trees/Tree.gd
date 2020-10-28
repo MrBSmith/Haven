@@ -7,6 +7,12 @@ signal generate_seed(pos, velocity, tree_type)
 
 var fire_propagation_dist : float = Globals.TILE_SIZE.x * 0.75
 
+export var tree_growth_state = {
+	"Young": null ,
+	"Medium": null,
+	"Old": null 
+}
+
 #### ACCESSORS ####
 
 func is_type(type): return type == "Tree" or .is_type(type)
@@ -34,12 +40,22 @@ func new_turn():
 		propagate_fire()
 
 
+# Get a random growth state of the tree
+# Return the path of the scene corresponding to this state
+func get_random_growth_state() -> String:
+	var nb_types = tree_growth_state.size()
+	var tree_state_array = tree_growth_state.values()
+	var rdm_type_id = randi() % nb_types
+	
+	return tree_state_array[rdm_type_id]
+
+
 func apply_wind(wind_dir: Vector2, force: int, duration: float):
 	var seed_rng = randi() % 100
 	$StatesMachine/Wind.start_wind_animation(wind_dir, force, duration)
 	
 	if seed_rng < seed_spawn_chances:
-		emit_signal("generate_seed", global_position, wind_dir * force, Globals.base_tree)
+		emit_signal("generate_seed", global_position, wind_dir * force, Resource_Loader.oak)
 		
 	if is_on_fire():
 		propagate_fire(wind_dir)
@@ -93,7 +109,7 @@ func die():
 
 func set_fire(thunder: bool = false):
 	.set_fire(thunder)
-	var fire = Globals.fire_fx.instance()
+	var fire = Resource_Loader.fire_fx.instance()
 	$FirePosition.add_child(fire)
 	on_fire = true
 
