@@ -18,6 +18,9 @@ movement_phases = [ [ ExtResource( 1 ), ExtResource( 3 ) ] ]
 [node name="Line2D" type="Line2D" parent="."]
 width = 15.0
 width_curve = SubResource( 1 )
-default_color = Color( 1, 1, 1, 0.898039 )
+default_color = Color( 1, 1, 1, 1 )
+sharp_limit = 0.0
+round_precision = 1
 antialiased = true
 script = ExtResource( 4 )
+trail_max_lenght = 6

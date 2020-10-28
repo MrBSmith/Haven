@@ -84,27 +84,29 @@ func modify_tile_type(tile: Tile, prev_type: TileType, next_type: TileType):
 	
 	# If its the first addition of a passable type
 	# Or if the passability haven't changed, abort
-	if (!add && first_type) or (!first_type && (is_tile_passable(next_type) == is_tile_passable(prev_type))):
+	if (!add && first_type) or \
+	(!first_type && (is_tile_passable(next_type) == is_tile_passable(prev_type))):
 		return
 	
-	for point in get_points_in_tile(tile):
-		var id = get_id_at_pos(point)
+	for point_id in get_points_in_tile(tile):
 		if add:
-			astar.set_point_disabled(id, true)
+			astar.set_point_disabled(point_id , true)
 		else:
-			if !is_point_in_obstacle(point):
-				astar.set_point_disabled(id, false)
+			if !is_point_in_obstacle(get_pos_from_id(point_id)):
+				astar.set_point_disabled(point_id, false)
 
 
 # Return a PoolVector2Array of points contained in the given tile
-func get_points_in_tile(tile: Tile) -> PoolVector2Array:
-	var upper_left = tile.get_global_position() - (Globals.TILE_SIZE / 2) / sampling_frequency
-	var points_array := PoolVector2Array()
+func get_points_in_tile(tile: Tile) -> PoolIntArray:
+	var upper_left = world_pos_to_point(tile.get_global_position() - Globals.TILE_SIZE / 2)
+	var points_array := PoolIntArray()
 	
-	for i in range(Globals.TILE_SIZE.y / sampling_frequency):
-		for j in range(Globals.TILE_SIZE.x / sampling_frequency):
-			var pos = Vector2(j, i)
-			points_array.append(Vector2(int(pos.x + upper_left.x), int(pos.y + upper_left.y)))
+	var tile_point_size = Globals.TILE_SIZE / sampling_frequency
+	
+	for i in range(tile_point_size.y + 1):
+		for j in range(tile_point_size.x + 1):
+			var pos = Vector2(j, i) + upper_left
+			points_array.append(get_id_at_pos(pos))
 	
 	return points_array
 
