@@ -28,10 +28,3 @@ func get_type() -> String : return TYPE
 
 
 #### SIGNAL RESPONSES ####
-
-func on_plant_grown(plant_calling, next_plant_scene):
-	var next_plant = next_plant_scene.instance()
-	add_child(next_plant)
-	
-	next_plant.set_position(plant_calling.get_position())
-	plant_calling.queue_free()

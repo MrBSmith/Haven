@@ -82,4 +82,4 @@ func _on_meteo_animation_started():
 	set_phase("MeteoAnimation")
 
 func _on_meteo_animation_finished():
-	set_phase("AnimalBehaviour")
+	set_phase("PlantBehaviour")

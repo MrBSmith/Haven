@@ -26,8 +26,8 @@ func _ready():
 
 #### ACCESSORS ####
 
-func get_tile_type(): return tile_type
-func get_tile_type_name(): return tile_type.get_type_name()
+func get_tile_type() -> TileType: return tile_type
+func get_tile_type_name() -> String : return tile_type.get_type_name()
 
 func set_grid_position(value: Vector2):
 	grid_position = value
@@ -188,6 +188,9 @@ func add_plant(plant_node: Plant, pos: Vector2, garden_generation : bool = false
 	if plant_node.has_signal("generate_seed"):
 		var _err = plant_node.connect("generate_seed", grid_node, "generate_moving_seed")
 	
+	if plant_node.has_signal("plant_grown"):
+		var _err = plant_node.connect("plant_grown", self, "on_plant_grown")
+	
 	# Send a signal to signify the plant has been added
 	# Not desired if the garden is currently beeing generated
 	if !garden_generation:
@@ -289,3 +292,12 @@ func on_wind_applied(wind_dir: Vector2, wind_force: int, duration: float):
 		tree.apply_wind(wind_dir, wind_force, duration)
 	
 	tile_type.on_wind_applied(wind_dir, wind_force, duration)
+
+
+# Make a plant grow by replacing its scene by the correct one
+func on_plant_grown(plant_calling, next_plant_scene):
+	var next_plant = next_plant_scene.instance()
+	if next_plant:
+		add_plant(next_plant, plant_calling.get_position())
+	
+	plant_calling.queue_free()

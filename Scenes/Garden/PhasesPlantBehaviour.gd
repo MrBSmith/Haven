@@ -1,7 +1,12 @@
 extends StateBase
 
+const TYPE : String = ""
+
+
 #### ACCESSORS ####
 
+func is_type(value : String) -> bool: return value == TYPE or .is_type(value)
+func get_type() -> String : return TYPE
 
 
 #### BUILT-IN ####
@@ -13,9 +18,6 @@ extends StateBase
 
 
 #### VIRTUALS ####
-
-func enter_state(_previous_state):
-	owner.propagate_call("meteo_animation_started")
 
 
 

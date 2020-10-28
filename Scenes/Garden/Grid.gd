@@ -117,7 +117,7 @@ func is_pos_outside_grid(pos: Vector2):
 
 
 # Generate a moving seed at the given position, with the given velocity and tree_type
-func generate_moving_seed(init_pos: Vector2, init_velocity: Vector2, tree_type: PackedScene):
+func generate_moving_seed(init_pos: Vector2, init_velocity: Vector2, tree_type: Plant):
 	var new_seed = moving_seed_scene.instance()
 	new_seed.set_position(init_pos)
 	new_seed.set_velocity(init_velocity)
@@ -162,14 +162,15 @@ func _input(event):
 
 #### SIGNALS REPSONSES ####
 
-func on_seed_planted(pos: Vector2, tree_type: PackedScene):
+func on_seed_planted(pos: Vector2, plant_type: Plant):
 	var tile = get_tile_at_world_pos(pos)
 	
 	if tile == null:
 		return
 	
-	var tree = tree_type.instance()
-	tile.add_plant(tree, pos - tile.global_position)
+	# NEED TO BE LOADED IN THE RESOURCE LOADER
+	var plant_scene = load(plant_type.plant_growth_state[0])
+	tile.add_plant(plant_scene.instance(), pos - tile.global_position)
 	
 	if Globals.debug_state == true:
 		print("seed_planted a pos: " + String(tile.get_grid_position()))
