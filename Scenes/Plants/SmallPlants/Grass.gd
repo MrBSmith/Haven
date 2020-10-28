@@ -14,7 +14,7 @@ func get_type(): return "Grass"
 
 
 func grow():
-	add_to_growth(1)
+	add_to_growth_progression(1)
 	add_to_dehydration(-1)
 	prolifarate()
 

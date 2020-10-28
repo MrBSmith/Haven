@@ -7,12 +7,6 @@ signal generate_seed(pos, velocity, tree_type)
 
 var fire_propagation_dist : float = Globals.TILE_SIZE.x * 0.75
 
-export var tree_growth_state = {
-	"Young": null ,
-	"Medium": null,
-	"Old": null 
-}
-
 #### ACCESSORS ####
 
 func is_type(type): return type == "Tree" or .is_type(type)
@@ -40,14 +34,6 @@ func new_turn():
 		propagate_fire()
 
 
-# Get a random growth state of the tree
-# Return the path of the scene corresponding to this state
-func get_random_growth_state() -> String:
-	var nb_types = tree_growth_state.size()
-	var tree_state_array = tree_growth_state.values()
-	var rdm_type_id = randi() % nb_types
-	
-	return tree_state_array[rdm_type_id]
 
 
 func apply_wind(wind_dir: Vector2, force: int, duration: float):

@@ -3,11 +3,7 @@
 [ext_resource path="res://Scenes/Plants/Trees/Tree.tscn" type="PackedScene" id=1]
 
 [node name="OakBase" instance=ExtResource( 1 )]
-tree_growth_state = {
-"Medium": "res://Scenes/Plants/Trees/Oak/MediumOak.tscn",
-"Old": "res://Scenes/Plants/Trees/Oak/OldOak.tscn",
-"Young": "res://Scenes/Plants/Trees/Oak/YoungOak.tscn"
-}
+plant_growth_state = [ "res://Scenes/Plants/Trees/Oak/YoungOak.tscn", "res://Scenes/Plants/Trees/Oak/MediumOak.tscn", "res://Scenes/Plants/Trees/Oak/OldOak.tscn" ]
 
 [node name="Sprite" parent="." index="1"]
 position = Vector2( -2.47487, -210.718 )

@@ -7,12 +7,7 @@ class_name Seed
 #### BUILT-IN ####
 
 func _ready():
-	growth_timer_node = Timer.new()
-	var _err = growth_timer_node.connect("timeout", self, "on_growth_timer_timeout")
-	growth_timer_node.set_wait_time(growth_frequency_time)
-	add_child(growth_timer_node)
-	
-	growth_timer_node.start()
+	pass
 
 
 #### LOGIC ####

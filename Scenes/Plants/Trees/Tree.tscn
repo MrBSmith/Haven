@@ -13,17 +13,18 @@ extents = Vector2( 2.98321, 4.63424 )
 
 [node name="Tree" type="StaticBody2D"]
 z_index = 1
+input_pickable = true
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_lock_": true
 }
+debug = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, -0.5 )
 shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
-scale = Vector2( 1, 1 )
 
 [node name="Skeleton2D" type="Skeleton2D" parent="."]
 __meta__ = {
