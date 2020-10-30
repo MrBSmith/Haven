@@ -71,7 +71,7 @@ script = ExtResource( 15 )
 [node name="Timer" type="Timer" parent="Phases/AnimalLeaving"]
 one_shot = true
 
-[node name="Grid" type="Node2D" parent="."]
+[node name="Grid" type="YSort" parent="."]
 script = ExtResource( 3 )
 
 [node name="TerresPathfinder" parent="Grid" instance=ExtResource( 11 )]

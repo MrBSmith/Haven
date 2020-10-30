@@ -1,4 +1,4 @@
-extends Node2D
+extends YSort
 
 var moving_seed_scene = preload("res://Scenes/Animations/MovingSeed/MovingSeed.tscn")
 
