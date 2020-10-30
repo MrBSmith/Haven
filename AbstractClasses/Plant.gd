@@ -18,7 +18,7 @@ var on_fire : bool = false setget , is_on_fire
 var mouse_inside : bool = false
 
 export var current_growth_state : int = 0
-export var plant_growth_state : Array = []
+export var growth_states : Array = [] setget , get_growth_states
 
 export var favorable_tile_types : PoolStringArray = ["Soil", "Grass", "Forest"]
 
@@ -28,8 +28,8 @@ signal plant_grown(plant, next_state_scene)
 
 #### ACCESSORS ####
 
-func is_type(type): return type == "Plant"
-func get_type(): return "Plant"
+func is_class(type): return type == "Plant"
+func get_class(): return "Plant"
 
 func set_eater(value: WeakRef): 
 	eater = value
@@ -56,6 +56,10 @@ func set_growth_progression(value: int):
 
 func get_growth_progression() -> int:
 	return growth_progression
+
+
+func get_growth_states() -> Array: return growth_states
+
 
 func add_to_growth_progression(value: int):
 	set_growth_progression(get_growth_progression() + value)
@@ -111,28 +115,37 @@ func rain_applied():
 
 # Get a random growth state of the tree
 # Return the path of the scene corresponding to this state
-func get_random_growth_state() -> String:
-	var nb_types = plant_growth_state.size()
+func get_random_growth_state() -> PackedScene:
+	var nb_types = growth_states.size()
 	if nb_types <= 0:
-		return "" 
+		return null
 	
+	var plant_state_array = Resource_Loader.loaded_plants[get_class()]
 	var rdm_type_id = randi() % nb_types
-	return plant_growth_state[rdm_type_id]
+	
+	return plant_state_array[rdm_type_id]
 
 
 # Get the next growth state in the dictionary, based on the given state name
 # Return the path of the scene corresponding to this state
 # Return "" if nothing were found
-func get_next_growth_state(state_index: int) -> String:
-	if state_index < 0 or state_index > plant_growth_state.size():
+func get_next_growth_state(state_index: int) -> PackedScene:
+	if state_index < 0 or state_index > growth_states.size():
 		print("The wanted state at index " + String(state_index) + " Wasn't found")
-		return ""
-
+		return null
+		
+	var plant_state_array = []
+	var loaded_plants_dict = Resource_Loader.loaded_plants
+	var plant_class = get_class()
+	
+	if loaded_plants_dict.has(plant_class):
+		plant_state_array = loaded_plants_dict[plant_class]
+	
 	var next_id = state_index + 1
-	if next_id >= plant_growth_state.size():
-		return ""
+	if next_id >= growth_states.size():
+		return null
 	else:
-		return plant_growth_state[next_id]
+		return plant_state_array[next_id]
 
 
 
@@ -175,8 +188,8 @@ func on_plant_phase_start():
 
 func on_growth_finished():
 	var next_state_path = get_next_growth_state(current_growth_state)
-	if next_state_path != "":
-		emit_signal("plant_grown", self, load(next_state_path))
+	if next_state_path != null:
+		emit_signal("plant_grown", self, next_state_path)
 		
 		if debug:
 			print("growth finished")

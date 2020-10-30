@@ -40,8 +40,8 @@ signal standby_changed(value)
 
 #### ACCESSORS ####
 
-func is_type(type): return type == "Animal"
-func get_type(): return "Animal"
+func is_class(type): return type == "Animal"
+func get_class(): return "Animal"
 
 func set_speed(value: float): speed = value
 func get_speed() -> float: return speed
@@ -177,7 +177,7 @@ func find_target_in_view() -> PhysicsBody2D:
 	
 	for body in bodies_in_view:
 		for type in eatable_types:
-			if body.is_type(type) && not body in visited_targets:
+			if body.is_class(type) && not body in visited_targets:
 				return body
 	return null
 
@@ -207,10 +207,10 @@ func find_appearing_tile(grid_node: Node) -> Tile:
 # Return true if the given tile is passable for this animal, false if not
 func is_tile_passable(tile: Tile) -> bool:
 	var tile_type = tile.get_tile_type()
-	if self.is_type("TerrestrialAnimal"):
+	if self.is_class("TerrestrialAnimal"):
 		return tile_type is DryTile
 		
-	elif self.is_type("SwimingAnimal"):
+	elif self.is_class("SwimingAnimal"):
 		return tile_type is WetTile
 		
 	return true
@@ -231,7 +231,7 @@ func is_appear_condition_verified(tile_array: Array, condition: AppearCondition)
 	var nb : int = 0
 	for tile in tile_array:
 		for plant in tile.get_all_plants():
-			if plant.is_type(entity_type):
+			if plant.is_class(entity_type):
 				nb += 1
 				if nb >= entity_number:
 					return true

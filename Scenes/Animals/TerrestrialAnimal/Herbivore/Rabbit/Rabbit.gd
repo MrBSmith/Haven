@@ -3,8 +3,8 @@ class_name Rabbit
 
 #### ACCESSORS ####
 
-func is_type(type): return type == "Rabbit" or .is_type(type)
-func get_type(): return "Rabbit"
+func is_class(type): return type == "Rabbit" or .is_class(type)
+func get_class(): return "Rabbit"
 
 
 #### BUILT-IN ####

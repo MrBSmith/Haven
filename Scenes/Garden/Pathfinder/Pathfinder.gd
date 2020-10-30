@@ -89,6 +89,9 @@ func modify_tile_type(tile: Tile, prev_type: TileType, next_type: TileType):
 		return
 	
 	for point_id in get_points_in_tile(tile):
+		if !astar.has_point(point_id):
+			continue
+		
 		if add:
 			astar.set_point_disabled(point_id , true)
 		else:

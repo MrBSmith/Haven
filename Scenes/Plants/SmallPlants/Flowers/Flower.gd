@@ -5,8 +5,8 @@ var pollinazer : WeakRef = null setget set_pollinazer, get_pollinazer
 
 #### ACCESSORS ####
 
-func is_type(type): return type == "Flower" or .is_type(type)
-func get_type(): return "Flower"
+func is_class(type): return type == "Flower" or .is_class(type)
+func get_class(): return "Flower"
 
 func set_pollinazer(value: WeakRef): pollinazer = value
 func get_pollinazer() -> WeakRef: return pollinazer

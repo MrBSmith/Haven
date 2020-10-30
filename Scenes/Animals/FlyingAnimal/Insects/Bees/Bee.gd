@@ -3,8 +3,8 @@ class_name Bee
 
 #### ACCESSORS ####
 
-func is_type(type): return type == "Bee" or .is_type(type)
-func get_type(): return "Bee"
+func is_class(type): return type == "Bee" or .is_class(type)
+func get_class(): return "Bee"
 
 #### BUILT-IN ####
 
