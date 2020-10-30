@@ -168,8 +168,16 @@ func on_seed_planted(pos: Vector2, plant_type: Plant):
 	if tile == null:
 		return
 	
-	# NEED TO BE LOADED IN THE RESOURCE LOADER
-	var plant_scene = load(plant_type.plant_growth_state[0])
+	var plant_type_name = plant_type.get_class()
+	var plant_states_array = Resource_Loader.loaded_plants[plant_type_name]
+	if plant_states_array.empty():
+		return
+	
+	var plant_scene = plant_states_array[0]
+	
+	if plant_scene == null:
+		return
+	
 	tile.add_plant(plant_scene.instance(), pos - tile.global_position)
 	
 	if Globals.debug_state == true:

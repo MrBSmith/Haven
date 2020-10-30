@@ -57,7 +57,7 @@ func generate_flora(astar_sample_freq: float):
 	generate_plant(Resource_Loader.grass, tile_type.min_grass_nb, tile_type.max_grass_nb, 70, true, astar_sample_freq)
 	generate_plant(Resource_Loader.flower_types, tile_type.min_flower_nb, tile_type.max_flower_nb, 70, true, astar_sample_freq)
 	
-	var tree_scene = load(Resource_Loader.oak.get_random_growth_state())
+	var tree_scene = Resource_Loader.oak.get_random_growth_state()
 	generate_plant(tree_scene, tile_type.min_tree_nb, tile_type.max_tree_nb, 40, true, astar_sample_freq)
 	
 	emit_signal("tile_created")

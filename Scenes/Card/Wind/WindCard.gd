@@ -1,7 +1,7 @@
 extends Card
 class_name WindCard
 
-func get_type() -> String:
+func get_class() -> String:
 	return "Wind"
 
 #### LOGIC ####

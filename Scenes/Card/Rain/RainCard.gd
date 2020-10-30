@@ -1,5 +1,5 @@
 extends Card
 class_name Rain
 
-func get_type() -> String:
+func get_class() -> String:
 	return "Rain"

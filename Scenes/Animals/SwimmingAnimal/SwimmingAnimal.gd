@@ -5,8 +5,8 @@ onready var pathfinder = get_tree().get_current_scene().find_node("WaterPathfind
 
 #### ACCESSORS ####
 
-func is_type(type): return type == "SwimmingAnimal" or .is_type(type)
-func get_type(): return "SwimmingAnimal"
+func is_class(type): return type == "SwimmingAnimal" or .is_class(type)
+func get_class(): return "SwimmingAnimal"
 
 #### BUILT-IN ####
 

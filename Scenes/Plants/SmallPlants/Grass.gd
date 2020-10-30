@@ -3,8 +3,8 @@ class_name Grass
 
 #### ACCESSORS ####
 
-func is_type(type): return type == "Grass" or .is_type(type)
-func get_type(): return "Grass"
+func is_class(type): return type == "Grass" or .is_class(type)
+func get_class(): return "Grass"
 
 #### BUILT-IN ####
 

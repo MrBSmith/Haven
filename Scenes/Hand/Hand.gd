@@ -70,7 +70,7 @@ func draw_card(card_index: int):
 func get_current_cards_types() -> PoolStringArray:
 	var type_array : PoolStringArray = []
 	for child in get_children():
-		type_array.append(child.get_type())
+		type_array.append(child.get_class())
 	
 	return type_array
 
@@ -137,6 +137,6 @@ func _on_hand_refilled():
 	var first_card = get_child(0)
 	var second_card = get_child(1)
 	
-	if first_card.get_type() == second_card.get_type():
+	if first_card.get_class() == second_card.get_class():
 		first_card.destroy()
 		second_card.combined_effect()

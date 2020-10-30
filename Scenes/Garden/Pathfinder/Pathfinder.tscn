@@ -10,6 +10,5 @@ __meta__ = {
 }
 
 [node name="PathVisualizer" type="Node2D" parent="."]
-visible = false
 modulate = Color( 1, 1, 1, 0.533333 )
 script = ExtResource( 2 )

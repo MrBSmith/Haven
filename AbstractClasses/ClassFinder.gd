@@ -50,7 +50,7 @@ func find_all_scene_of_class(path : String = ""):
 					var scene = load(current_scene_path)
 					var instance = scene.instance()
 					
-					if instance.has_method("is_type") && instance.is_type(targeted_class) \
+					if instance.has_method("is_class") && instance.is_class(targeted_class) \
 						&& !is_exception(current_file_name):
 						target_array.append([instance, scene])
 						if debug:
