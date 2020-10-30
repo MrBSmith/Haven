@@ -1,4 +1,4 @@
-extends YSort
+extends Node2D
 
 var lightning_scene = preload("res://Scenes/Projectile/Lightning.tscn")
 

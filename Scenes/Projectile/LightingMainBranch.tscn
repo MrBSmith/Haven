@@ -7,7 +7,7 @@
 [sub_resource type="Resource" id=1]
 resource_local_to_scene = true
 script = ExtResource( 3 )
-speed = 900.0
+speed = 24800.0
 
 [node name="LightingMainBranch" instance=ExtResource( 1 )]
 script = ExtResource( 2 )

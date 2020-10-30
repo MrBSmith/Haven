@@ -14,7 +14,7 @@ func _ready():
 
 
 func generate_thunder(impact_pos: Vector2):
-	var lightning_projectile = Globals.lighting_main_branch.instance()
+	var lightning_projectile = Resource_Loader.lighting_main_branch.instance()
 	lightning_projectile.connect("collided", self, "_on_lightning_collided")
 	lightning_projectile.connect("tree_exiting", self, "_on_lightning_over")
 	

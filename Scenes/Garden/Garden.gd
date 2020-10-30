@@ -13,6 +13,7 @@ extends Node2D
 
 onready var grid_node = $Grid
 onready var hand_node = $Hand
+onready var camera_node = $Camera2D
 
 onready var phase_state_machine = $Phases
 
@@ -59,8 +60,12 @@ func init_clouds(grid_pxl_size: Vector2):
 
 
 func init_hand_size(grid_pxl_size: Vector2):
-	var hand_space_size = Vector2(Globals.window_width, Globals.window_height - grid_pxl_size.y)
-	hand_node.set_position(Vector2(Globals.window_width / 2, grid_pxl_size.y + hand_space_size.y / 2))
+	var screen_size = Globals.window_size * camera_node.get_zoom()
+	
+	var hand_space_size = Vector2(screen_size.x, screen_size.y - grid_pxl_size.y)
+	var hand_pos = Vector2(screen_size.x / 2, grid_pxl_size.y + hand_space_size.y / 2)
+	hand_node.hand_size = hand_space_size
+	hand_node.set_position(hand_pos)
 
 
 #### INPUTS ####
@@ -77,4 +82,4 @@ func _on_meteo_animation_started():
 	set_phase("MeteoAnimation")
 
 func _on_meteo_animation_finished():
-	set_phase("AnimalBehaviour")
+	set_phase("PlantBehaviour")

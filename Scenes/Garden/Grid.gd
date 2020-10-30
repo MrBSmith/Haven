@@ -2,6 +2,8 @@ extends Node2D
 
 var moving_seed_scene = preload("res://Scenes/Animations/MovingSeed/MovingSeed.tscn")
 
+export var sampling_frequency : int = 50
+
 #### ACCESSORS ####
 
 func get_tile_array() -> Array:
@@ -23,7 +25,6 @@ func generate_grid():
 	for i in range(nb_tiles.x):
 		for j in range(nb_tiles.y):
 			free_pos_array.append(Vector2(i, j))
-			
 	
 	# Determine the number of water tile to place btw 5-8, then places it
 	var nb_water_tile = randi() % 4 + 5
@@ -41,11 +42,10 @@ func generate_grid():
 	
 	for child in get_children():
 		if child is Tile:
-			child.generate_flora()
+			child.generate_flora(sampling_frequency)
 	
 	$GridArea.adapt_grid_area(nb_tiles.x, Globals.TILE_SIZE)
-	$TerresPathfinder.sample_map()
-	$WaterPathfinder.sample_map()
+	$TerresPathfinder.sample_map(sampling_frequency)
 
 
 # Place the given type of tile, the given number of time, in the free slot in the grid (stocked in the free_pos_array)
@@ -66,7 +66,7 @@ func place_tiles_on_grid(tile_type: String, free_pos_array: Array, nb_tile: int 
 # Place a tile, and give it the given type
 func place_single_tile(tile_type: String, grid_position: Vector2):
 	var tile_size = Globals.TILE_SIZE
-	var new_tile = Globals.tile.instance()
+	var new_tile = Resource_Loader.tile.instance()
 	
 	new_tile.set_position(grid_position * tile_size + (tile_size / 2))
 	new_tile.set_grid_position(grid_position)
@@ -117,7 +117,7 @@ func is_pos_outside_grid(pos: Vector2):
 
 
 # Generate a moving seed at the given position, with the given velocity and tree_type
-func generate_moving_seed(init_pos: Vector2, init_velocity: Vector2, tree_type: PackedScene):
+func generate_moving_seed(init_pos: Vector2, init_velocity: Vector2, tree_type: Plant):
 	var new_seed = moving_seed_scene.instance()
 	new_seed.set_position(init_pos)
 	new_seed.set_velocity(init_velocity)
@@ -162,14 +162,15 @@ func _input(event):
 
 #### SIGNALS REPSONSES ####
 
-func on_seed_planted(pos: Vector2, tree_type: PackedScene):
+func on_seed_planted(pos: Vector2, plant_type: Plant):
 	var tile = get_tile_at_world_pos(pos)
 	
 	if tile == null:
 		return
 	
-	var tree = tree_type.instance()
-	tile.add_plant(tree, pos - tile.global_position)
+	# NEED TO BE LOADED IN THE RESOURCE LOADER
+	var plant_scene = load(plant_type.plant_growth_state[0])
+	tile.add_plant(plant_scene.instance(), pos - tile.global_position)
 	
 	if Globals.debug_state == true:
 		print("seed_planted a pos: " + String(tile.get_grid_position()))

@@ -14,8 +14,7 @@ func get_type(): return "Grass"
 
 
 func grow():
-	add_to_growth(1)
-	add_to_dehydration(-1)
+	add_to_growth_progression(1)
 	prolifarate()
 
 # Proliferate to a random position nearby
@@ -27,7 +26,7 @@ func prolifarate():
 		return
 	
 	var local_pos = rdm_pos - tile_under_pos.get_global_position()
-	var new_grass = Globals.grass.instance()
+	var new_grass = Resource_Loader.grass.instance()
 	
 	if tile_under_pos.is_plant_correct_position(new_grass, rdm_pos, min_sibling_dist):
 		tile_under_pos.add_plant(new_grass, local_pos)

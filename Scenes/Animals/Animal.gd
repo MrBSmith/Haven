@@ -3,7 +3,7 @@ class_name Animal
 
 var is_ready : bool = false
 
-export var speed : float = 1.0 setget set_speed, get_speed
+export var speed : float = 20.0 setget set_speed, get_speed
 
 # Wander maximum distance, expressed in tiles
 export var wander_distance : float = 1.5 setget set_wander_distance, get_wander_distance
@@ -13,6 +13,8 @@ export var view_radius : float = 12.0
 
 export var eating_time : float = 3.0
 
+export var debug : bool = false
+
 # Exepressed in turns
 var presence_time : int = 0
 export var prensence_time_fork : PoolIntArray = [1, 3]
@@ -20,6 +22,8 @@ export var prensence_time_fork : PoolIntArray = [1, 3]
 export var appearing_conditions : Array = []
 export var appearing_cond_radius : int = 2
 export (float, 0.0, 100.0, 0.0) var appearing_probability : float = 0.0
+
+export var path_bake_interval : float = 14.0
 
 export var standby : bool = false setget set_standby, get_standby
 var target : PhysicsBody2D = null setget set_target, get_target
@@ -79,7 +83,7 @@ func _ready():
 	randomize()
 	
 	compute_presence_time()
-	path_curve.set_bake_interval(0.7)
+	path_curve.set_bake_interval(path_bake_interval)
 	
 	var shape = $Area2D/CollisionShape2D.get_shape()
 	shape.set_radius(view_radius)

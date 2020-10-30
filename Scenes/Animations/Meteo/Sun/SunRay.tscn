@@ -4,6 +4,7 @@
 [ext_resource path="res://Scenes/Animations/Meteo/Sun/SunRay.gd" type="Script" id=2]
 
 [node name="SunRay" type="Light2D"]
+scale = Vector2( 20, 20 )
 texture = ExtResource( 1 )
 offset = Vector2( -7.5, -50 )
 energy = 0.0

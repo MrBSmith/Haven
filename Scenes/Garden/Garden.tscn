@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://Scenes/Garden/Garden.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Hand/Hand.gd" type="Script" id=2]
@@ -9,7 +9,7 @@
 [ext_resource path="res://Scenes/Garden/Animations.gd" type="Script" id=7]
 [ext_resource path="res://Scenes/VFX/Clouds/Clouds.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Scenes/Animals/TerrestrialAnimal/Herbivore/Rabbit/Rabbit.tscn" type="PackedScene" id=9]
-[ext_resource path="res://Scenes/Animals/FlyingAnimal/Insects/Bees/Bee.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Scenes/Garden/Camera2D.gd" type="Script" id=10]
 [ext_resource path="res://Scenes/Garden/Pathfinder/Pathfinder.tscn" type="PackedScene" id=11]
 [ext_resource path="res://AbstractClasses/StateMachine.gd" type="Script" id=12]
 [ext_resource path="res://Scenes/Garden/AreaDebug.gd" type="Script" id=13]
@@ -19,10 +19,11 @@
 [ext_resource path="res://Scenes/Garden/Phases/MeteoAnimation.gd" type="Script" id=17]
 [ext_resource path="res://Scenes/Garden/Phases/AnimalBehaviour.gd" type="Script" id=18]
 [ext_resource path="res://Scenes/Garden/Phases/Draw.gd" type="Script" id=19]
+[ext_resource path="res://Scenes/Garden/Phases/PlantBehaviour.gd" type="Script" id=20]
 
 [sub_resource type="RectangleShape2D" id=1]
 
-[sub_resource type="Environment" id=3]
+[sub_resource type="Environment" id=2]
 background_mode = 4
 glow_enabled = true
 glow_levels/1 = true
@@ -51,6 +52,12 @@ script = ExtResource( 16 )
 [node name="MeteoAnimation" type="Node" parent="Phases"]
 script = ExtResource( 17 )
 
+[node name="PlantBehaviour" type="Node" parent="Phases"]
+script = ExtResource( 20 )
+
+[node name="Timer" type="Timer" parent="Phases/PlantBehaviour"]
+one_shot = true
+
 [node name="AnimalBehaviour" type="Node" parent="Phases"]
 script = ExtResource( 18 )
 
@@ -66,14 +73,8 @@ one_shot = true
 
 [node name="Grid" type="Node2D" parent="."]
 script = ExtResource( 3 )
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="TerresPathfinder" parent="Grid" instance=ExtResource( 11 )]
-
-[node name="WaterPathfinder" parent="Grid" instance=ExtResource( 11 )]
-swimming_animal = true
 
 [node name="GridArea" type="Area2D" parent="Grid"]
 script = ExtResource( 4 )
@@ -96,12 +97,9 @@ __meta__ = {
 }
 
 [node name="Rabbit" parent="Grid/Animals" instance=ExtResource( 9 )]
-position = Vector2( 46.0139, 45.7779 )
+position = Vector2( 1136.47, 1214.64 )
 
-[node name="Bee" parent="Grid/Animals" instance=ExtResource( 10 )]
-position = Vector2( 68.195, 19.8214 )
-
-[node name="MeteoEffects" type="YSort" parent="Grid"]
+[node name="MeteoEffects" type="Node2D" parent="Grid"]
 script = ExtResource( 7 )
 __meta__ = {
 "_edit_lock_": true
@@ -115,6 +113,7 @@ layer = 9
 script = ExtResource( 6 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Grid/DebugPanel"]
+modulate = Color( 1, 1, 1, 0.741176 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = 96.0
@@ -126,8 +125,8 @@ __meta__ = {
 }
 
 [node name="GamePhase" type="Label" parent="Grid/DebugPanel/VBoxContainer"]
-margin_right = 192.0
-margin_bottom = 13.0
+margin_right = 576.0
+margin_bottom = 38.0
 custom_fonts/font = ExtResource( 5 )
 text = "Phase:"
 __meta__ = {
@@ -135,9 +134,9 @@ __meta__ = {
 }
 
 [node name="CursorTile" type="Label" parent="Grid/DebugPanel/VBoxContainer"]
-margin_top = 17.0
-margin_right = 192.0
-margin_bottom = 30.0
+margin_top = 42.0
+margin_right = 576.0
+margin_bottom = 80.0
 custom_fonts/font = ExtResource( 5 )
 text = "CursorTile:"
 __meta__ = {
@@ -145,14 +144,20 @@ __meta__ = {
 }
 
 [node name="CursorPos" type="Label" parent="Grid/DebugPanel/VBoxContainer"]
-margin_top = 34.0
-margin_right = 192.0
-margin_bottom = 47.0
+margin_top = 84.0
+margin_right = 576.0
+margin_bottom = 122.0
 custom_fonts/font = ExtResource( 5 )
 text = "CursorPos:"
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="CursorPointAStar" type="Label" parent="Grid/DebugPanel/VBoxContainer"]
+margin_top = 126.0
+margin_right = 576.0
+margin_bottom = 164.0
+custom_fonts/font = ExtResource( 5 )
 
 [node name="AreaDebug" type="Node2D" parent="Grid"]
 visible = false
@@ -171,4 +176,10 @@ __meta__ = {
 }
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 3 )
+environment = SubResource( 2 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+current = true
+zoom = Vector2( 6.25, 6.25 )
+script = ExtResource( 10 )

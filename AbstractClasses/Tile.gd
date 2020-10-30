@@ -26,8 +26,8 @@ func _ready():
 
 #### ACCESSORS ####
 
-func get_tile_type(): return tile_type
-func get_tile_type_name(): return tile_type.get_type_name()
+func get_tile_type() -> TileType: return tile_type
+func get_tile_type_name() -> String : return tile_type.get_type_name()
 
 func set_grid_position(value: Vector2):
 	grid_position = value
@@ -53,10 +53,12 @@ func add_to_wetness(value: int):
 
 # Generate the flora of the tile, based on its type
 # Called by the grid when the tile is generated
-func generate_flora():
-	generate_plant(Globals.grass, tile_type.min_grass_nb, tile_type.max_grass_nb, 70, true)
-	generate_plant(Globals.flower_types, tile_type.min_flower_nb, tile_type.max_flower_nb, 70, true)
-	generate_plant(Globals.base_tree, tile_type.min_tree_nb, tile_type.max_tree_nb, 40, true)
+func generate_flora(astar_sample_freq: float):
+	generate_plant(Resource_Loader.grass, tile_type.min_grass_nb, tile_type.max_grass_nb, 70, true, astar_sample_freq)
+	generate_plant(Resource_Loader.flower_types, tile_type.min_flower_nb, tile_type.max_flower_nb, 70, true, astar_sample_freq)
+	
+	var tree_scene = load(Resource_Loader.oak.get_random_growth_state())
+	generate_plant(tree_scene, tile_type.min_tree_nb, tile_type.max_tree_nb, 40, true, astar_sample_freq)
 	
 	emit_signal("tile_created")
 
@@ -73,7 +75,8 @@ func generate_wetness():
 # The plant argument can also be an array, if this is the case, 
 # A random member will be picked each time
 # Called when the garden is generated
-func generate_plant(plant, min_nb: int, max_nb: int, spawn_chances: int, garden_generation : bool = false):
+func generate_plant(plant, min_nb: int, max_nb: int, spawn_chances: int,
+			garden_generation : bool = false, astar_sample_freq: float = 1.0):
 	if max_nb == 0:
 		return
 	
@@ -81,6 +84,7 @@ func generate_plant(plant, min_nb: int, max_nb: int, spawn_chances: int, garden_
 	
 	var plant_array : Array = []
 	var nb_plant_rng = randi() % max_nb + min_nb
+	var grid_snap = Globals.TILE_SIZE / astar_sample_freq
 	
 	for _i in range(nb_plant_rng):
 		var rng_plant = randi() % 100
@@ -96,9 +100,9 @@ func generate_plant(plant, min_nb: int, max_nb: int, spawn_chances: int, garden_
 			var min_dist = new_plant.get_min_sibling_dist()
 			
 			# Generate new positions until one is correct
-			var pos = random_plant_position()
+			var pos = Vector2.INF
 			while(!is_plant_correct_position(new_plant, pos, min_dist)):
-				pos = random_plant_position()
+				pos = random_plant_position().snapped(grid_snap)
 			
 			add_plant(new_plant, pos, true)
 			plant_array.append(new_plant)
@@ -129,7 +133,7 @@ func drain_wetness(value: int) -> int:
 
 # Change the type of the tile for the given one
 func change_tile_type(type_name: String, generation: bool = false):
-	var tile_type_scene = Globals.tiles_type[type_name]
+	var tile_type_scene = Resource_Loader.tiles_type[type_name]
 	var new_tile_type = tile_type_scene.instance()
 	
 	# If the type to be changed in is the same as the current type, abort
@@ -184,6 +188,9 @@ func add_plant(plant_node: Plant, pos: Vector2, garden_generation : bool = false
 	if plant_node.has_signal("generate_seed"):
 		var _err = plant_node.connect("generate_seed", grid_node, "generate_moving_seed")
 	
+	if plant_node.has_signal("plant_grown"):
+		var _err = plant_node.connect("plant_grown", self, "on_plant_grown")
+	
 	# Send a signal to signify the plant has been added
 	# Not desired if the garden is currently beeing generated
 	if !garden_generation:
@@ -193,6 +200,9 @@ func add_plant(plant_node: Plant, pos: Vector2, garden_generation : bool = false
 # Return true if the given position is far enough (the minimum distance is defined by min_dist)
 # from every seed in the seed array
 func is_plant_correct_position(plant_node: Plant, pos: Vector2, min_dist: float = 4.0) -> bool:
+	if pos == Vector2.INF:
+		return false
+	
 	var plant_category = plant_node.get_category()
 	var plant_array := get_plant_correct_group(plant_category).get_children()
 	
@@ -282,3 +292,12 @@ func on_wind_applied(wind_dir: Vector2, wind_force: int, duration: float):
 		tree.apply_wind(wind_dir, wind_force, duration)
 	
 	tile_type.on_wind_applied(wind_dir, wind_force, duration)
+
+
+# Make a plant grow by replacing its scene by the correct one
+func on_plant_grown(plant_calling, next_plant_scene):
+	var next_plant = next_plant_scene.instance()
+	if next_plant:
+		add_plant(next_plant, plant_calling.get_position())
+	
+	plant_calling.queue_free()

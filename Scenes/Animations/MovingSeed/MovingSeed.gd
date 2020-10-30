@@ -3,7 +3,7 @@ extends Node2D
 const damping : float = 0.1
 
 var velocity := Vector2.ZERO setget set_velocity, get_velocity
-var tree_type : PackedScene = null setget set_tree_type, get_tree_type
+var tree_type : Plant = null setget set_tree_type, get_tree_type
 
 var grid_node : Node2D = null
 
@@ -11,10 +11,10 @@ signal seed_planted(seed_pos, tree_type)
 
 #### ACCESSORS ####
 
-func set_tree_type(value: PackedScene):
+func set_tree_type(value: Plant):
 	tree_type = value
 
-func get_tree_type() -> PackedScene:
+func get_tree_type() -> Plant:
 	return tree_type
 
 func set_velocity(value: Vector2):

@@ -39,7 +39,8 @@ func apply_wind(wind_dir: Vector2, force: int, duration: float):
 	$StatesMachine/Wind.start_wind_animation(wind_dir, force, duration)
 	
 	if seed_rng < seed_spawn_chances:
-		emit_signal("generate_seed", global_position, wind_dir * force, Globals.base_tree)
+		var game_upscale = Globals.get_tile_upscale().x
+		emit_signal("generate_seed", global_position, wind_dir * force * game_upscale, Resource_Loader.oak)
 		
 	if is_on_fire():
 		propagate_fire(wind_dir)
@@ -93,7 +94,7 @@ func die():
 
 func set_fire(thunder: bool = false):
 	.set_fire(thunder)
-	var fire = Globals.fire_fx.instance()
+	var fire = Resource_Loader.fire_fx.instance()
 	$FirePosition.add_child(fire)
 	on_fire = true
 

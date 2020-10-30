@@ -1,11 +1,11 @@
 [gd_scene format=2]
 
 [node name="TileArea" type="ColorRect"]
-margin_left = -8.0
-margin_top = -8.0
-margin_right = 8.0
-margin_bottom = 8.0
-rect_pivot_offset = Vector2( 8, 8 )
+margin_left = -250.0
+margin_top = -250.0
+margin_right = 250.0
+margin_bottom = 250.0
+rect_pivot_offset = Vector2( 250, 250 )
 color = Color( 0, 0.694118, 1, 0.435294 )
 __meta__ = {
 "_edit_use_anchors_": false

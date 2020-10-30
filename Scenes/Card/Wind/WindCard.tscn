@@ -21,4 +21,5 @@ script = ExtResource( 7 )
 
 [node name="Arrow" type="Sprite" parent="StateMachine/Target" index="0"]
 visible = false
+scale = Vector2( 20, 20 )
 texture = ExtResource( 6 )

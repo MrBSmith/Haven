@@ -7,12 +7,7 @@ class_name Seed
 #### BUILT-IN ####
 
 func _ready():
-	growth_timer_node = Timer.new()
-	var _err = growth_timer_node.connect("timeout", self, "on_growth_timer_timeout")
-	growth_timer_node.set_wait_time(growth_frequency_time)
-	add_child(growth_timer_node)
-	
-	growth_timer_node.start()
+	pass
 
 
 #### LOGIC ####
@@ -25,7 +20,7 @@ func transform_in_tree():
 		print_debug("The tile reference doesn't exists")
 		return
 	
-	var tree = Globals.tree_types[0].instance()
+	var tree = Resource_Loader.tree_types[0].instance()
 	tree.set_position(get_position())
 	tile.call_deferred("add_child", tree)
 	
